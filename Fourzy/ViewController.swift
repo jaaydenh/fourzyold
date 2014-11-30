@@ -283,4 +283,9 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         println("### Quit.....match")
         // TODO
     }
+    
+    func player(player: GKPlayer!, receivedTurnEventForMatch match: GKTurnBasedMatch!, didBecomeActive: Bool) {
+        println("receivedTurnEventForMatch:didBecomeActive: \(didBecomeActive)")
+        self.performSegueWithIdentifier("segueToGamePlay", sender: match)
+    }
 }
