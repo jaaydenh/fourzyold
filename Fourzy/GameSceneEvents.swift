@@ -13,11 +13,10 @@ extension GameScene {
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         if (isMultiplayer && currentMatch != nil) {
-            if GKLocalPlayer.localPlayer().playerID != currentMatch.currentParticipant.playerID {
+            if currentMatch.status == GKTurnBasedMatchStatus.Ended {
                 return
             }
-            
-            if currentMatch.status == GKTurnBasedMatchStatus.Ended {
+            if GKLocalPlayer.localPlayer().playerID != currentMatch.currentParticipant.playerID {
                 return
             }
         }
@@ -41,58 +40,69 @@ extension GameScene {
             let piece = activePieces[0]
             activePiece = piece
             assert(piece.moveDestinations.count > 0)
-            activePieces.removeAtIndex(0)
+            //activePieces.removeAtIndex(0)
             
             piece.animate()
             
             let destination = piece.moveDestinations[0]
-            // update gameboard model with destination of gamepiece
-            board.addPieceAtColumn(destination.column, row: destination.row, piece: piece)
+            //board.addPieceAtColumn(destination.column, row: destination.row, piece: piece)
             self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
 
             rotateActivePlayer()
             
 //            [self removeHighlights];
             
-            var winners:[PieceType] = []
-            var winner = board.checkForWinnerAtRow(destination.row, column: destination.column)
-            if (winner != PieceType.None) {
-                winners.append(winner)
-            }
-
+            // update board model
             for activePiece in activePieces {
                 let destination = activePiece.moveDestinations[0]
                 board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
-                winner = board.checkForWinnerAtRow(destination.row, column: destination.column)
-                if (winner != PieceType.None) {
-                    winners.append(winner)
-                }
             }
-//          [self printBoard];
             
-            if (winners.count > 0) {
-                var player1Wins = 0;
-                var player2Wins = 0;
-                var winner = PieceType.None
-                
-                for pieceType in winners {
-                    if pieceType == PieceType.Player1 {
-                        player1Wins++;
-                    } else if pieceType == PieceType.Player2 {
-                        player2Wins++;
-                    }
-                }
-                if (player1Wins > 0 && player2Wins > 0) {
-                    winner = PieceType.None
-                } else if (player1Wins > 0) {
-                    winner = PieceType.Player1
-                } else if (player2Wins > 0) {
-                    winner = PieceType.Player2
-                }
-                
-                endMatchWithWinner(winner)
-            }
+
+            
+//            var winner = board.checkForWinnerAtRow(destination.row, column: destination.column)
+//            if (winner != PieceType.None) {
+//                winners.append(winner)
+//            }
+            
+            checkForWinnerAndUpdateMatch(true)
+//            var winners:[PieceType] = []
 //            
+//            for activePiece in activePieces {
+//                let destination = activePiece.moveDestinations[0]
+//                var winner = board.checkForWinnerAtRow(destination.row, column: destination.column)
+//                if (winner != PieceType.None) {
+//                    winners.append(winner)
+//                }
+//            }
+////          [self printBoard];
+//            
+//            if (winners.count > 0) {
+//                var player1Wins = 0;
+//                var player2Wins = 0;
+//                var winner = PieceType.None
+//                
+//                for pieceType in winners {
+//                    if pieceType == PieceType.Player1 {
+//                        player1Wins++;
+//                    } else if pieceType == PieceType.Player2 {
+//                        player2Wins++;
+//                    }
+//                }
+//                if (player1Wins > 0 && player2Wins > 0) {
+//                    winner = PieceType.None
+//                } else if (player1Wins > 0) {
+//                    winner = PieceType.Player1
+//                } else if (player2Wins > 0) {
+//                    winner = PieceType.Player2
+//                }
+//                
+//                endMatchWithWinner(winner)
+//            }
+            if activePieces.count > 0 {
+                activePieces.removeAll(keepCapacity: false)
+            }
+//
 //            //TODO: Tie if no more possible moves
             if self.isMultiplayer {
                 advanceTurn()

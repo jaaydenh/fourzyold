@@ -138,7 +138,7 @@ class Board: SKNode {
             }
         }
         if (winner == PieceType.None) {
-            //winner = [self checkDiagonalForWinnerAtRow:row andColumn:column];
+            winner = checkDiagonalForWinnerAtRow(row, currentColumn:column)
             if (winner != PieceType.None) {
                 winMethod = "diagonal"
             }
@@ -148,7 +148,7 @@ class Board: SKNode {
     }
     
     func checkForWinnerInRow(row: Int) -> PieceType {
-        var currentPiece:PieceType
+        //var currentPiece:PieceType
         var winCounter = 0
     
         for (var column = 0; column < NumColumns; column++) {
@@ -167,7 +167,7 @@ class Board: SKNode {
     }
     
     func checkForWinnerInColumn(column: Int) -> PieceType {
-        var currentPiece:PieceType
+        //var currentPiece:PieceType
         var winCounter = 0
     
         for (var row = 0; row < NumRows; row++) {
@@ -184,6 +184,54 @@ class Board: SKNode {
         }
     
         return PieceType.None
+    }
+    
+    func checkDiagonalForWinnerAtRow(currentRow: Int, currentColumn: Int) -> PieceType {
+        //var currentPiece:PieceType
+        var winCounter = 0
+        var startingRow = 0;
+        var startingColumn = 0;
+        var row: Int, column: Int;
+    
+        for (row = currentRow, column = currentColumn; row >= 0 && column >= 0;row--,column--) {
+            startingRow = row;
+            startingColumn = column;
+        }
+    
+        for (row = startingRow, column = startingColumn; row < NumRows && column < NumColumns; row++,column++) {
+            if (row > startingRow && column > startingColumn && pieceAtColumn(column, row: row)?.pieceType != pieceAtColumn(column-1, row: row-1)?.pieceType) {
+                winCounter = 0;
+            }
+            if let currentPiece = pieceAtColumn(column, row: row)?.pieceType {
+                winCounter = updateWinCounterWithRow(row, column: column, player: currentPiece, wins: winCounter)
+    
+                if (winCounter >= 4) {
+                    return currentPiece;
+                }
+            }
+        }
+    
+        winCounter = 0;
+    
+        for (row = currentRow, column = currentColumn; row < NumRows && column >= 0;row++,column--) {
+            startingRow = row;
+            startingColumn = column;
+        }
+    
+        for (row = startingRow, column = startingColumn; row >= 0 && column < NumColumns;row--,column++) {
+            if (row < startingRow && column > startingColumn && pieceAtColumn(column, row: row)?.pieceType != pieceAtColumn(column-1, row: row+1)?.pieceType) {
+                winCounter = 0;
+            }
+            if let currentPiece = pieceAtColumn(column, row: row)?.pieceType {
+                winCounter = updateWinCounterWithRow(row, column: column, player: currentPiece, wins: winCounter)
+                
+                if (winCounter >= 4) {
+                    return currentPiece;
+                }
+            }
+        }
+    
+        return PieceType.None;
     }
     
     func updateWinCounterWithRow(row:Int, column:Int, player:PieceType, wins:Int) -> Int {

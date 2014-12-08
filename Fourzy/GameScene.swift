@@ -53,8 +53,8 @@ class GameScene:BaseScene {
     
      override func didMoveToView(view: SKView) {
         println("didMoveToView")
-        piecesLayer.removeAllChildren()
-        addTapAreas()
+//        piecesLayer.removeAllChildren()
+//        addTapAreas()
         //if let match = GameKitTurnBasedMatchHelper.sharedInstance().currentMatch {
         layoutMatch()
         //}
@@ -130,16 +130,6 @@ class GameScene:BaseScene {
         }
     }
     
-    //    override func didMoveToView(view: SKView) {
-    //        /* Setup your scene here */
-    //        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-    //        myLabel.text = "Hello, World!";
-    //        myLabel.fontSize = 65;
-    //        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
-    //
-    //        self.addChild(myLabel)
-    //    }
-    
     func createContent() {
         
         //[self setupTapAreas];
@@ -153,7 +143,7 @@ class GameScene:BaseScene {
         winnerLabel.name = kWinnerLabelName;
         
         addChild(winnerLabel)
-        addBoard()
+        //addBoard()
         
         addBackgroundImage()
         addBoardCorners()
@@ -470,9 +460,90 @@ class GameScene:BaseScene {
         currentMatch = match
     }
     
+    func playLastMove() {
+        if let match = currentMatch {
+            match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
+                if (error != nil)
+                {
+                    println("Error fetching matches: \(error.localizedDescription)");
+                } else {
+                    if let matchData = matchData {
+                        self.gameData = GameKitMatchData(matchData: matchData)
+                        let count = self.gameData.moves.count
+                        if (count >= 3) {
+                            var column = self.gameData.moves[count - 3];
+                            var row = self.gameData.moves[count - 2];
+                            if let direction = Direction(rawValue: self.gameData.moves[count - 1]) {
+                                
+                                switch (direction) {
+                                case .Up:
+                                    row = 0
+                                    break
+                                case .Down:
+                                    row = 7
+                                    break
+                                case .Left:
+                                    column = 7
+                                    break
+                                case .Right:
+                                    column = 0
+                                    break
+                                }
+                                
+                                if let piece = self.placePieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction) {
+                                    self.activePieces.append(piece)
+                                }
+                                for piece in self.activePieces {
+                                    piece.generateActions()
+                                }
+                                
+                                let piece = self.activePieces[0]
+                                //activePiece = piece
+                                assert(piece.moveDestinations.count > 0)
+                                //self.activePieces.removeAtIndex(0)
+                                
+                                piece.animate()
+                                
+                                let destination = piece.moveDestinations[0]
+                                // update gameboard model with destination of gamepiece
+                                self.board.addPieceAtColumn(destination.column, row: destination.row, piece: piece)
+                                
+                                self.checkForWinnerAndUpdateMatch(false)
+                                //self.processPieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction)
+                                self.rotateActivePlayer()
+                                
+                                if self.activePieces.count > 0 {
+                                    self.activePieces.removeAll(keepCapacity: false)
+                                }
+                            }
+                            
+                            //self.renderBoard()
+                        }
+                    }
+                    
+                    var statusString:NSString
+                    if match.status == GKTurnBasedMatchStatus.Ended {
+                        statusString = "Match Ended"
+                    }
+                    else
+                    {
+                        // let playerNum = match.participants. [match.currentParticipant + 1]
+                        //println("Player %@'s Turn", playerNum)
+                        //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum];
+                    }
+                }
+                
+            })
+        }
+    }
+    
     func layoutMatch()
     {
         println("Viewing match where it's not our turn...")
+        self.activePlayer = PieceType.Player1
+        board = Board()
+        piecesLayer.removeAllChildren()
+        addTapAreas()
         
         if let match = currentMatch {
             
@@ -532,16 +603,8 @@ class GameScene:BaseScene {
         if currentMatch.status != GKTurnBasedMatchStatus.Ended {
             if currentMatch.participants.count >= 2 {
                 
-                if currentMatch.participants[0] as? GKTurnBasedParticipant == currentMatch.currentParticipant {
-                    nextParticipant = currentMatch.participants[1] as GKTurnBasedParticipant
-                } else if currentMatch.participants[1] as? GKTurnBasedParticipant == currentMatch.currentParticipant {
-                    nextParticipant = currentMatch.participants[0] as GKTurnBasedParticipant
-                } else {
-                    assertionFailure("Current Participant is not in the currentMatch participants")
-                }
-                
+                nextParticipant = getOpponentForMatch(currentMatch)
                 let sortedParticipants:[GKTurnBasedParticipant] = [nextParticipant, currentMatch.currentParticipant]
-                //let sortedParticipants = currentMatch.participants
                 
                 currentMatch.endTurnWithNextParticipants(sortedParticipants, turnTimeout: GKTurnTimeoutDefault, matchData: updatedMatchData) { (error) -> Void in
                     if (error != nil) {
@@ -587,7 +650,43 @@ class GameScene:BaseScene {
         return nil
     }
     
-    func endMatchWithWinner(pieceType: PieceType) {
+    func checkForWinnerAndUpdateMatch(shouldUpdateMatch: Bool) {
+        var winners:[PieceType] = []
+        
+        for activePiece in activePieces {
+            let destination = activePiece.moveDestinations[0]
+            var winner = board.checkForWinnerAtRow(destination.row, column: destination.column)
+            if (winner != PieceType.None) {
+                winners.append(winner)
+            }
+        }
+        // [self printBoard];
+        
+        if (winners.count > 0) {
+            var player1Wins = 0;
+            var player2Wins = 0;
+            var winner = PieceType.None
+            
+            for pieceType in winners {
+                if pieceType == PieceType.Player1 {
+                    player1Wins++;
+                } else if pieceType == PieceType.Player2 {
+                    player2Wins++;
+                }
+            }
+            if (player1Wins > 0 && player2Wins > 0) {
+                winner = PieceType.None
+            } else if (player1Wins > 0) {
+                winner = PieceType.Player1
+            } else if (player2Wins > 0) {
+                winner = PieceType.Player2
+            }
+            
+            endMatchWithWinner(winner, shouldUpdateMatch: shouldUpdateMatch)
+        }
+    }
+    
+    func endMatchWithWinner(pieceType: PieceType, shouldUpdateMatch: Bool) {
         println("endMatch")
         
         var winnerLabel = self.childNodeWithName(kWinnerLabelName) as SKLabelNode
@@ -607,26 +706,20 @@ class GameScene:BaseScene {
             winnerLabel.hidden = false
         }
         
-        if isMultiplayer {
-            var nextParticipant:GKTurnBasedParticipant!
+        if isMultiplayer && shouldUpdateMatch {
+            var opponent:GKTurnBasedParticipant!
             
-            if currentMatch.participants[0] as? GKTurnBasedParticipant == currentMatch.currentParticipant {
-                nextParticipant = currentMatch.participants[1] as GKTurnBasedParticipant
-            } else if currentMatch.participants[1] as? GKTurnBasedParticipant == currentMatch.currentParticipant {
-                nextParticipant = currentMatch.participants[0] as GKTurnBasedParticipant
-            } else {
-                assertionFailure("Current Participant is not in the currentMatch participants")
-            }
+            opponent = getOpponentForMatch(currentMatch)
             
             if pieceType == PieceType.None {
                 currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Tied
-                nextParticipant.matchOutcome = GKTurnBasedMatchOutcome.Tied
+                opponent.matchOutcome = GKTurnBasedMatchOutcome.Tied
             } else if pieceType == activePlayer {
                 currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Won
-                nextParticipant.matchOutcome = GKTurnBasedMatchOutcome.Lost
+                opponent.matchOutcome = GKTurnBasedMatchOutcome.Lost
             } else {
                 currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Lost
-                nextParticipant.matchOutcome = GKTurnBasedMatchOutcome.Won
+                opponent.matchOutcome = GKTurnBasedMatchOutcome.Won
             }
             
             let updatedMatchData:NSData = self.gameData.encodeMatchData()
@@ -637,8 +730,6 @@ class GameScene:BaseScene {
                 }
             })
         }
-
-        
         
     //NSDictionary *winParams = @{@"Winner": winner};
     //[[OALSimpleAudio sharedInstance] playEffect:@"win1.mp3"];

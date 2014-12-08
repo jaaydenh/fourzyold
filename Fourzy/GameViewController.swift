@@ -27,7 +27,7 @@ extension SKNode {
     }
 }
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, GKLocalPlayerListener {
     
     @IBOutlet var loadingProgressIndicator: UIActivityIndicatorView!
     
@@ -60,6 +60,9 @@ class GameViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        var localPlayer = GKLocalPlayer.localPlayer()
+        localPlayer.registerListener(self)
+        
         // Start the progress indicator animation.
         self.loadingProgressIndicator.startAnimating()
         
@@ -85,13 +88,26 @@ class GameViewController: UIViewController {
             skView.showsDrawCount = true
             skView.showsFPS = true
             skView.multipleTouchEnabled = false
-            
+
             skView.presentScene(self.scene)
             
             UIView.animateWithDuration(2.0) {
                 //self.archerButton.alpha = 1.0
                 //self.warriorButton.alpha = 1.0
             }
+        }
+    }
+    
+    func player(player: GKPlayer!, receivedTurnEventForMatch match: GKTurnBasedMatch!, didBecomeActive: Bool) {
+        println("receivedTurnEventForMatch:GameViewController")
+        if (self.scene.currentMatch.matchID == match.matchID) {
+            self.scene.playLastMove()
+        }
+    }
+    
+    func player(player: GKPlayer!, matchEnded match: GKTurnBasedMatch!) {
+        if (self.scene.currentMatch.matchID == match.matchID) {
+            self.scene.playLastMove()
         }
     }
     

@@ -15,9 +15,7 @@
 		D04700C81A15A50C001411B3 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700831A15A50C001411B3 /* Board.swift */; };
 		D04700C91A15A50C001411B3 /* FConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700841A15A50C001411B3 /* FConstants.swift */; };
 		D04700CA1A15A50C001411B3 /* FExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700851A15A50C001411B3 /* FExtensions.swift */; };
-		D04700CB1A15A50C001411B3 /* GameKitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D04700881A15A50C001411B3 /* GameKitHelper.m */; };
 		D04700CC1A15A50C001411B3 /* GameKitMatchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700891A15A50C001411B3 /* GameKitMatchData.swift */; };
-		D04700CD1A15A50C001411B3 /* GameKitTurnBasedMatchHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D047008B1A15A50C001411B3 /* GameKitTurnBasedMatchHelper.m */; };
 		D04700CE1A15A50C001411B3 /* GameSceneEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047008C1A15A50C001411B3 /* GameSceneEvents.swift */; };
 		D04700CF1A15A50C001411B3 /* GridPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047008D1A15A50C001411B3 /* GridPosition.swift */; };
 		D04700D01A15A50C001411B3 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = D047008E1A15A50C001411B3 /* Piece.swift */; };
@@ -83,6 +81,9 @@
 		D05348551A14B98200331484 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D05348541A14B98200331484 /* Images.xcassets */; };
 		D05348581A14B98200331484 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D05348561A14B98200331484 /* LaunchScreen.xib */; };
 		D05348641A14B98200331484 /* FourzyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05348631A14B98200331484 /* FourzyTests.swift */; };
+		D056BDE31A2C2E2900DCEAF6 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */; };
+		D08486ED1A3586F8002B5197 /* GamesListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D08486EC1A3586F8002B5197 /* GamesListCell.xib */; };
+		D08486EF1A3589C3002B5197 /* GamesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08486EE1A3589C3002B5197 /* GamesListCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,12 +105,7 @@
 		D04700831A15A50C001411B3 /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		D04700841A15A50C001411B3 /* FConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FConstants.swift; sourceTree = "<group>"; };
 		D04700851A15A50C001411B3 /* FExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FExtensions.swift; sourceTree = "<group>"; };
-		D04700861A15A50C001411B3 /* Fourzy-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Fourzy-Bridging-Header.h"; sourceTree = "<group>"; };
-		D04700871A15A50C001411B3 /* GameKitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitHelper.h; sourceTree = "<group>"; };
-		D04700881A15A50C001411B3 /* GameKitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitHelper.m; sourceTree = "<group>"; };
 		D04700891A15A50C001411B3 /* GameKitMatchData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameKitMatchData.swift; sourceTree = "<group>"; };
-		D047008A1A15A50C001411B3 /* GameKitTurnBasedMatchHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameKitTurnBasedMatchHelper.h; sourceTree = "<group>"; };
-		D047008B1A15A50C001411B3 /* GameKitTurnBasedMatchHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameKitTurnBasedMatchHelper.m; sourceTree = "<group>"; };
 		D047008C1A15A50C001411B3 /* GameSceneEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameSceneEvents.swift; sourceTree = "<group>"; };
 		D047008D1A15A50C001411B3 /* GridPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridPosition.swift; sourceTree = "<group>"; };
 		D047008E1A15A50C001411B3 /* Piece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
@@ -179,6 +175,9 @@
 		D053485D1A14B98200331484 /* FourzyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FourzyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05348621A14B98200331484 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D05348631A14B98200331484 /* FourzyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourzyTests.swift; sourceTree = "<group>"; };
+		D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		D08486EC1A3586F8002B5197 /* GamesListCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GamesListCell.xib; sourceTree = "<group>"; };
+		D08486EE1A3589C3002B5197 /* GamesListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GamesListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -282,33 +281,31 @@
 		D05348461A14B98200331484 /* Fourzy */ = {
 			isa = PBXGroup;
 			children = (
-				D06026161A16749E00AD36CC /* Boards */,
-				D04700811A15A50C001411B3 /* BaseScene.swift */,
+				D05348491A14B98200331484 /* AppDelegate.swift */,
 				D04700831A15A50C001411B3 /* Board.swift */,
 				D04700801A15A50C001411B3 /* Array2D.swift */,
 				D04700841A15A50C001411B3 /* FConstants.swift */,
 				D04700851A15A50C001411B3 /* FExtensions.swift */,
-				D04700861A15A50C001411B3 /* Fourzy-Bridging-Header.h */,
-				D04700871A15A50C001411B3 /* GameKitHelper.h */,
-				D04700881A15A50C001411B3 /* GameKitHelper.m */,
 				D04700891A15A50C001411B3 /* GameKitMatchData.swift */,
-				D047008A1A15A50C001411B3 /* GameKitTurnBasedMatchHelper.h */,
-				D047008B1A15A50C001411B3 /* GameKitTurnBasedMatchHelper.m */,
+				D04700811A15A50C001411B3 /* BaseScene.swift */,
 				D053484D1A14B98200331484 /* GameScene.swift */,
 				D047008C1A15A50C001411B3 /* GameSceneEvents.swift */,
 				D047008D1A15A50C001411B3 /* GridPosition.swift */,
+				D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */,
 				D047008E1A15A50C001411B3 /* Piece.swift */,
-				D047008F1A15A50C001411B3 /* resources */,
 				D04700C11A15A50C001411B3 /* Set.swift */,
-				D04700C21A15A50C001411B3 /* Sprites.atlas */,
 				D04700C31A15A50C001411B3 /* Token.swift */,
-				D04700C41A15A50C001411B3 /* ViewController.swift */,
-				D05348491A14B98200331484 /* AppDelegate.swift */,
 				D053484B1A14B98200331484 /* GameScene.sks */,
 				D053484F1A14B98200331484 /* GameViewController.swift */,
+				D04700C41A15A50C001411B3 /* ViewController.swift */,
+				D08486EC1A3586F8002B5197 /* GamesListCell.xib */,
+				D08486EE1A3589C3002B5197 /* GamesListCell.swift */,
 				D05348511A14B98200331484 /* Main.storyboard */,
 				D05348541A14B98200331484 /* Images.xcassets */,
 				D05348561A14B98200331484 /* LaunchScreen.xib */,
+				D06026161A16749E00AD36CC /* Boards */,
+				D047008F1A15A50C001411B3 /* resources */,
+				D04700C21A15A50C001411B3 /* Sprites.atlas */,
 				D05348471A14B98200331484 /* Supporting Files */,
 			);
 			path = Fourzy;
@@ -437,6 +434,7 @@
 				D04700FF1A15A50C001411B3 /* up_arrow_token.png in Resources */,
 				D04700EC1A15A50C001411B3 /* highlight.png in Resources */,
 				D04700D51A15A50C001411B3 /* bluepiece.png in Resources */,
+				D08486ED1A3586F8002B5197 /* GamesListCell.xib in Resources */,
 				D04700E11A15A50C001411B3 /* greypiece.png in Resources */,
 				D04700D81A15A50C001411B3 /* down_arrow_token.png in Resources */,
 				D04700E31A15A50C001411B3 /* grid1.png in Resources */,
@@ -524,18 +522,18 @@
 			files = (
 				D053484E1A14B98200331484 /* GameScene.swift in Sources */,
 				D04700C51A15A50C001411B3 /* Array2D.swift in Sources */,
+				D08486EF1A3589C3002B5197 /* GamesListCell.swift in Sources */,
 				D04700CA1A15A50C001411B3 /* FExtensions.swift in Sources */,
 				D04700C81A15A50C001411B3 /* Board.swift in Sources */,
 				D05348501A14B98200331484 /* GameViewController.swift in Sources */,
 				D04701021A15A50C001411B3 /* Set.swift in Sources */,
+				D056BDE31A2C2E2900DCEAF6 /* Utilities.swift in Sources */,
 				D04700C91A15A50C001411B3 /* FConstants.swift in Sources */,
 				D04701041A15A50C001411B3 /* Token.swift in Sources */,
-				D04700CB1A15A50C001411B3 /* GameKitHelper.m in Sources */,
 				D04701051A15A50C001411B3 /* ViewController.swift in Sources */,
 				D04700CF1A15A50C001411B3 /* GridPosition.swift in Sources */,
 				D04700D01A15A50C001411B3 /* Piece.swift in Sources */,
 				D053484A1A14B98200331484 /* AppDelegate.swift in Sources */,
-				D04700CD1A15A50C001411B3 /* GameKitTurnBasedMatchHelper.m in Sources */,
 				D04700CE1A15A50C001411B3 /* GameSceneEvents.swift in Sources */,
 				D04700CC1A15A50C001411B3 /* GameKitMatchData.swift in Sources */,
 				D04700C61A15A50C001411B3 /* BaseScene.swift in Sources */,

@@ -18,10 +18,12 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     var authenticationViewController: UIViewController!
     @IBOutlet var matchListTableView: UITableView?
     var matches = []
+    var players = [String: GKPlayer]()
     var refreshControl:UIRefreshControl!
     var lastError:NSError!
     var enableGameCenter:Bool!
     var loadingMatches:Bool!
+    var gameViewController:GameViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,15 +31,14 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showAuthenticationViewController", name: PresentAuthenticationViewController, object: nil)
         
         authenticateLocalPlayer()
-        //GameKitTurnBasedMatchHelper.sharedInstance().authenticateLocalPlayer()
-        
-        //GameKitTurnBasedMatchHelper.sharedInstance().viewControllerDelegate = self;
         
         self.refreshControl = UIRefreshControl();
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh");
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
 
         self.matchListTableView?.addSubview(refreshControl)
+        
+        self.matchListTableView?.registerNib(UINib(nibName: "GamesListCell", bundle: nil), forCellReuseIdentifier: "GamesListCell")
     }
     
     func authenticateLocalPlayer() {
@@ -77,8 +78,6 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func localPlayerWasAuthenticated() {
-        
-        //[GKTurnBasedEventHandler sharedTurnBasedEventHandler].delegate = self;
         loadMatches()
     }
 
@@ -126,7 +125,6 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     func refresh(sender:AnyObject) {
         println("refresh")
-        //GameKitTurnBasedMatchHelper.sharedInstance().loadMatches()
         loadMatches()
     }
     
@@ -151,11 +149,12 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         request.minPlayers = 2;
         request.maxPlayers = 2;
         request.defaultNumberOfPlayers = 2;
-        request.playerAttributes = 0xFFFFFFFF;
+        //request.playerAttributes = 0xFFFFFFFF;
         
         var mmvc = GKTurnBasedMatchmakerViewController(matchRequest: request)
         mmvc.turnBasedMatchmakerDelegate = self;
-
+        mmvc.showExistingMatches = false
+        
         self.presentViewController(mmvc, animated:true, completion:nil)
     }
     
@@ -169,49 +168,42 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.Value2, reuseIdentifier: nil)
-
+        
+//        let cell = UITableViewCell(style: UITableViewCellStyle.Value2, reuseIdentifier: "GamesListCell") as GamesListCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("GamesListCell", forIndexPath: indexPath) as GamesListCell
+        
         let match: GKTurnBasedMatch = self.matches[indexPath.row] as GKTurnBasedMatch
+        let opponentParticipant = getOpponentForMatch(match)
         
-        cell.textLabel.text = match.matchID
-        
-        if match.status == GKTurnBasedMatchStatus.Ended {
-            cell.detailTextLabel?.text = "Game Over"
+        if opponentParticipant.playerID != nil {
+            let opponentPlayer = self.players[opponentParticipant.playerID]
+            cell.opponentDisplayNameLabel?.text = opponentPlayer?.displayName
         } else {
-            let localPlayerID = GKLocalPlayer.localPlayer().playerID
-            println(match.currentParticipant)
-            if let currentParticipant = match.currentParticipant.playerID {
-                if match.currentParticipant.playerID == localPlayerID {
-                    cell.detailTextLabel?.text = "Your Turn"
-                } else  {
-                    cell.detailTextLabel?.text = "Waiting For Turn"
-                }
-            } else {
-                cell.detailTextLabel?.text = "Waiting For Turn"
-            }
+            cell.opponentDisplayNameLabel?.text = "Waiting For Opponent"
         }
         
+        if match.status == GKTurnBasedMatchStatus.Ended {
+            cell.matchStatusLabel?.text = "Game Over"
+        } else {
+            let localPlayerID = GKLocalPlayer.localPlayer().playerID
 
-
-//        var opponentPlayerId: String
-//        
-//        for participant in matchData.participants {
-//            if participant.playerID != nil {
-//                if participant.playerID != localPlayerID {
-//                    opponentPlayerId = participant.playerID
-//                }
-//            } else {
-//                opponentPlayerId = "empty"
-//            }
-//
-//        }
+            if let currentParticipant = match.currentParticipant.playerID {
+                if match.currentParticipant.playerID == localPlayerID {
+                    cell.matchStatusLabel?.text = "Your Turn"
+                } else  {
+                    cell.matchStatusLabel?.text = "Waiting For Turn"
+                }
+            } else {
+                cell.matchStatusLabel?.text = "Waiting For Turn"
+            }
+        }
         
         return cell;
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         println("select match" + self.matches[indexPath.row].matchID);
-        //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch = self.matches[indexPath.row] as GKTurnBasedMatch
+
         let match = self.matches[indexPath.row] as GKTurnBasedMatch
         self.performSegueWithIdentifier("segueToGamePlay", sender: match)
     }
@@ -227,7 +219,25 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         if let matchList = matches as? [GKTurnBasedMatch]
         {
             self.matches = matchList;
-            self.matchListTableView!.reloadData()
+            var playerList:[String] = []
+            for match in self.matches {
+                
+                var matchParticipants = match.participants as [GKTurnBasedParticipant]
+                let playerIDs = matchParticipants.map { ($0 as GKTurnBasedParticipant).playerID }
+                
+                for playerID in playerIDs {
+                    if playerID != nil {
+                        if !contains(playerList, playerID) {
+                            playerList.append(playerID)
+                        }
+                    }
+                }
+            }
+            if playerList.count > 0 {
+                loadPlayerData(playerList)
+            } else {
+                self.matchListTableView!.reloadData()
+            }
         }
         
         self.refreshControl.endRefreshing()
@@ -235,20 +245,18 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     func enterNewGame(match:GKTurnBasedMatch) {
         println("Entering new game...")
-        //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch = match
         self.performSegueWithIdentifier("segueToGamePlay", sender: match)
     }
 
     func layoutMatch(match: GKTurnBasedMatch) {
         println("layoutMatch...")
-        //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch = match
         self.performSegueWithIdentifier("segueToGamePlay", sender: match)
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         println("prepareForSegue")
         if segue.identifier == "segueToGamePlay" {
-           let gameViewController = segue.destinationViewController as GameViewController
+            gameViewController = segue.destinationViewController as GameViewController
             //gameViewController.delegate = self
             if sender != nil {
                 gameViewController.match = sender as GKTurnBasedMatch
@@ -285,7 +293,54 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func player(player: GKPlayer!, receivedTurnEventForMatch match: GKTurnBasedMatch!, didBecomeActive: Bool) {
-        println("receivedTurnEventForMatch:didBecomeActive: \(didBecomeActive)")
-        self.performSegueWithIdentifier("segueToGamePlay", sender: match)
+        println("receivedTurnEventForMatch:didBecomeActive:ViewController \(didBecomeActive)")
+
+        loadMatches()
+    }
+    
+    func player(player: GKPlayer!, matchEnded match: GKTurnBasedMatch!) {
+        loadMatches()
+    }
+    
+    func loadPlayerPhoto(player: GKPlayer) {
+        player.loadPhotoForSize(GKPhotoSizeSmall, withCompletionHandler: { (photo, error) -> Void in
+            if (photo != nil) {
+                //self.storePhoto(photo, ForPlayer:player);
+            }
+            if (error != nil) {
+                self.setLastError(error!)
+            }
+        })
+    }
+    
+    func loadPlayerData(playerList:[AnyObject]) {
+
+        if playerList.count > 0 {
+            
+            GKPlayer.loadPlayersForIdentifiers(playerList, withCompletionHandler: { (players, error) -> Void in
+                if (error != nil) {
+                    self.setLastError(error!)
+                }
+                if let playersFound = players as? [GKPlayer] {
+                    for player in playersFound {
+                        self.players[player.playerID] = player
+                    }
+                }
+                self.matchListTableView!.reloadData()
+            })
+        }
+    }
+    
+    func topMostController() -> UIViewController? {
+
+        if var topController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            while ((topController.presentedViewController) != nil) {
+                topController = topController.presentedViewController!
+            }
+            
+            return topController
+        }
+        
+        return nil
     }
 }
