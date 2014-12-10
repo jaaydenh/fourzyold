@@ -209,22 +209,37 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func showAuthenticationViewController() {
-        //self.presentViewController(GameKitTurnBasedMatchHelper.sharedInstance().authenticationViewController, animated: true, completion: nil)
         self.presentViewController(authenticationViewController, animated: true, completion: nil)
     }
     
+    func sortMatchesByPlayerTurn(matches: [GKTurnBasedMatch]) -> [GKTurnBasedMatch] {
+        var matchList = matches as [GKTurnBasedMatch]
+        for match in matches {
+            if match.currentParticipant != nil && match.currentParticipant.playerID != nil {
+                if match.currentParticipant.playerID == GKLocalPlayer.localPlayer().playerID {
+                    let index = find(matches, match)
+                    matchList.removeAtIndex(index!)
+                    matchList.insert(match, atIndex: 0)
+                }
+            }
+        }
+        
+        return matchList
+    }
+    
     func didFetchMatches(matches: [AnyObject]!) {
-        println("didFetchMatches");
+        println("didFetchMatches")
         
         if let matchList = matches as? [GKTurnBasedMatch]
         {
-            self.matches = matchList;
+            self.matches = sortMatchesByPlayerTurn(matchList)
             var playerList:[String] = []
             for match in self.matches {
                 
                 var matchParticipants = match.participants as [GKTurnBasedParticipant]
                 let playerIDs = matchParticipants.map { ($0 as GKTurnBasedParticipant).playerID }
                 
+                //TODO: check if players dictionary already contains a player before loading that players data
                 for playerID in playerIDs {
                     if playerID != nil {
                         if !contains(playerList, playerID) {

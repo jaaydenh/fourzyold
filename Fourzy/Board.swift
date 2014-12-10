@@ -105,7 +105,7 @@ class Board: SKNode {
     
     // MARK: Querying the Board
     
-    // Returns the cookie at the specified column and row, or nil when there is none.
+    // Returns the piece at the specified column and row, or nil when there is none.
     func pieceAtColumn(column: Int, row: Int) -> Piece? {
         assert(column >= 0 && column < NumColumns)
         assert(row >= 0 && row < NumRows)
@@ -116,7 +116,7 @@ class Board: SKNode {
         return pieces.getArray()
     }
     
-    // Determines whether there's a tile at the specified column and row.
+    // Determines whether there's a token at the specified column and row.
     func tokenAtColumn(column: Int, row: Int) -> Token? {
         assert(column >= 0 && column < NumColumns)
         assert(row >= 0 && row < NumRows)

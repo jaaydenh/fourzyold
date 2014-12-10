@@ -50,7 +50,7 @@ extension GameScene {
 
             rotateActivePlayer()
             
-//            [self removeHighlights];
+            self.removeHighlights()
             
             // update board model
             for activePiece in activePieces {
@@ -115,8 +115,6 @@ extension GameScene {
             
             //[self removeHighlights];
             
-            //var piece: Piece;
-            
             let (success, column, row, direction) = convertPoint(touchLocation)
             if success {
                 println("touchlocation: x: \(touchLocation.x), y: \(touchLocation.y)")
@@ -126,6 +124,7 @@ extension GameScene {
                 
                 if let piece = placePieceAtColumn(column, row: row, pieceType: activePlayer, direction: direction) {
                     activePieces.append(piece)
+                    self.addGamePieceHighlightFrom(row, column: column, direction: direction)
                 }
             }
         }

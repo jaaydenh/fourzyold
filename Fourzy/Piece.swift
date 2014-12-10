@@ -82,32 +82,3 @@ enum PieceType: Int, Printable {
 func ==(lhs: Piece, rhs: Piece) -> Bool {
     return lhs.column == rhs.column && lhs.row == rhs.row
 }
-
-
-
-
-//import SpriteKit
-//
-//class Piece: SKSpriteNode {
-//
-//    init(pieceType:PieceType, direction:Direction, row:NSInteger, column:NSInteger) {
-//
-//        super.init(texture: getPieceTexture(pieceType), color: nil, size: CGSizeMake(50.0, 50.0))
-//    }
-//
-//    required init(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    func getPieceTexture(pieceType:PieceType) -> SKTexture {
-//
-//        switch pieceType {
-//        case .Player1:
-//            return SKTexture(imageNamed: "gamepiece4")
-//        case .Player2:
-//            return SKTexture(imageNamed: "gamepiece6")
-//        default:
-//            return SKTexture(imageNamed: "gamepiece4")
-//        }
-//    }
-//}

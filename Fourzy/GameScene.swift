@@ -736,6 +736,66 @@ class GameScene:BaseScene {
     //[Flurry logEvent:@"Game_Over" withParameters:winParams];
     }
     
+    func removeHighlights() {
+        
+        self.piecesLayer.enumerateChildNodesWithName("highlight", usingBlock: { (node, stop) -> Void in
+            node.removeFromParent()
+        })
+    }
+    
+    func addGamePieceHighlightFrom(row: Int, column: Int, direction: Direction) {
+    
+        var startRow = row;
+        var startColumn = column;
+        
+        self.removeHighlights()
+    
+        for piece in self.activePieces {
+    
+            if (startRow  < 0) {
+                startRow = 0;
+            }
+            
+            if (startColumn < 0) {
+                startColumn = 0;
+            }
+    
+            for position in piece.moveDestinations.reverse() {
+                let highlight = SKSpriteNode(imageNamed: "highlight")
+                highlight.alpha = 0.2
+                if (piece.pieceType == PieceType.Player2) {
+                    highlight.color = UIColor.orangeColor()
+                    highlight.colorBlendFactor = 0.9
+                } else if (piece.pieceType == PieceType.Player1) {
+                    highlight.color = UIColor.greenColor()
+                    highlight.colorBlendFactor = 0.3
+                }
+            
+                highlight.anchorPoint = CGPointMake(0.0, 0.0)
+                highlight.name = "highlight"
+            
+                if (direction == .Down) {
+                    highlight.size = CGSize(width: kTileWidth, height: (startRow - position.row + 1) * kTileHeight);
+                    highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y:  (position.row * kTileHeight) + 40);
+                } else if (direction == .Up) {
+                    highlight.size = CGSize(width: kTileWidth, height: (position.row - startRow + 1) * kTileHeight);
+                    highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y: (startRow * kTileHeight) + 40);
+                } else if (direction == .Right) {
+                    highlight.size = CGSize(width: (position.column - startColumn + 1) * kTileWidth, height: kTileHeight);
+                    highlight.position = CGPoint(x: (column * kTileWidth) + kGridXOffset, y: position.row * kTileHeight + 40);
+                } else if (direction == .Left) {
+                    highlight.size = CGSize(width: (startColumn - position.column + 1) * kTileWidth, height: kTileHeight);
+                    highlight.position = CGPoint(x: kGridXOffset + (position.column * kTileWidth), y: position.row * kTileHeight + 40);
+                }
+            
+                startRow = position.row;
+                startColumn = position.column;
+            
+                self.piecesLayer.addChild(highlight)
+            }
+        }
+    }
+    
     override class func loadSceneAssets() {
         
         //Goblin.loadSharedAssets()
