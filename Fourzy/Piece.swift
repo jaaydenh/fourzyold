@@ -9,8 +9,8 @@
 import SpriteKit
 
 class Piece: Printable, Hashable {
-    let column: Int
-    let row: Int
+    var column: Int
+    var row: Int
     let pieceType: PieceType
     let direction: Direction
     var moveDestination: CGPoint!
@@ -27,7 +27,7 @@ class Piece: Printable, Hashable {
     }
     
     var description: String {
-        return "type:\(pieceType) square:(\(column),\(row))"
+        return "\(pieceType)"
     }
     
     var hashValue: Int {
@@ -42,16 +42,38 @@ class Piece: Printable, Hashable {
     func generateActions() {
         if var lastPosition = sprite?.position {
             for position in moveDestinations.reverse() {
-                let moveLocation = CGPoint(x: position.column * Int(kTileWidth) + Int(kTapAreaWidth), y: position.row * Int(kTileHeight) + Int(kTapAreaWidth))
+                let moveLocation = CGPoint(x: position.column * Int(kTileWidth) + Int(kTapAreaWidth) + kPieceSize/2, y: position.row * Int(kTileHeight) + Int(kTapAreaWidth) + kPieceSize/2)
                 var xDiff:Double = Double(moveLocation.x - lastPosition.x)
                 var yDiff:Double = Double(moveLocation.y - lastPosition.y)
                 var distance = sqrt(xDiff * xDiff + yDiff * yDiff)
                 let move = SKAction.moveTo(moveLocation, duration: distance/260.0)
                 actions.append(move)
-                lastPosition = moveLocation;
-                moveDestination = moveLocation;
+                lastPosition = moveLocation
+                moveDestination = moveLocation
             }
         }
+    }
+    
+    func pulseAnimation() {
+        sprite?.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        var pulseActions: [SKAction] = [];
+        var moveActions: [SKAction] = [];
+        let growAction = SKAction.resizeToWidth(CGFloat(kPieceSize+10), height: CGFloat(kPieceSize+10), duration: 0.5)
+        let growMove = SKAction.moveByX(-0.5, y: -0.5, duration: 0.5)
+        let shrinkAction = SKAction.resizeToWidth(CGFloat(kPieceSize), height: CGFloat(kPieceSize), duration: 0.5)
+        let shrinkMove = SKAction.moveByX(0.5, y: 0.5, duration: 0.5)
+        
+        pulseActions.append(growAction)
+        moveActions.append(growMove)
+        pulseActions.append(shrinkAction)
+        moveActions.append(shrinkMove)
+
+        let sequence1 = SKAction.sequence(pulseActions)
+        let sequence2 = SKAction.sequence(moveActions)
+        let pulse = SKAction.repeatActionForever(sequence1)
+        //let move = SKAction.repeatActionForever(sequence2)
+        sprite?.runAction(pulse)
+        //sprite?.runAction(move)
     }
     
     func animate() {
@@ -60,6 +82,14 @@ class Piece: Printable, Hashable {
             sprite.removeAllActions()
             sprite.runAction(sequence)
         }
+    }
+    
+    func setColumn(column: Int) {
+        self.column = column
+    }
+    
+    func setRow(row: Int) {
+        self.row = row
     }
 }
 
@@ -75,7 +105,7 @@ enum PieceType: Int, Printable {
     }
     
     var description: String {
-        return spriteName
+        return String(rawValue)
     }
 }
 

@@ -84,6 +84,10 @@
 		D056BDE31A2C2E2900DCEAF6 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */; };
 		D08486ED1A3586F8002B5197 /* GamesListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D08486EC1A3586F8002B5197 /* GamesListCell.xib */; };
 		D08486EF1A3589C3002B5197 /* GamesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08486EE1A3589C3002B5197 /* GamesListCell.swift */; };
+		D097BDEA1A3EB07F0081337F /* Board_1.json in Resources */ = {isa = PBXBuildFile; fileRef = D097BDE71A3EB07F0081337F /* Board_1.json */; };
+		D097BDEB1A3EB07F0081337F /* Board_2.json in Resources */ = {isa = PBXBuildFile; fileRef = D097BDE81A3EB07F0081337F /* Board_2.json */; };
+		D097BDEC1A3EB07F0081337F /* Board_3.json in Resources */ = {isa = PBXBuildFile; fileRef = D097BDE91A3EB07F0081337F /* Board_3.json */; };
+		D097BDEE1A3FBBA20081337F /* PlayerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D097BDED1A3FBBA20081337F /* PlayerCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,6 +182,10 @@
 		D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		D08486EC1A3586F8002B5197 /* GamesListCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GamesListCell.xib; sourceTree = "<group>"; };
 		D08486EE1A3589C3002B5197 /* GamesListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GamesListCell.swift; sourceTree = "<group>"; };
+		D097BDE71A3EB07F0081337F /* Board_1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_1.json; sourceTree = "<group>"; };
+		D097BDE81A3EB07F0081337F /* Board_2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_2.json; sourceTree = "<group>"; };
+		D097BDE91A3EB07F0081337F /* Board_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_3.json; sourceTree = "<group>"; };
+		D097BDED1A3FBBA20081337F /* PlayerCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,6 +295,7 @@
 				D04700841A15A50C001411B3 /* FConstants.swift */,
 				D04700851A15A50C001411B3 /* FExtensions.swift */,
 				D04700891A15A50C001411B3 /* GameKitMatchData.swift */,
+				D097BDED1A3FBBA20081337F /* PlayerCache.swift */,
 				D04700811A15A50C001411B3 /* BaseScene.swift */,
 				D053484D1A14B98200331484 /* GameScene.swift */,
 				D047008C1A15A50C001411B3 /* GameSceneEvents.swift */,
@@ -298,8 +307,8 @@
 				D053484B1A14B98200331484 /* GameScene.sks */,
 				D053484F1A14B98200331484 /* GameViewController.swift */,
 				D04700C41A15A50C001411B3 /* ViewController.swift */,
-				D08486EC1A3586F8002B5197 /* GamesListCell.xib */,
 				D08486EE1A3589C3002B5197 /* GamesListCell.swift */,
+				D08486EC1A3586F8002B5197 /* GamesListCell.xib */,
 				D05348511A14B98200331484 /* Main.storyboard */,
 				D05348541A14B98200331484 /* Images.xcassets */,
 				D05348561A14B98200331484 /* LaunchScreen.xib */,
@@ -339,6 +348,9 @@
 		D06026161A16749E00AD36CC /* Boards */ = {
 			isa = PBXGroup;
 			children = (
+				D097BDE71A3EB07F0081337F /* Board_1.json */,
+				D097BDE81A3EB07F0081337F /* Board_2.json */,
+				D097BDE91A3EB07F0081337F /* Board_3.json */,
 				D04700821A15A50C001411B3 /* Board_0.json */,
 			);
 			name = Boards;
@@ -450,6 +462,7 @@
 				D04700D41A15A50C001411B3 /* blocker_token.png in Resources */,
 				D04700D91A15A50C001411B3 /* gamepiece.png in Resources */,
 				D04700FA1A15A50C001411B3 /* tap_area.png in Resources */,
+				D097BDEB1A3EB07F0081337F /* Board_2.json in Resources */,
 				D04700E81A15A50C001411B3 /* grid6.png in Resources */,
 				D04700EA1A15A50C001411B3 /* grid8.png in Resources */,
 				D04700F71A15A50C001411B3 /* right_arrow_token.png in Resources */,
@@ -461,6 +474,7 @@
 				D04700E51A15A50C001411B3 /* grid3.png in Resources */,
 				D04700E71A15A50C001411B3 /* grid5.png in Resources */,
 				D04700F01A15A50C001411B3 /* menu_button.png in Resources */,
+				D097BDEA1A3EB07F0081337F /* Board_1.json in Resources */,
 				D05348581A14B98200331484 /* LaunchScreen.xib in Resources */,
 				D04701011A15A50C001411B3 /* yellowpiece.png in Resources */,
 				D05348551A14B98200331484 /* Images.xcassets in Resources */,
@@ -477,6 +491,7 @@
 				D04700F61A15A50C001411B3 /* pinkpiece.png in Resources */,
 				D04700D21A15A50C001411B3 /* arrow1.mp3 in Resources */,
 				D04700D71A15A50C001411B3 /* die.wav in Resources */,
+				D097BDEC1A3EB07F0081337F /* Board_3.json in Resources */,
 				D04701001A15A50C001411B3 /* win1.mp3 in Resources */,
 				D04700EB1A15A50C001411B3 /* grid9.png in Resources */,
 				D04700DC1A15A50C001411B3 /* gamepiece3.png in Resources */,
@@ -527,6 +542,7 @@
 				D04700C81A15A50C001411B3 /* Board.swift in Sources */,
 				D05348501A14B98200331484 /* GameViewController.swift in Sources */,
 				D04701021A15A50C001411B3 /* Set.swift in Sources */,
+				D097BDEE1A3FBBA20081337F /* PlayerCache.swift in Sources */,
 				D056BDE31A2C2E2900DCEAF6 /* Utilities.swift in Sources */,
 				D04700C91A15A50C001411B3 /* FConstants.swift in Sources */,
 				D04701041A15A50C001411B3 /* Token.swift in Sources */,

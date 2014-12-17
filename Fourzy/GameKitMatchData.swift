@@ -12,6 +12,7 @@ class GameKitMatchData {
     var tokenLayout:[Int] = []
     var moves:[Int] = []
     var currentMove:[Int] = []
+    var moveNumber:Int = 0
     
     init() {
         
@@ -19,30 +20,33 @@ class GameKitMatchData {
     
     init(matchData: NSData) {
         if let combinedDataArray = NSKeyedUnarchiver.unarchiveObjectWithData(matchData) as? [Int] {
-            //if combinedDataArray.count >= (Int(kNumRows) * Int(kNumColumns)) {
-                
-                //let tokenLayoutRangeEnd = Int(kNumRows) * Int(kNumColumns)
-                //tokenLayout = Array(combinedDataArray[0...tokenLayoutRangeEnd])
-                
-                let movesRangeStart = Int(kNumRows) * Int(kNumColumns)
-                let movesRangeEnd = combinedDataArray.count + movesRangeStart
-                //moves = Array(combinedDataArray[movesRangeStart...movesRangeEnd])
-                moves = combinedDataArray
-            //} else {
-                //TODO: throw error here
-                //println("Match data is corrupt when initializing matchdata")
-            //}
+            moveNumber = combinedDataArray[0]
+            
+            if moveNumber > 0 {
+                let movesRangeStart = 1
+                let movesRangeEnd = moveNumber * 3
+                moves = Array(combinedDataArray[movesRangeStart...movesRangeEnd])
+            }
+            
+            if combinedDataArray.count >= (kNumRows * kNumColumns) + moveNumber * 3 + 1  {
+                let tokenLayoutRangeStart = moveNumber * 3 + 1
+                let tokenLayoutRangeEnd = tokenLayoutRangeStart + kNumRows * kNumColumns - 1
+                tokenLayout = Array(combinedDataArray[tokenLayoutRangeStart...tokenLayoutRangeEnd])
+            }
         }
     }
     
     func encodeMatchData() -> NSData {
-        var finalDataArray:[Int] = []
+        var combinedDataArray:[Int] = []
         if currentMove.count > 0 {
-            finalDataArray = tokenLayout + moves + currentMove
+            moveNumber++
         }
-        let matchData:NSData = NSKeyedArchiver.archivedDataWithRootObject(finalDataArray)
+        combinedDataArray.append(moveNumber)
+        combinedDataArray.extend(moves + currentMove + tokenLayout)
+        
+        let matchData:NSData = NSKeyedArchiver.archivedDataWithRootObject(combinedDataArray)
 
-        return matchData;
+        return matchData
     }
 }
 

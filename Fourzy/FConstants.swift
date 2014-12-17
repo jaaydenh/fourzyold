@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Party Troll. All rights reserved.
 //
 
-let kPieceSize = 30
+let kPieceSize: Int = 30
 let kTapAreaWidth: Int = 40
 let kNumRows: Int = 8
 let kNumColumns: Int = 8
@@ -25,7 +25,3 @@ enum Player {
 enum Direction:Int {
     case Up = 1, Down, Left, Right
 }
-
-//enum TokenType {
-//    case None, Sticky, UpArrow, DownArrow, LeftArrow, RightArrow, Blocker
-//}

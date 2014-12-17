@@ -8,7 +8,6 @@
 
 import SpriteKit
 import GameKit
-//import GameKitMatchData
 
 class GameScene:BaseScene {
     
@@ -28,7 +27,7 @@ class GameScene:BaseScene {
     
     //var backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     var gameData: GameKitMatchData = GameKitMatchData()
-    var activePlayer:PieceType = PieceType.Player1;
+    var activePlayer:PieceType = PieceType.Player1
     var currentMatch:GKTurnBasedMatch!
     
      override init(size: CGSize) {
@@ -51,7 +50,7 @@ class GameScene:BaseScene {
         createContent()
     }
     
-     override func didMoveToView(view: SKView) {
+    override func didMoveToView(view: SKView) {
         println("didMoveToView")
 //        piecesLayer.removeAllChildren()
 //        addTapAreas()
@@ -66,14 +65,14 @@ class GameScene:BaseScene {
     
     func touchedActivePiece(point: CGPoint) -> Bool {
         if activePieces.count > 0 {
-            let activePiece = activePieces[0];
-            var touchRect:CGRect;
+            let activePiece = activePieces[activePieces.count-1]
+            var touchRect:CGRect
             var sprite = activePiece.sprite
             if let sprite = activePiece.sprite {
                 if activePiece.direction == .Up || activePiece.direction == .Down {
-                    touchRect = CGRectMake(sprite.position.x - 8, sprite.position.y - 50, 46.0, 130.0);
+                    touchRect = CGRectMake(sprite.position.x - 8, sprite.position.y - 50, 46.0, 130.0)
                 } else {
-                    touchRect = CGRectMake(sprite.position.x - 50, sprite.position.y - 8, 130.0, 46.0);
+                    touchRect = CGRectMake(sprite.position.x - 50, sprite.position.y - 8, 130.0, 46.0)
                 }
                 
                 if CGRectContainsPoint(touchRect, point) {
@@ -88,32 +87,41 @@ class GameScene:BaseScene {
     func addSpriteForPiece(piece: Piece, isPieceOnBoard: Bool) {
         let sprite = SKSpriteNode(imageNamed: piece.pieceType.spriteName)
         if isPieceOnBoard {
-            sprite.position = pointInsideBoardForColumn(piece.column, row:piece.row, direction:piece.direction)
+            sprite.position = pointInsideBoardForColumn(piece.column, row:piece.row)
         } else {
             sprite.position = pointOutsideBoardForColumn(piece.column, row:piece.row, direction:piece.direction)
         }
         
-        sprite.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-        sprite.size = CGSize(width: 30.0, height: 30.0)
+        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        sprite.size = CGSize(width: kPieceSize, height: kPieceSize)
         piecesLayer.addChild(sprite)
         piece.sprite = sprite
     }
     
+    func addSpriteForToken(token: Token) {
+        let sprite = SKSpriteNode(imageNamed: token.tokenType.spriteName)
+        sprite.position = pointInsideBoardForColumn(token.column, row: token.row)
+        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        sprite.size = CGSize(width: kPieceSize, height: kPieceSize)
+        piecesLayer.addChild(sprite)
+        token.sprite = sprite
+    }
+    
     // Converts a column,row pair into a CGPoint that is relative to the pieceLayer and is inside the board area.
-    func pointInsideBoardForColumn(column: Int, row: Int, direction: Direction) -> CGPoint {
-        return CGPoint(x: column * kTileWidth + kTapAreaWidth, y: row * kTileHeight + kTapAreaWidth);
+    func pointInsideBoardForColumn(column: Int, row: Int) -> CGPoint {
+        return CGPoint(x: column * kTileWidth + kTapAreaWidth + kPieceSize/2, y: row * kTileHeight + kTapAreaWidth + kPieceSize/2)
     }
     
     // Converts a column,row pair into a CGPoint that is relative to the pieceLayer and is outside the board area.
     func pointOutsideBoardForColumn(column: Int, row: Int, direction: Direction) -> CGPoint {
         if (direction == .Up) {
-            return CGPoint(x: column * kTileWidth + kTapAreaWidth, y: 5);
+            return CGPoint(x: column * kTileWidth + kTapAreaWidth + kPieceSize/2, y: 5 + kPieceSize/2)
         } else if (direction == .Down) {
-            return CGPoint(x: column * kTileWidth + kGridXOffset, y: (row+1) * kTileHeight + kTapAreaWidth + 5);
+            return CGPoint(x: column * kTileWidth + kGridXOffset + kPieceSize/2, y: (row+1) * kTileHeight + kTapAreaWidth + 5 + kPieceSize/2)
         } else if (direction == .Left) {
-            return CGPoint(x: (column+1) * kTileWidth + kTapAreaWidth + 5, y: row * kTileHeight + kTapAreaWidth);
+            return CGPoint(x: (column+1) * kTileWidth + kTapAreaWidth + 5 + kPieceSize/2, y: row * kTileHeight + kTapAreaWidth + kPieceSize/2)
         } else if (direction == .Right) {
-            return CGPoint(x: 5, y: row * kTileHeight + kTapAreaWidth);
+            return CGPoint(x: 5 + kPieceSize/2, y: row * kTileHeight + kTapAreaWidth + kPieceSize/2)
         }
         
         
@@ -124,23 +132,39 @@ class GameScene:BaseScene {
     
     func rotateActivePlayer() {
         if (activePlayer == .Player1) {
-            activePlayer = .Player2;
+            activePlayer = .Player2
         } else {
-            activePlayer = .Player1;
+            activePlayer = .Player1
+        }
+    }
+    
+    func loadPlayerPhotos() {
+        let currentParticipant = getOpponentForMatch(currentMatch)
+        if let playerID = currentParticipant.playerID {
+            if let playerImage = PlayerCache.sharedManager.playerPhotos[playerID] {
+                let playerTexture = SKTexture(image: playerImage)
+                let player1ImageNode = SKSpriteNode(texture: playerTexture, size: CGSize(width: 50, height: 50))
+                player1ImageNode.position = CGPoint(x: -60, y: 200)
+                addChild(player1ImageNode)
+            }
         }
     }
     
     func createContent() {
         
-        //[self setupTapAreas];
+        //let playerImageView = UIImageView(image: PlayerCache.sharedManager.playerPhotos[currentParticipant.playerID])
+        //playerImageView.frame = CGRect(x: 50, y: 50, width: 100, height: 100)
+        //addChild(playerImageView)
+        
+        //[self setupTapAreas]
         
         var winnerLabel = SKLabelNode(fontNamed:"Arial Bold")
         winnerLabel.fontSize = 26
         winnerLabel.fontColor = SKColor.blackColor()
-        winnerLabel.position = CGPointMake(0, 0);
-        winnerLabel.zPosition = 1.0;
-        winnerLabel.hidden = false;
-        winnerLabel.name = kWinnerLabelName;
+        winnerLabel.position = CGPointMake(0, 0)
+        winnerLabel.zPosition = 1.0
+        winnerLabel.hidden = false
+        winnerLabel.name = kWinnerLabelName
         
         addChild(winnerLabel)
         //addBoard()
@@ -150,24 +174,24 @@ class GameScene:BaseScene {
         //addTapAreas()
         
         //addBoardCorners()
-        //[self addBackButton];
-        //[self addMenuButton];
-        //[self loadSounds];
+        //[self addBackButton]
+        //[self addMenuButton]
+        //[self loadSounds]
     }
     
     func addBoard() {
         board = Board()
         //board = Board(imageNamed: "grid8")
         //board.anchorPoint = CGPointMake(0.0, 0.0)
-        //board.position = CGPointMake(kGridXOffset, kGridYOffset);
+        //board.position = CGPointMake(kGridXOffset, kGridYOffset)
         //board.size = CGSizeMake(320.0, 320.0)
         //addChild(self.board)
         
-        //[self.board loadLayouts];
-        //[self setupBoardCorners];
-        //[self initWithDimension:self.boardRows];
-        //[self resetBoardTokens];
-        //[self initTokensWithDimention:self.boardRows];
+        //[self.board loadLayouts]
+        //[self setupBoardCorners]
+        //[self initWithDimension:self.boardRows]
+        //[self resetBoardTokens]
+        //[self initTokensWithDimention:self.boardRows]
     }
     
     //    func getPieceAtPosition(xPosition x:NSInteger, yPosition y:NSInteger) -> GamePiece {
@@ -197,6 +221,22 @@ class GameScene:BaseScene {
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        if var activePiece = self.activePiece {
+            if let sprite = activePiece.sprite {
+                if sprite.hasActions() {
+                    let destinationRect = CGRect(x: activePiece.moveDestination.x, y: activePiece.moveDestination.y, width: CGFloat(kPieceSize), height: CGFloat(kPieceSize))
+                    if (CGRectIntersectsRect(destinationRect, sprite.frame)) {
+                        if self.activePieces.count > 0 {
+                            var piece = self.activePieces[self.activePieces.count-1]
+                            self.activePieces.removeAtIndex(self.activePieces.count-1)
+                            let sequence = SKAction.sequence(piece.actions)
+                            piece.sprite?.runAction(sequence)
+                            self.activePiece = piece
+                        }
+                    }
+                }
+            }
+        }
     }
     
     // assumption: only call this method with a valid row and column that is within the bounds of the board and does not contain a piece
@@ -206,75 +246,75 @@ class GameScene:BaseScene {
         
         switch (direction) {
         case .Down:
-            destinationRow = 0;
-            destinationColumn = startingColumn;
+            destinationRow = 0
+            destinationColumn = startingColumn
             
             for var row:Int = startingRow; row >= 0;row-- {
                 if let token = board.tokenAtColumn(startingColumn, row: row) {
                     if (token.tokenType == .Sticky) {
                         if (board.pieceAtColumn(startingColumn, row: row) != nil) {
                             // If the piece in the sticky square can move
-                            if (row - 1 >= 0 && board.pieceAtColumn(startingColumn, row: row - 1) != nil){
+                            if (row - 1 >= 0 && board.pieceAtColumn(startingColumn, row: row - 1) == nil){
                                 if let stuckPiece = board.pieceAtColumn(startingColumn, row: row) {
                                     stuckPiece.resetMovement()
                                     getDestinationForPiece(stuckPiece, direction: .Down, startingRow: row - 1, startingColumn: startingColumn)
                                     activePieces.append(stuckPiece)
-                                    destinationRow = row;
+                                    destinationRow = row
                                     break
                                 }
                             } else {
                                 // piece in sticky square cannot move
-                                destinationRow = row + 1;
+                                destinationRow = row + 1
                                 break
                             }
                         } else {
-                            destinationRow = row;
+                            destinationRow = row
                             break
                         }
                     } else if board.pieceAtColumn(startingColumn, row: row) != nil {
-                        destinationRow = row + 1;
+                        destinationRow = row + 1
                         break
                     } else if token.tokenType == .UpArrow {
-                        destinationRow = row;
+                        destinationRow = row
                         getDestinationForPiece(piece, direction: .Up, startingRow: row + 1, startingColumn: startingColumn)
                         break
                     } else if token.tokenType == .DownArrow {
-                        destinationRow = row;
+                        destinationRow = row
                         getDestinationForPiece(piece, direction: .Down, startingRow: row - 1, startingColumn: startingColumn)
                         break
                     } else if token.tokenType == .LeftArrow {
-                        destinationRow = row;
+                        destinationRow = row
                         getDestinationForPiece(piece, direction: .Left, startingRow: row, startingColumn: startingColumn - 1)
                         break
                     } else if token.tokenType == .RightArrow {
-                        destinationRow = row;
+                        destinationRow = row
                         getDestinationForPiece(piece, direction: .Right, startingRow: row, startingColumn: startingColumn + 1)
                         break
                     } else if token.tokenType == .Blocker {
-                        destinationRow = row + 1;
+                        destinationRow = row + 1
                         break
                     }
                 } else {
                     if board.pieceAtColumn(startingColumn, row: row) != nil {
-                        destinationRow = row + 1;
+                        destinationRow = row + 1
                         break
                     }
                 }
                 
-                destinationRow = row;
+                destinationRow = row
             }
             break
             
         case .Up:
             destinationRow = Int(kNumRows) - 1
-            destinationColumn = startingColumn;
+            destinationColumn = startingColumn
             
             for var row:Int = startingRow; row <= Int(kNumRows) - 1;row++ {
                 if let token = board.tokenAtColumn(startingColumn, row: row) {
                     if token.tokenType == .Sticky {
                         if board.pieceAtColumn(startingColumn, row: row) != nil {
                             // If the piece in the sticky square can move
-                            if row + 1 < Int(kNumRows) && board.pieceAtColumn(startingColumn, row: row + 1) != nil {
+                            if row + 1 < Int(kNumRows) && board.pieceAtColumn(startingColumn, row: row + 1) == nil {
                                 if let stuckPiece = board.pieceAtColumn(startingColumn, row: row) {
                                     stuckPiece.resetMovement()
                                     getDestinationForPiece(stuckPiece, direction: .Up, startingRow: row + 1, startingColumn: startingColumn)
@@ -334,7 +374,7 @@ class GameScene:BaseScene {
                     if token.tokenType == .Sticky {
                         if board.pieceAtColumn(column, row: startingRow) != nil {
                             // If the piece in the sticky square can move
-                            if column - 1 >= 0 && board.pieceAtColumn(column - 1, row: startingRow) != nil {
+                            if column - 1 >= 0 && board.pieceAtColumn(column - 1, row: startingRow) == nil {
                                 if let stuckPiece = board.pieceAtColumn(column, row: startingRow) {
                                     stuckPiece.resetMovement()
                                     getDestinationForPiece(stuckPiece, direction: .Left, startingRow: startingRow, startingColumn: column - 1)
@@ -394,7 +434,7 @@ class GameScene:BaseScene {
                     if token.tokenType == .Sticky {
                         if board.pieceAtColumn(column, row: startingRow) != nil {
                             // If the piece in the sticky square can move
-                            if column + 1 < Int(kNumColumns) && board.pieceAtColumn(column + 1, row: startingRow) != nil {
+                            if column + 1 < Int(kNumColumns) && board.pieceAtColumn(column + 1, row: startingRow) == nil {
                                 if let stuckPiece = board.pieceAtColumn(column, row: startingRow) {
                                     stuckPiece.resetMovement()
                                     getDestinationForPiece(stuckPiece, direction: .Right, startingRow: startingRow, startingColumn: column + 1)
@@ -456,23 +496,23 @@ class GameScene:BaseScene {
     
     func enterNewGame(match:GKTurnBasedMatch) {
         println("Entering new game...")
-        //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch = match
         currentMatch = match
     }
     
     func playLastMove() {
         if let match = currentMatch {
+            
             match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
                 if (error != nil)
                 {
-                    println("Error fetching matches: \(error.localizedDescription)");
+                    println("Error fetching matches: \(error.localizedDescription)")
                 } else {
                     if let matchData = matchData {
                         self.gameData = GameKitMatchData(matchData: matchData)
                         let count = self.gameData.moves.count
                         if (count >= 3) {
-                            var column = self.gameData.moves[count - 3];
-                            var row = self.gameData.moves[count - 2];
+                            var column = self.gameData.moves[count - 3]
+                            var row = self.gameData.moves[count - 2]
                             if let direction = Direction(rawValue: self.gameData.moves[count - 1]) {
                                 
                                 switch (direction) {
@@ -497,24 +537,36 @@ class GameScene:BaseScene {
                                     piece.generateActions()
                                 }
                                 
-                                let piece = self.activePieces[0]
-                                //activePiece = piece
+                                let piece = self.activePieces[self.activePieces.count-1]
+
+                                self.activePiece = piece
                                 assert(piece.moveDestinations.count > 0)
                                 //self.activePieces.removeAtIndex(0)
                                 
                                 piece.animate()
                                 
-                                let destination = piece.moveDestinations[0]
+                                //let destination = piece.moveDestinations[0]
                                 // update gameboard model with destination of gamepiece
-                                self.board.addPieceAtColumn(destination.column, row: destination.row, piece: piece)
+                                //self.board.addPieceAtColumn(destination.column, row: destination.row, piece: piece)
                                 
-                                self.checkForWinnerAndUpdateMatch(false)
-                                //self.processPieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction)
-                                self.rotateActivePlayer()
-                                
-                                if self.activePieces.count > 0 {
-                                    self.activePieces.removeAll(keepCapacity: false)
+                                // update board model
+                                for activePiece in self.activePieces {
+                                    let destination = activePiece.moveDestinations[0]
+                                    self.board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
                                 }
+                                
+                                //println("play last move - print board")
+                                //self.board.printBoard()
+                                println("active player: " + self.activePlayer.description)
+                                self.rotateActivePlayer()
+                                self.checkForWinnerAndUpdateMatch(false)
+                                self.activePieces.removeAtIndex(self.activePieces.count-1)
+                                //self.processPieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction)
+
+                                
+//                                if self.activePieces.count > 0 {
+//                                    self.activePieces.removeAll(keepCapacity: false)
+//                                }
                             }
                             
                             //self.renderBoard()
@@ -529,7 +581,7 @@ class GameScene:BaseScene {
                     {
                         // let playerNum = match.participants. [match.currentParticipant + 1]
                         //println("Player %@'s Turn", playerNum)
-                        //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum];
+                        //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum]
                     }
                 }
                 
@@ -539,34 +591,65 @@ class GameScene:BaseScene {
     
     func layoutMatch()
     {
-        println("Viewing match where it's not our turn...")
         self.activePlayer = PieceType.Player1
         board = Board()
         piecesLayer.removeAllChildren()
         addTapAreas()
         
         if let match = currentMatch {
-            
+
             match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
                 if (error != nil)
                 {
-                    println("Error fetching matches: \(error.localizedDescription)");
+                    println("Error fetching matches: \(error.localizedDescription)")
                 } else {
                     
                     println(match)
-                    //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch = match
                     
                     if let matchData = matchData {
                         self.gameData = GameKitMatchData(matchData: matchData)
                         
-                        if self.gameData.tokenLayout.count > 0 {
-                            //[self initTokensWithDimention:self.boardRows];
+                        if self.gameData.tokenLayout.count == 0 {
+                            let boardNumber = Int(arc4random_uniform(4))
+                            self.board.initTokensWithBoard("Board_" + String(boardNumber))
+                            
+                            for var row = kNumRows - 1; row >= 0; row-- {
+                                for var column = 0; column < kNumColumns; column++ {
+                                    if let token = self.board.tokenAtColumn(column, row: row) {
+                                        self.gameData.tokenLayout.append(token.tokenType.rawValue)
+                                    }
+                                }
+                            }
+                            
+                            match.saveCurrentTurnWithMatchData(self.gameData.encodeMatchData(), completionHandler: { (error) -> Void in
+                                if (error != nil)
+                                {
+                                    println("Error saving current turn with match data: \(error.localizedDescription)")
+                                }
+                            })
+                            
+                            self.renderBoardTokens()
+                        } else {
+                            //[self initTokensWithDimention:self.boardRows]
+                            var layoutPos = 0
+                            
+                            for var row = kNumRows - 1; row >= 0; row-- {
+                                for var column = 0; column < kNumColumns; column++ {
+                                    if let tokenType = TokenType(rawValue: self.gameData.tokenLayout[layoutPos]) {
+                                        let token = Token(column: column, row: row, tokenType: tokenType)
+                                        self.board.addTokenAtColumn(column, row: row, token: token)
+                                    }
+                                    layoutPos++
+                                }
+                            }
+                            
+                            self.renderBoardTokens()
                         }
                         
                         if (self.gameData.moves.count > 0) {
                             for (var i = 0;i < self.gameData.moves.count / 3; i++) {
-                                let column = self.gameData.moves[i * 3];
-                                let row = self.gameData.moves[i * 3 + 1];
+                                let column = self.gameData.moves[i * 3]
+                                let row = self.gameData.moves[i * 3 + 1]
                                 if let direction = Direction(rawValue: self.gameData.moves[i * 3 + 2]) {
                                     self.processPieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction)
                                     self.rotateActivePlayer()
@@ -585,13 +668,27 @@ class GameScene:BaseScene {
                     {
                         // let playerNum = match.participants. [match.currentParticipant + 1]
                         //println("Player %@'s Turn", playerNum)
-                        //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum];
+                        //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum]
                     }
                 }
-                
+                println("layout match - print board")
+                self.board.printBoard()
             })
+        } else {
+            // Initialize tokens for the board
+            let boardNumber = Int(arc4random_uniform(4))
+            self.board.initTokensWithBoard("Board_" + String(boardNumber))
+            //self.board.initTokensWithBoard("Board_2")
             
+            for var row = kNumRows - 1; row >= 0; row-- {
+                for var column = 0; column < kNumColumns; column++ {
+                    if let token = board.tokenAtColumn(column, row: row) {
+                        self.gameData.tokenLayout.append(token.tokenType.rawValue)
+                    }
+                }
+            }
 
+            renderBoardTokens()
         }
     }
     
@@ -611,7 +708,7 @@ class GameScene:BaseScene {
                         println(error)
                     }
                 }
-                println("Send Turn, \(updatedMatchData), \(nextParticipant)")
+                //println("Send Turn, \(updatedMatchData), \(nextParticipant)")
                 //TODO: update game scene UI to switch active player
             }
         }
@@ -625,14 +722,26 @@ class GameScene:BaseScene {
         }
     }
     
+    func renderBoardTokens() {
+        for token in board.getAllTokens() {
+            if token != nil {
+                if token?.tokenType != TokenType.None {
+                    addSpriteForToken(token!)
+                }
+            }
+        }
+    }
+    
     func processPieceAtColumn(column: Int, row: Int, pieceType: PieceType, direction: Direction) {
-        assert(board.pieceAtColumn(column, row: row) == nil, "Trying to make a move at a non empty space")
+        //assert(board.pieceAtColumn(column, row: row) == nil, "Trying to make a move at a non empty space")
         let piece = Piece(column: column, row: row, pieceType: pieceType, direction: direction)
         activePieces.append(piece)
         getDestinationForPiece(piece, direction: direction, startingRow: row, startingColumn: column)
         
         for piece in activePieces {
             let destination = piece.moveDestinations[0]
+            piece.column = destination.column
+            piece.row = destination.row
             // update gameboard model with destination of gamepiece
             board.addPieceAtColumn(destination.column, row: destination.row, piece: piece)
         }
@@ -643,7 +752,7 @@ class GameScene:BaseScene {
         if board.pieceAtColumn(column, row: row) == nil {
             let piece = Piece(column: column, row: row, pieceType: pieceType, direction: direction)
             getDestinationForPiece(piece, direction: direction, startingRow: row, startingColumn: column)
-            addSpriteForPiece(piece, isPieceOnBoard: false);
+            addSpriteForPiece(piece, isPieceOnBoard: false)
             
             return piece
         }
@@ -660,18 +769,17 @@ class GameScene:BaseScene {
                 winners.append(winner)
             }
         }
-        // [self printBoard];
         
         if (winners.count > 0) {
-            var player1Wins = 0;
-            var player2Wins = 0;
+            var player1Wins = 0
+            var player2Wins = 0
             var winner = PieceType.None
             
             for pieceType in winners {
                 if pieceType == PieceType.Player1 {
-                    player1Wins++;
+                    player1Wins++
                 } else if pieceType == PieceType.Player2 {
-                    player2Wins++;
+                    player2Wins++
                 }
             }
             if (player1Wins > 0 && player2Wins > 0) {
@@ -690,20 +798,36 @@ class GameScene:BaseScene {
         println("endMatch")
         
         var winnerLabel = self.childNodeWithName(kWinnerLabelName) as SKLabelNode
-        var winner = "";
+        var winner = ""
     
-        if pieceType == PieceType.Player1 {
-            winner = "Player 1"
-            winnerLabel.text =  "Player 1 Wins!"
-            winnerLabel.hidden = false
-        } else if pieceType == PieceType.Player2 {
-            winner = "Player 2"
-            winnerLabel.text = "Player 2 Wins!"
-            winnerLabel.hidden = false
-        } else if pieceType == PieceType.None {
-            winner = "Tie"
-            winnerLabel.text = "Tie!"
-            winnerLabel.hidden = false
+        if (isMultiplayer) {
+            if PlayerCache.sharedManager.players.count > 0 {
+                if pieceType == activePlayer {
+                    let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
+                    let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
+                    winnerLabel.text =  "\(currentPlayerName.alias) Wins!"
+                    winnerLabel.hidden = false
+                } else {
+                    let opponentParticipant = getOpponentForMatch(currentMatch)
+                    let opponentPlayerName = PlayerCache.sharedManager.players[opponentParticipant.playerID]!
+                    winnerLabel.text =  "\(opponentPlayerName.displayName) Wins!"
+                    winnerLabel.hidden = false
+                }
+            }
+        } else {
+            if pieceType == PieceType.Player1 {
+                winner = "Player 1"
+                winnerLabel.text =  "Player 1 Wins!"
+                winnerLabel.hidden = false
+            } else if pieceType == PieceType.Player2 {
+                winner = "Player 2"
+                winnerLabel.text = "Player 2 Wins!"
+                winnerLabel.hidden = false
+            } else if pieceType == PieceType.None {
+                winner = "Tie"
+                winnerLabel.text = "Tie!"
+                winnerLabel.hidden = false
+            }
         }
         
         if isMultiplayer && shouldUpdateMatch {
@@ -731,9 +855,9 @@ class GameScene:BaseScene {
             })
         }
         
-    //NSDictionary *winParams = @{@"Winner": winner};
-    //[[OALSimpleAudio sharedInstance] playEffect:@"win1.mp3"];
-    //[Flurry logEvent:@"Game_Over" withParameters:winParams];
+    //NSDictionary *winParams = @{@"Winner": winner}
+    //[[OALSimpleAudio sharedInstance] playEffect:@"win1.mp3"]
+    //[Flurry logEvent:@"Game_Over" withParameters:winParams]
     }
     
     func removeHighlights() {
@@ -745,19 +869,19 @@ class GameScene:BaseScene {
     
     func addGamePieceHighlightFrom(row: Int, column: Int, direction: Direction) {
     
-        var startRow = row;
-        var startColumn = column;
+        var startRow = row
+        var startColumn = column
         
         self.removeHighlights()
     
         for piece in self.activePieces {
     
             if (startRow  < 0) {
-                startRow = 0;
+                startRow = 0
             }
             
             if (startColumn < 0) {
-                startColumn = 0;
+                startColumn = 0
             }
     
             for position in piece.moveDestinations.reverse() {
@@ -775,21 +899,21 @@ class GameScene:BaseScene {
                 highlight.name = "highlight"
             
                 if (direction == .Down) {
-                    highlight.size = CGSize(width: kTileWidth, height: (startRow - position.row + 1) * kTileHeight);
-                    highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y:  (position.row * kTileHeight) + 40);
+                    highlight.size = CGSize(width: kTileWidth, height: (startRow - position.row + 1) * kTileHeight)
+                    highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y:  (position.row * kTileHeight) + 40)
                 } else if (direction == .Up) {
-                    highlight.size = CGSize(width: kTileWidth, height: (position.row - startRow + 1) * kTileHeight);
-                    highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y: (startRow * kTileHeight) + 40);
+                    highlight.size = CGSize(width: kTileWidth, height: (position.row - startRow + 1) * kTileHeight)
+                    highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y: (startRow * kTileHeight) + 40)
                 } else if (direction == .Right) {
-                    highlight.size = CGSize(width: (position.column - startColumn + 1) * kTileWidth, height: kTileHeight);
-                    highlight.position = CGPoint(x: (column * kTileWidth) + kGridXOffset, y: position.row * kTileHeight + 40);
+                    highlight.size = CGSize(width: (position.column - startColumn + 1) * kTileWidth, height: kTileHeight)
+                    highlight.position = CGPoint(x: (column * kTileWidth) + kGridXOffset, y: position.row * kTileHeight + 40)
                 } else if (direction == .Left) {
-                    highlight.size = CGSize(width: (startColumn - position.column + 1) * kTileWidth, height: kTileHeight);
-                    highlight.position = CGPoint(x: kGridXOffset + (position.column * kTileWidth), y: position.row * kTileHeight + 40);
+                    highlight.size = CGSize(width: (startColumn - position.column + 1) * kTileWidth, height: kTileHeight)
+                    highlight.position = CGPoint(x: kGridXOffset + (position.column * kTileWidth), y: position.row * kTileHeight + 40)
                 }
             
-                startRow = position.row;
-                startColumn = position.column;
+                startRow = position.row
+                startColumn = position.column
             
                 self.piecesLayer.addChild(highlight)
             }
@@ -857,7 +981,7 @@ class GameScene:BaseScene {
         var corner2 = SKSpriteNode(imageNamed:"board_corner")
         corner2.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
         //corner2.anchorPoint = CGPointMake(0.0, 0.0)
-        corner2.position = CGPointMake(140.0, 140.0);
+        corner2.position = CGPointMake(140.0, 140.0)
         corner2.alpha = 0.5
         gameLayer.addChild(corner2)
         

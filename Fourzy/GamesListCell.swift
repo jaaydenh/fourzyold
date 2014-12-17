@@ -13,6 +13,4 @@ class GamesListCell: UITableViewCell {
     @IBOutlet var opponentDisplayNameLabel: UILabel!
     @IBOutlet var matchStatusLabel: UILabel!
     
-    
-
 }

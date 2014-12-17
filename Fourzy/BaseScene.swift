@@ -10,7 +10,6 @@ import SpriteKit
 
 class BaseScene : SKScene {
     
-    
     // ASSET LOADING
     class func loadSceneAssetsWithCompletionHandler(completionHandler: () -> Void) {
         let queue = dispatch_get_main_queue()

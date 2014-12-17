@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Party Troll. All rights reserved.
 //
 
-
 struct GridPosition {
     let row: Int
     let column: Int

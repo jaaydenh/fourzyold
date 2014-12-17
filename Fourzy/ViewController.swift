@@ -32,8 +32,8 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         authenticateLocalPlayer()
         
-        self.refreshControl = UIRefreshControl();
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh");
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
 
         self.matchListTableView?.addSubview(refreshControl)
@@ -57,7 +57,6 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
             }
             
             if((viewController) != nil) {
-                //self.presentViewController(viewController, animated: true, completion: nil)
                 self.showAuthenticationDialogWhenReasonable(viewController)
             } else if (localPlayer.authenticated){
                 println("Local player already authenticated")
@@ -73,7 +72,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func showAuthenticationDialogWhenReasonable(authenticationViewController:UIViewController) {
-        self.authenticationViewController = authenticationViewController;
+        self.authenticationViewController = authenticationViewController
         NSNotificationCenter.defaultCenter().postNotificationName(PresentAuthenticationViewController, object: self)
     }
     
@@ -88,12 +87,12 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
             }
         }
 
-        loadingMatches = true;
+        loadingMatches = true
         
         GKTurnBasedMatch.loadMatchesWithCompletionHandler { (matches:[AnyObject]!, error:NSError!) -> Void in
             if (error != nil)
             {
-                println("Error fetching matches: \(error.localizedDescription)");
+                println("Error fetching matches: \(error.localizedDescription)")
             }
             if matches != nil {
                 self.matches = matches as [GKTurnBasedMatch]
@@ -137,22 +136,20 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     override func prefersStatusBarHidden() -> Bool {
-        return true;
+        return true
     }
     
     @IBAction func newGame(sender: AnyObject) {
         println("start new game")
-        //GameKitTurnBasedMatchHelper.sharedInstance().findMatchWithMinPlayers(2, maxPlayers: 2, showExistingMatches: false)
-        //self.performSegueWithIdentifier("segueToGamePlay", sender: self)
 
         var request = GKMatchRequest()
-        request.minPlayers = 2;
-        request.maxPlayers = 2;
-        request.defaultNumberOfPlayers = 2;
-        //request.playerAttributes = 0xFFFFFFFF;
+        request.minPlayers = 2
+        request.maxPlayers = 2
+        request.defaultNumberOfPlayers = 2
+        //request.playerAttributes = 0xFFFFFFFF
         
         var mmvc = GKTurnBasedMatchmakerViewController(matchRequest: request)
-        mmvc.turnBasedMatchmakerDelegate = self;
+        mmvc.turnBasedMatchmakerDelegate = self
         mmvc.showExistingMatches = false
         
         self.presentViewController(mmvc, animated:true, completion:nil)
@@ -176,7 +173,8 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         let opponentParticipant = getOpponentForMatch(match)
         
         if opponentParticipant.playerID != nil {
-            let opponentPlayer = self.players[opponentParticipant.playerID]
+            //let opponentPlayer = self.players[opponentParticipant.playerID]
+            let opponentPlayer = PlayerCache.sharedManager.players[opponentParticipant.playerID]
             cell.opponentDisplayNameLabel?.text = opponentPlayer?.displayName
         } else {
             cell.opponentDisplayNameLabel?.text = "Waiting For Opponent"
@@ -198,11 +196,11 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
             }
         }
         
-        return cell;
+        return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        println("select match" + self.matches[indexPath.row].matchID);
+        println("select match" + self.matches[indexPath.row].matchID)
 
         let match = self.matches[indexPath.row] as GKTurnBasedMatch
         self.performSegueWithIdentifier("segueToGamePlay", sender: match)
@@ -320,7 +318,12 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     func loadPlayerPhoto(player: GKPlayer) {
         player.loadPhotoForSize(GKPhotoSizeSmall, withCompletionHandler: { (photo, error) -> Void in
             if (photo != nil) {
-                //self.storePhoto(photo, ForPlayer:player);
+                
+                if PlayerCache.sharedManager.playerPhotos[player.playerID] == nil {
+                    PlayerCache.sharedManager.playerPhotos[player.playerID] = photo
+                }
+
+                //self.storePhoto(photo, ForPlayer:player)
             }
             if (error != nil) {
                 self.setLastError(error!)
@@ -338,7 +341,10 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
                 }
                 if let playersFound = players as? [GKPlayer] {
                     for player in playersFound {
-                        self.players[player.playerID] = player
+                        //self.players[player.playerID] = player
+                        
+                        PlayerCache.sharedManager.players[player.playerID] = player
+                        self.loadPlayerPhoto(player)
                     }
                 }
                 self.matchListTableView!.reloadData()

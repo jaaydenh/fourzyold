@@ -34,28 +34,6 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     var scene: GameScene!
     var match:GKTurnBasedMatch!
     var isMultiplayer = true
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        
-//        if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
-//        var viewSize = self.view.bounds.size
-//        self.scene = GameScene(size: viewSize)
-//        self.scene.scaleMode = .AspectFill
-//        
-//            // Configure the view.
-//            let skView = self.view as SKView
-//            skView.showsFPS = true
-//            skView.showsNodeCount = true
-//            
-//            /* Sprite Kit applies additional optimizations to improve rendering performance */
-//            skView.ignoresSiblingOrder = true
-//            
-//            /* Set the scale mode to scale to fit the window */
-//            scene.scaleMode = .AspectFill
-//            
-//            skView.presentScene(scene)
-//        }
-//    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -84,11 +62,16 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             self.loadingProgressIndicator.stopAnimating()
             self.loadingProgressIndicator.hidden = true
             
+            if self.isMultiplayer {
+                self.scene.loadPlayerPhotos()
+            }
+            
             let skView = self.view as SKView
             skView.showsDrawCount = true
             skView.showsFPS = true
             skView.multipleTouchEnabled = false
-
+            skView.ignoresSiblingOrder = true
+            
             skView.presentScene(self.scene)
             
             UIView.animateWithDuration(2.0) {
@@ -100,8 +83,10 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     
     func player(player: GKPlayer!, receivedTurnEventForMatch match: GKTurnBasedMatch!, didBecomeActive: Bool) {
         println("receivedTurnEventForMatch:GameViewController")
-        if (self.scene.currentMatch.matchID == match.matchID) {
-            self.scene.playLastMove()
+        if (self.scene.currentMatch != nil) {
+            if (self.scene.currentMatch.matchID == match.matchID) {
+                self.scene.playLastMove()
+            }
         }
     }
     
