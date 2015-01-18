@@ -70,9 +70,9 @@ class GameScene:BaseScene {
             var sprite = activePiece.sprite
             if let sprite = activePiece.sprite {
                 if activePiece.direction == .Up || activePiece.direction == .Down {
-                    touchRect = CGRectMake(sprite.position.x - 8, sprite.position.y - 50, 46.0, 130.0)
+                    touchRect = CGRectMake(sprite.position.x - 20, sprite.position.y - 50, 31.0, 130.0)
                 } else {
-                    touchRect = CGRectMake(sprite.position.x - 50, sprite.position.y - 8, 130.0, 46.0)
+                    touchRect = CGRectMake(sprite.position.x - 50, sprite.position.y - 20, 130.0, 31.0)
                 }
                 
                 if CGRectContainsPoint(touchRect, point) {
@@ -139,12 +139,21 @@ class GameScene:BaseScene {
     }
     
     func loadPlayerPhotos() {
-        let currentParticipant = getOpponentForMatch(currentMatch)
+        let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
         if let playerID = currentParticipant.playerID {
             if let playerImage = PlayerCache.sharedManager.playerPhotos[playerID] {
                 let playerTexture = SKTexture(image: playerImage)
                 let player1ImageNode = SKSpriteNode(texture: playerTexture, size: CGSize(width: 50, height: 50))
                 player1ImageNode.position = CGPoint(x: -60, y: 200)
+                addChild(player1ImageNode)
+            }
+        }
+        let opponentParticipant = getOpponentForMatch(currentMatch)
+        if let playerID = opponentParticipant.playerID {
+            if let playerImage = PlayerCache.sharedManager.playerPhotos[playerID] {
+                let playerTexture = SKTexture(image: playerImage)
+                let player1ImageNode = SKSpriteNode(texture: playerTexture, size: CGSize(width: 50, height: 50))
+                player1ImageNode.position = CGPoint(x: 20, y: 200)
                 addChild(player1ImageNode)
             }
         }
@@ -243,11 +252,13 @@ class GameScene:BaseScene {
     func getDestinationForPiece(piece:Piece, direction:Direction, startingRow:Int, startingColumn:Int) {
         var destinationRow: Int
         var destinationColumn: Int
+        var destinationDirection: Direction
         
         switch (direction) {
         case .Down:
             destinationRow = 0
             destinationColumn = startingColumn
+            destinationDirection = .Down
             
             for var row:Int = startingRow; row >= 0;row-- {
                 if let token = board.tokenAtColumn(startingColumn, row: row) {
@@ -308,6 +319,7 @@ class GameScene:BaseScene {
         case .Up:
             destinationRow = Int(kNumRows) - 1
             destinationColumn = startingColumn
+            destinationDirection = .Up
             
             for var row:Int = startingRow; row <= Int(kNumRows) - 1;row++ {
                 if let token = board.tokenAtColumn(startingColumn, row: row) {
@@ -368,6 +380,7 @@ class GameScene:BaseScene {
         case .Left:
             destinationRow = startingRow
             destinationColumn = 0
+            destinationDirection = .Left
             
             for var column:Int = startingColumn; column >= 0;column-- {
                 if let token = board.tokenAtColumn(column, row: startingRow) {
@@ -428,6 +441,7 @@ class GameScene:BaseScene {
         case .Right:
             destinationRow = startingRow
             destinationColumn = Int(kNumColumns) - 1
+            destinationDirection = .Right
             
             for var column:Int = startingColumn; column <= Int(kNumColumns) - 1;column++ {
                 if let token = board.tokenAtColumn(column, row: startingRow) {
@@ -488,7 +502,7 @@ class GameScene:BaseScene {
         default:
             break
         }
-        let position = GridPosition(column: destinationColumn, row: destinationRow)
+        let position = GridPosition(column: destinationColumn, row: destinationRow, direction: destinationDirection)
         piece.moveDestinations.append(position)
     }
     
@@ -676,7 +690,7 @@ class GameScene:BaseScene {
             })
         } else {
             // Initialize tokens for the board
-            let boardNumber = Int(arc4random_uniform(4))
+            let boardNumber = Int(arc4random_uniform(6))
             self.board.initTokensWithBoard("Board_" + String(boardNumber))
             //self.board.initTokensWithBoard("Board_2")
             
@@ -874,7 +888,7 @@ class GameScene:BaseScene {
         
         self.removeHighlights()
     
-        for piece in self.activePieces {
+        for piece in self.activePieces.reverse() {
     
             if (startRow  < 0) {
                 startRow = 0
@@ -898,16 +912,16 @@ class GameScene:BaseScene {
                 highlight.anchorPoint = CGPointMake(0.0, 0.0)
                 highlight.name = "highlight"
             
-                if (direction == .Down) {
+                if (position.direction == .Down) {
                     highlight.size = CGSize(width: kTileWidth, height: (startRow - position.row + 1) * kTileHeight)
                     highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y:  (position.row * kTileHeight) + 40)
-                } else if (direction == .Up) {
+                } else if (position.direction == .Up) {
                     highlight.size = CGSize(width: kTileWidth, height: (position.row - startRow + 1) * kTileHeight)
                     highlight.position = CGPoint(x: position.column * kTileWidth + kGridXOffset, y: (startRow * kTileHeight) + 40)
-                } else if (direction == .Right) {
+                } else if (position.direction == .Right) {
                     highlight.size = CGSize(width: (position.column - startColumn + 1) * kTileWidth, height: kTileHeight)
-                    highlight.position = CGPoint(x: (column * kTileWidth) + kGridXOffset, y: position.row * kTileHeight + 40)
-                } else if (direction == .Left) {
+                    highlight.position = CGPoint(x: (startColumn * kTileWidth) + kGridXOffset, y: position.row * kTileHeight + 40)
+                } else if (position.direction == .Left) {
                     highlight.size = CGSize(width: (startColumn - position.column + 1) * kTileWidth, height: kTileHeight)
                     highlight.position = CGPoint(x: kGridXOffset + (position.column * kTileWidth), y: position.row * kTileHeight + 40)
                 }
@@ -938,7 +952,13 @@ class GameScene:BaseScene {
     }
     
     func addBackgroundImage() {
-        var grid = SKSpriteNode(imageNamed:"grid8")
+        var background = SKSpriteNode(imageNamed: "bright-squares")
+        background.size = CGSize(width: 320, height: 568)
+        //background.position = CGPointMake(self.size.width/2, self.size.height/2);
+        //addChild(background)
+        self.backgroundColor = SKColor.lightGrayColor()
+
+        var grid = SKSpriteNode(imageNamed:"grid2")
         //grid.anchorPoint = CGPointMake(0.0, 0.0)
         //grid.position = CGPointMake(kGridXOffset, kGridYOffset)
         addChild(grid)
@@ -946,27 +966,43 @@ class GameScene:BaseScene {
     
     func addTapAreas() {
         leftActionArea.texture = SKTexture(imageNamed: "tap_area")
-        leftActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
+        //leftActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
+        leftActionArea.size = CGSize(width: 45, height: 45)
         leftActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-        leftActionArea.position = CGPoint(x: 0, y: kTapAreaWidth)
+        leftActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
+        leftActionArea.xScale = 38.0/45.0
+        leftActionArea.yScale = 30.0 * 8.0/45.0
+        leftActionArea.position = CGPoint(x: -1, y: kTapAreaWidth)
         piecesLayer.addChild(leftActionArea)
         
         rightActionArea.texture = SKTexture(imageNamed: "tap_area")
-        rightActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
+        //rightActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
+        rightActionArea.size = CGSize(width: 45, height: 45)
         rightActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-        rightActionArea.position = CGPoint(x: kNumColumns * kTileWidth + kTapAreaWidth, y: kTapAreaWidth)
+        rightActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
+        rightActionArea.xScale = 38.0/45.0
+        rightActionArea.yScale = 30.0 * 8.0/45.0
+        rightActionArea.position = CGPoint(x: kNumColumns * kTileWidth + kTapAreaWidth + 1, y: kTapAreaWidth)
         piecesLayer.addChild(rightActionArea)
         
         topActionArea.texture = SKTexture(imageNamed: "tap_area")
-        topActionArea.size = CGSize(width: kTileWidth * kNumRows, height:kTapAreaWidth)
+        //topActionArea.size = CGSize(width: kTileWidth * kNumRows, height:kTapAreaWidth)
+        topActionArea.size = CGSize(width: 45, height: 45)
         topActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-        topActionArea.position = CGPoint(x: kTapAreaWidth, y: kTileWidth * kNumRows + kTapAreaWidth)
+        topActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
+        topActionArea.xScale = 30.0 * 8.0/45.0
+        topActionArea.yScale = 38.0/45.0
+        topActionArea.position = CGPoint(x: kTapAreaWidth, y: kTileWidth * kNumRows + kTapAreaWidth + 1)
         piecesLayer.addChild(topActionArea)
         
         bottomActionArea.texture = SKTexture(imageNamed: "tap_area")
-        bottomActionArea.size = CGSize(width: kTileWidth * kNumColumns, height: kTapAreaWidth)
+        //bottomActionArea.size = CGSize(width: kTileWidth * kNumColumns, height: kTapAreaWidth)
+        bottomActionArea.size = CGSize(width: 45, height: 45)
         bottomActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
-        bottomActionArea.position = CGPoint(x: kTapAreaWidth, y: 0)
+        bottomActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
+        bottomActionArea.xScale = 30.0 * 8.0/45.0
+        bottomActionArea.yScale = 38.0/45.0
+        bottomActionArea.position = CGPoint(x: kTapAreaWidth, y: 0 - 1)
         piecesLayer.addChild(bottomActionArea)
     }
     

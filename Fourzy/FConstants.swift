@@ -7,7 +7,7 @@
 //
 
 let kPieceSize: Int = 30
-let kTapAreaWidth: Int = 40
+let kTapAreaWidth: Int = 38
 let kNumRows: Int = 8
 let kNumColumns: Int = 8
 let kWinnerLabelName = "winnerLabel"
@@ -15,7 +15,7 @@ let kTileWidth: Int = 30
 let kTileHeight: Int = 30
 let kGridXOffset: Int = 40
 let kGridYOffset: Int = 150
-let kGamePieceName = "gamepiece"
+//let kGamePieceName = "gamepiece"
 let kTokenName = "token"
 
 enum Player {

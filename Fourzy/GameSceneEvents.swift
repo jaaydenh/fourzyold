@@ -80,6 +80,8 @@ extension GameScene {
                 activePieces.removeAll(keepCapacity: false)
             }
             
+            self.removeHighlights()
+            
             let (success, column, row, direction) = convertPoint(touchLocation)
             if success {
                 //println("touchlocation: x: \(touchLocation.x), y: \(touchLocation.y)")

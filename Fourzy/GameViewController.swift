@@ -59,6 +59,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             self.scene.scaleMode = .AspectFill
             self.scene.currentMatch = self.match
             self.scene.isMultiplayer = self.isMultiplayer
+            
             self.loadingProgressIndicator.stopAnimating()
             self.loadingProgressIndicator.hidden = true
             
@@ -67,11 +68,12 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             }
             
             let skView = self.view as SKView
+
             skView.showsDrawCount = true
             skView.showsFPS = true
             skView.multipleTouchEnabled = false
             skView.ignoresSiblingOrder = true
-            
+
             skView.presentScene(self.scene)
             
             UIView.animateWithDuration(2.0) {

@@ -58,7 +58,7 @@ class Piece: Printable, Hashable {
         sprite?.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         var pulseActions: [SKAction] = [];
         var moveActions: [SKAction] = [];
-        let growAction = SKAction.resizeToWidth(CGFloat(kPieceSize+10), height: CGFloat(kPieceSize+10), duration: 0.5)
+        let growAction = SKAction.resizeToWidth(CGFloat(kPieceSize+7), height: CGFloat(kPieceSize+7), duration: 0.5)
         let growMove = SKAction.moveByX(-0.5, y: -0.5, duration: 0.5)
         let shrinkAction = SKAction.resizeToWidth(CGFloat(kPieceSize), height: CGFloat(kPieceSize), duration: 0.5)
         let shrinkMove = SKAction.moveByX(0.5, y: 0.5, duration: 0.5)
@@ -99,7 +99,7 @@ enum PieceType: Int, Printable {
     var spriteName: String {
         let spriteNames = [
             "gamepiece4",
-            "gamepiece6"]
+            "gamepiece7"]
         
         return spriteNames[rawValue - 1]
     }

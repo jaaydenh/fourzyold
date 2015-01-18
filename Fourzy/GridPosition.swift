@@ -9,9 +9,11 @@
 struct GridPosition {
     let row: Int
     let column: Int
+    var direction: Direction
     
-    init(column: Int, row: Int) {
+    init(column: Int, row: Int, direction: Direction) {
         self.column = column
         self.row = row
+        self.direction = direction
     }
 }
