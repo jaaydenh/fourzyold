@@ -8,7 +8,8 @@
 
 import UIKit
 import GameKit
-
+import QuartzCore
+    
 let PresentAuthenticationViewController = "present_authentication_view_controller"
 let LocalPlayerIsAuthenticated = "local_player_authenticated"
 
@@ -28,6 +29,8 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = UIColor.redColor()
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showAuthenticationViewController", name: PresentAuthenticationViewController, object: nil)
         
         authenticateLocalPlayer()
@@ -39,6 +42,11 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         self.matchListTableView?.addSubview(refreshControl)
         
         self.matchListTableView?.registerNib(UINib(nibName: "GamesListCell", bundle: nil), forCellReuseIdentifier: "GamesListCell")
+        
+        
+        //self.matchListTableView?.layer.cornerRadius = 10
+        //self.matchListTableView?.layer.masksToBounds = true;
+
     }
     
     func authenticateLocalPlayer() {
@@ -164,10 +172,72 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         return matches.count
     }
     
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if (cell.respondsToSelector(Selector("tintColor"))) {
+            if (tableView == self.matchListTableView) {
+                let cornerRadius:CGFloat = 5.0
+                let cornerHeight:CGFloat = 5.0
+                cell.backgroundColor = UIColor.clearColor()
+                var layer:CAShapeLayer = CAShapeLayer()
+                var pathRef:CGMutablePathRef = CGPathCreateMutable()
+                var bounds:CGRect = CGRectInset(cell.bounds, 0, 0);
+                var addLine = false
+                if (indexPath.row == 0 && indexPath.row == (tableView.numberOfRowsInSection(indexPath.section) - 1)) {
+                    CGPathAddRoundedRect(pathRef, nil, bounds, cornerRadius, cornerHeight)
+                } else if (indexPath.row == 0) {
+                    CGPathMoveToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMaxY(bounds));
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMinY(bounds), CGRectGetMidX(bounds), CGRectGetMinY(bounds), cornerRadius);
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMinY(bounds), CGRectGetMaxX(bounds), CGRectGetMidY(bounds), cornerRadius);
+                    CGPathAddLineToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMaxY(bounds));
+                    addLine = true
+                } else if (indexPath.row ==  (tableView.numberOfRowsInSection(indexPath.section) - 1)) {
+                    CGPathMoveToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMinY(bounds));
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMaxY(bounds), CGRectGetMidX(bounds), CGRectGetMaxY(bounds), cornerRadius);
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMaxY(bounds), CGRectGetMaxX(bounds), CGRectGetMidY(bounds), cornerRadius);
+                    CGPathAddLineToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMinY(bounds));
+                } else {
+                    CGPathAddRect(pathRef, nil, bounds);
+                    addLine = true
+                }
+                layer.path = pathRef;
+                //CFRelease(pathRef);
+                layer.fillColor = UIColor(white: 1.0, alpha: 1.0).CGColor
+                
+                if (addLine == true) {
+                    var lineLayer:CALayer = CALayer()
+                    var lineHeight:CGFloat = (1.0 / UIScreen.mainScreen().scale)
+                    lineLayer.frame = CGRectMake(CGRectGetMinX(bounds)+10, bounds.size.height-lineHeight, bounds.size.width-10, lineHeight)
+                    lineLayer.backgroundColor = tableView.separatorColor.CGColor
+                    layer.addSublayer(lineLayer)
+                }
+                var testView:UIView = UIView(frame: bounds)
+                testView.layer.insertSublayer(layer, atIndex: 0)
+                testView.backgroundColor = UIColor.clearColor()
+                cell.backgroundView = testView;
+            }
+        }
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
 //        let cell = UITableViewCell(style: UITableViewCellStyle.Value2, reuseIdentifier: "GamesListCell") as GamesListCell
         let cell = tableView.dequeueReusableCellWithIdentifier("GamesListCell", forIndexPath: indexPath) as GamesListCell
+        
+        // Remove seperator inset
+        if cell.respondsToSelector(Selector("setSeparatorInset:")) {
+            cell.separatorInset = UIEdgeInsetsZero
+        }
+        
+        // Prevent the cell from inheriting the Table View's margin settings
+        if cell.respondsToSelector(Selector("setPreservesSuperviewLayoutMargins:")) {
+            cell.preservesSuperviewLayoutMargins = false
+        }
+        
+        // Explictly set your cell's layout margins
+        if cell.respondsToSelector(Selector("setLayoutMargins:")) {
+            cell.layoutMargins = UIEdgeInsetsZero
+        }
         
         let match: GKTurnBasedMatch = self.matches[indexPath.row] as GKTurnBasedMatch
         let opponentParticipant = getOpponentForMatch(match)

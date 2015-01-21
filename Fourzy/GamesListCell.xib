@@ -27,6 +27,7 @@
                     </label>
                 </subviews>
             </tableViewCellContentView>
+            <color key="backgroundColor" red="0.94229066371917725" green="0.94245201349258423" blue="0.94228047132492065" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
                 <outlet property="matchStatusLabel" destination="Vve-NY-wZZ" id="g33-JW-iy6"/>
                 <outlet property="opponentDisplayNameLabel" destination="kwc-LC-v5x" id="flv-uZ-mSv"/>

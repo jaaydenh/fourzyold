@@ -14,7 +14,8 @@ class GameScene:BaseScene {
     var board: Board!
     
     let gameLayer = SKNode()
-    let piecesLayer = SKSpriteNode()
+    let piecesLayer = SKNode()
+    let boardLayer = SKNode()
     
     let leftActionArea = SKSpriteNode()
     let rightActionArea = SKSpriteNode()
@@ -33,19 +34,23 @@ class GameScene:BaseScene {
      override init(size: CGSize) {
         super.init(size: size)
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        backgroundColor = SKColor.whiteColor()
+        backgroundColor = SKColor.lightGrayColor()
         
         gameLayer.hidden = false
+        
         gameLayer.position = CGPoint(x: 0, y: 0)
         self.addChild(gameLayer)
         
         let layerPosition = CGPoint(
             x: (-kTileWidth * NumColumns / 2) - kTapAreaWidth,
-            y: (-kTileHeight * NumRows / 2) - kTapAreaWidth)
+            y: (-kTileHeight * NumRows / 2) - kTapAreaWidth - 50)
         
         piecesLayer.position = layerPosition
         piecesLayer.zPosition = 1
         gameLayer.addChild(piecesLayer)
+        
+        boardLayer.position = layerPosition
+        gameLayer.addChild(boardLayer)
         
         createContent()
     }
@@ -180,9 +185,9 @@ class GameScene:BaseScene {
         
         addBackgroundImage()
         addBoardCorners()
+        
         //addTapAreas()
         
-        //addBoardCorners()
         //[self addBackButton]
         //[self addMenuButton]
         //[self loadSounds]
@@ -576,7 +581,6 @@ class GameScene:BaseScene {
                                 self.checkForWinnerAndUpdateMatch(false)
                                 self.activePieces.removeAtIndex(self.activePieces.count-1)
                                 //self.processPieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction)
-
                                 
 //                                if self.activePieces.count > 0 {
 //                                    self.activePieces.removeAll(keepCapacity: false)
@@ -956,15 +960,22 @@ class GameScene:BaseScene {
         background.size = CGSize(width: 320, height: 568)
         //background.position = CGPointMake(self.size.width/2, self.size.height/2);
         //addChild(background)
-        self.backgroundColor = SKColor.lightGrayColor()
-
+        
+        //let grid = SKSpriteNode()
+        //grid.texture = SKTexture(imageNamed: "grid2")
         var grid = SKSpriteNode(imageNamed:"grid2")
-        //grid.anchorPoint = CGPointMake(0.0, 0.0)
-        //grid.position = CGPointMake(kGridXOffset, kGridYOffset)
-        addChild(grid)
+        grid.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+        grid.position = CGPoint(x: kTapAreaWidth, y: kTapAreaWidth)
+        boardLayer.addChild(grid)
     }
     
     func addTapAreas() {
+//        var grid = SKSpriteNode(imageNamed:"grid2")
+//        grid.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+//        grid.position = CGPoint(x: kTapAreaWidth, y: kTapAreaWidth)
+//        piecesLayer.addChild(grid)
+
+        
         leftActionArea.texture = SKTexture(imageNamed: "tap_area")
         //leftActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
         leftActionArea.size = CGSize(width: 45, height: 45)
@@ -973,7 +984,7 @@ class GameScene:BaseScene {
         leftActionArea.xScale = 38.0/45.0
         leftActionArea.yScale = 30.0 * 8.0/45.0
         leftActionArea.position = CGPoint(x: -1, y: kTapAreaWidth)
-        piecesLayer.addChild(leftActionArea)
+        boardLayer.addChild(leftActionArea)
         
         rightActionArea.texture = SKTexture(imageNamed: "tap_area")
         //rightActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
@@ -983,7 +994,7 @@ class GameScene:BaseScene {
         rightActionArea.xScale = 38.0/45.0
         rightActionArea.yScale = 30.0 * 8.0/45.0
         rightActionArea.position = CGPoint(x: kNumColumns * kTileWidth + kTapAreaWidth + 1, y: kTapAreaWidth)
-        piecesLayer.addChild(rightActionArea)
+        boardLayer.addChild(rightActionArea)
         
         topActionArea.texture = SKTexture(imageNamed: "tap_area")
         //topActionArea.size = CGSize(width: kTileWidth * kNumRows, height:kTapAreaWidth)
@@ -993,7 +1004,7 @@ class GameScene:BaseScene {
         topActionArea.xScale = 30.0 * 8.0/45.0
         topActionArea.yScale = 38.0/45.0
         topActionArea.position = CGPoint(x: kTapAreaWidth, y: kTileWidth * kNumRows + kTapAreaWidth + 1)
-        piecesLayer.addChild(topActionArea)
+        boardLayer.addChild(topActionArea)
         
         bottomActionArea.texture = SKTexture(imageNamed: "tap_area")
         //bottomActionArea.size = CGSize(width: kTileWidth * kNumColumns, height: kTapAreaWidth)
@@ -1003,35 +1014,35 @@ class GameScene:BaseScene {
         bottomActionArea.xScale = 30.0 * 8.0/45.0
         bottomActionArea.yScale = 38.0/45.0
         bottomActionArea.position = CGPoint(x: kTapAreaWidth, y: 0 - 1)
-        piecesLayer.addChild(bottomActionArea)
+        boardLayer.addChild(bottomActionArea)
     }
     
     func addBoardCorners() {
         var corner1 = SKSpriteNode(imageNamed:"board_corner")
         corner1.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
         //corner1.anchorPoint = CGPointMake(0.0, 0.0)
-        corner1.position = CGPointMake(-140.0, 140.0)
+        corner1.position = CGPointMake(-140.0, 90.0)
         corner1.alpha = 0.5
         gameLayer.addChild(corner1)
         
         var corner2 = SKSpriteNode(imageNamed:"board_corner")
         corner2.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
         //corner2.anchorPoint = CGPointMake(0.0, 0.0)
-        corner2.position = CGPointMake(140.0, 140.0)
+        corner2.position = CGPointMake(140.0, 90.0)
         corner2.alpha = 0.5
         gameLayer.addChild(corner2)
         
         var corner3 = SKSpriteNode(imageNamed:"board_corner")
         corner3.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
         //corner3.anchorPoint = CGPointMake(0.0, 0.0)
-        corner3.position = CGPointMake(140.0, -140)
+        corner3.position = CGPointMake(140.0, -190)
         corner3.alpha = 0.5
         gameLayer.addChild(corner3)
         
         var corner4 = SKSpriteNode(imageNamed:"board_corner")
         corner4.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
         //corner4.anchorPoint = CGPointMake(0.0, 0.0)
-        corner4.position = CGPointMake(-140.0, -140.0)
+        corner4.position = CGPointMake(-140.0, -190.0)
         corner4.alpha = 0.5
         gameLayer.addChild(corner4)
     }

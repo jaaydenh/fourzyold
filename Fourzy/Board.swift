@@ -30,7 +30,6 @@ class Board: SKNode {
         // initialize properties
         // backgroundTexture = SKTexture(imageNamed: "grid8")
         super.init()
-        //super.init(texture: backgroundTexture, color: nil, size: backgroundTexture.size())
     }
 
     required init(coder aDecoder: NSCoder) {
