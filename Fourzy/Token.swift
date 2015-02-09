@@ -30,11 +30,12 @@ class Token: Printable, Hashable {
 }
 
 enum TokenType: Int, Printable {
+    
     case None = 0, Sticky, UpArrow, DownArrow, LeftArrow, RightArrow, Blocker
     
     var spriteName: String {
         let spriteNames = [
-            "Sticky",
+            "Sticky1",
             "UpArrow",
             "DownArrow",
             "LeftArrow",

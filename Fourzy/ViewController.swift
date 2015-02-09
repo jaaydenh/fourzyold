@@ -163,6 +163,13 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         self.presentViewController(mmvc, animated:true, completion:nil)
     }
     
+    @IBAction func editGamesList(sender: AnyObject) {
+        
+    }
+//    @IBAction func editGamesList(sender: AnyObject) {
+//                println("start new pass and play game")
+//    }
+    
     @IBAction func newPassAndPlayGame(sender: AnyObject) {
         println("start new pass and play game")
         self.performSegueWithIdentifier("segueToGamePlay", sender: nil)
@@ -267,6 +274,21 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         }
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            var matchList = matches as [GKTurnBasedMatch]
+            matchList.removeAtIndex(indexPath.row)
+            //self.matchListTableView?.reloadData()
+            var indexPaths:NSMutableArray = []
+            indexPaths.addObject(indexPath.row)
+            matchListTableView?.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Fade)
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -396,7 +418,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
                 //self.storePhoto(photo, ForPlayer:player)
             }
             if (error != nil) {
-                self.setLastError(error!)
+                //self.setLastError(error!)
             }
         })
     }

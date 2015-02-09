@@ -53,7 +53,7 @@ extension GameScene {
             
             piece.animate()
             
-            let destination = piece.moveDestinations[0]
+            let destination = piece.moveDestinations[piece.moveDestinations.count-1]
             self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
 
             self.removeHighlights()

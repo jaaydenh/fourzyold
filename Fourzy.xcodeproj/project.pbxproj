@@ -39,7 +39,7 @@
 		D04700F11A15A50C001411B3 /* new_game_button1.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700B01A15A50C001411B3 /* new_game_button1.png */; };
 		D04700F71A15A50C001411B3 /* right_arrow_token.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700B61A15A50C001411B3 /* right_arrow_token.png */; };
 		D04700F81A15A50C001411B3 /* sticky1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D04700B71A15A50C001411B3 /* sticky1.mp3 */; };
-		D04700F91A15A50C001411B3 /* sticky_token.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700B81A15A50C001411B3 /* sticky_token.png */; };
+		D04700F91A15A50C001411B3 /* sticky_token_old.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700B81A15A50C001411B3 /* sticky_token_old.png */; };
 		D04700FA1A15A50C001411B3 /* tap_area.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700B91A15A50C001411B3 /* tap_area.png */; };
 		D04700FB1A15A50C001411B3 /* up_arrow2.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700BA1A15A50C001411B3 /* up_arrow2.png */; };
 		D04700FC1A15A50C001411B3 /* up_arrow3.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700BB1A15A50C001411B3 /* up_arrow3.png */; };
@@ -71,6 +71,22 @@
 		D097BDEB1A3EB07F0081337F /* Board_2.json in Resources */ = {isa = PBXBuildFile; fileRef = D097BDE81A3EB07F0081337F /* Board_2.json */; };
 		D097BDEC1A3EB07F0081337F /* Board_3.json in Resources */ = {isa = PBXBuildFile; fileRef = D097BDE91A3EB07F0081337F /* Board_3.json */; };
 		D097BDEE1A3FBBA20081337F /* PlayerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D097BDED1A3FBBA20081337F /* PlayerCache.swift */; };
+		D09A4CB21A7EA81B00F3A4F3 /* Board_6.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CB11A7EA81B00F3A4F3 /* Board_6.json */; };
+		D09A4CB41A7EA8A500F3A4F3 /* Board_7.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CB31A7EA8A500F3A4F3 /* Board_7.json */; };
+		D09A4CB61A7EA95000F3A4F3 /* Board_8.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CB51A7EA95000F3A4F3 /* Board_8.json */; };
+		D09A4CB81A7EAA2400F3A4F3 /* Board_9.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CB71A7EAA2400F3A4F3 /* Board_9.json */; };
+		D09A4CBA1A7EAAE200F3A4F3 /* Board_10.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CB91A7EAAE200F3A4F3 /* Board_10.json */; };
+		D09A4CBC1A7EADEF00F3A4F3 /* Board_11.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CBB1A7EADEF00F3A4F3 /* Board_11.json */; };
+		D09A4CBE1A7EAE3F00F3A4F3 /* Board_12.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CBD1A7EAE3F00F3A4F3 /* Board_12.json */; };
+		D09A4CC01A7EAFB600F3A4F3 /* Board_13.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CBF1A7EAFB600F3A4F3 /* Board_13.json */; };
+		D09A4CC21A7EAFF300F3A4F3 /* Board_14.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CC11A7EAFF300F3A4F3 /* Board_14.json */; };
+		D09A4CC41A7EB0C600F3A4F3 /* Board_15.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CC31A7EB0C600F3A4F3 /* Board_15.json */; };
+		D09A4CC61A7EB0DC00F3A4F3 /* Board_16.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CC51A7EB0DC00F3A4F3 /* Board_16.json */; };
+		D09A4CC81A7EB10000F3A4F3 /* Board_17.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CC71A7EB10000F3A4F3 /* Board_17.json */; };
+		D09A4CCA1A7EB17900F3A4F3 /* Board_18.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CC91A7EB17900F3A4F3 /* Board_18.json */; };
+		D09A4CCC1A7EB19100F3A4F3 /* Board_19.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CCB1A7EB19100F3A4F3 /* Board_19.json */; };
+		D09A4CCE1A7EB1AC00F3A4F3 /* Board_20.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CCD1A7EB1AC00F3A4F3 /* Board_20.json */; };
+		D09A4CD01A7EB91A00F3A4F3 /* Board_21.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CCF1A7EB91A00F3A4F3 /* Board_21.json */; };
 		D0AA60231A42A46E001531FC /* Board_4.json in Resources */ = {isa = PBXBuildFile; fileRef = D0AA60211A42A46E001531FC /* Board_4.json */; };
 		D0AA60241A42A46E001531FC /* Board_5.json in Resources */ = {isa = PBXBuildFile; fileRef = D0AA60221A42A46E001531FC /* Board_5.json */; };
 /* End PBXBuildFile section */
@@ -118,7 +134,7 @@
 		D04700B01A15A50C001411B3 /* new_game_button1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = new_game_button1.png; sourceTree = "<group>"; };
 		D04700B61A15A50C001411B3 /* right_arrow_token.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right_arrow_token.png; sourceTree = "<group>"; };
 		D04700B71A15A50C001411B3 /* sticky1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sticky1.mp3; sourceTree = "<group>"; };
-		D04700B81A15A50C001411B3 /* sticky_token.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sticky_token.png; sourceTree = "<group>"; };
+		D04700B81A15A50C001411B3 /* sticky_token_old.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sticky_token_old.png; sourceTree = "<group>"; };
 		D04700B91A15A50C001411B3 /* tap_area.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tap_area.png; sourceTree = "<group>"; };
 		D04700BA1A15A50C001411B3 /* up_arrow2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up_arrow2.png; sourceTree = "<group>"; };
 		D04700BB1A15A50C001411B3 /* up_arrow3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up_arrow3.png; sourceTree = "<group>"; };
@@ -154,6 +170,22 @@
 		D097BDE81A3EB07F0081337F /* Board_2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_2.json; sourceTree = "<group>"; };
 		D097BDE91A3EB07F0081337F /* Board_3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_3.json; sourceTree = "<group>"; };
 		D097BDED1A3FBBA20081337F /* PlayerCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCache.swift; sourceTree = "<group>"; };
+		D09A4CB11A7EA81B00F3A4F3 /* Board_6.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_6.json; sourceTree = "<group>"; };
+		D09A4CB31A7EA8A500F3A4F3 /* Board_7.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_7.json; sourceTree = "<group>"; };
+		D09A4CB51A7EA95000F3A4F3 /* Board_8.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_8.json; sourceTree = "<group>"; };
+		D09A4CB71A7EAA2400F3A4F3 /* Board_9.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_9.json; sourceTree = "<group>"; };
+		D09A4CB91A7EAAE200F3A4F3 /* Board_10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_10.json; sourceTree = "<group>"; };
+		D09A4CBB1A7EADEF00F3A4F3 /* Board_11.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_11.json; sourceTree = "<group>"; };
+		D09A4CBD1A7EAE3F00F3A4F3 /* Board_12.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_12.json; sourceTree = "<group>"; };
+		D09A4CBF1A7EAFB600F3A4F3 /* Board_13.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_13.json; sourceTree = "<group>"; };
+		D09A4CC11A7EAFF300F3A4F3 /* Board_14.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_14.json; sourceTree = "<group>"; };
+		D09A4CC31A7EB0C600F3A4F3 /* Board_15.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_15.json; sourceTree = "<group>"; };
+		D09A4CC51A7EB0DC00F3A4F3 /* Board_16.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_16.json; sourceTree = "<group>"; };
+		D09A4CC71A7EB10000F3A4F3 /* Board_17.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_17.json; sourceTree = "<group>"; };
+		D09A4CC91A7EB17900F3A4F3 /* Board_18.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_18.json; sourceTree = "<group>"; };
+		D09A4CCB1A7EB19100F3A4F3 /* Board_19.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_19.json; sourceTree = "<group>"; };
+		D09A4CCD1A7EB1AC00F3A4F3 /* Board_20.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_20.json; sourceTree = "<group>"; };
+		D09A4CCF1A7EB91A00F3A4F3 /* Board_21.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_21.json; sourceTree = "<group>"; };
 		D0AA60211A42A46E001531FC /* Board_4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_4.json; sourceTree = "<group>"; };
 		D0AA60221A42A46E001531FC /* Board_5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_5.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -273,10 +305,26 @@
 			children = (
 				D0AA60211A42A46E001531FC /* Board_4.json */,
 				D0AA60221A42A46E001531FC /* Board_5.json */,
+				D09A4CB11A7EA81B00F3A4F3 /* Board_6.json */,
 				D097BDE71A3EB07F0081337F /* Board_1.json */,
 				D097BDE81A3EB07F0081337F /* Board_2.json */,
 				D097BDE91A3EB07F0081337F /* Board_3.json */,
 				D04700821A15A50C001411B3 /* Board_0.json */,
+				D09A4CB31A7EA8A500F3A4F3 /* Board_7.json */,
+				D09A4CB51A7EA95000F3A4F3 /* Board_8.json */,
+				D09A4CB71A7EAA2400F3A4F3 /* Board_9.json */,
+				D09A4CB91A7EAAE200F3A4F3 /* Board_10.json */,
+				D09A4CBB1A7EADEF00F3A4F3 /* Board_11.json */,
+				D09A4CBD1A7EAE3F00F3A4F3 /* Board_12.json */,
+				D09A4CBF1A7EAFB600F3A4F3 /* Board_13.json */,
+				D09A4CC11A7EAFF300F3A4F3 /* Board_14.json */,
+				D09A4CC31A7EB0C600F3A4F3 /* Board_15.json */,
+				D09A4CC51A7EB0DC00F3A4F3 /* Board_16.json */,
+				D09A4CC71A7EB10000F3A4F3 /* Board_17.json */,
+				D09A4CC91A7EB17900F3A4F3 /* Board_18.json */,
+				D09A4CCB1A7EB19100F3A4F3 /* Board_19.json */,
+				D09A4CCD1A7EB1AC00F3A4F3 /* Board_20.json */,
+				D09A4CCF1A7EB91A00F3A4F3 /* Board_21.json */,
 			);
 			name = Boards;
 			sourceTree = "<group>";
@@ -303,7 +351,7 @@
 				D04700AF1A15A50C001411B3 /* menu_button.png */,
 				D04700B01A15A50C001411B3 /* new_game_button1.png */,
 				D04700B61A15A50C001411B3 /* right_arrow_token.png */,
-				D04700B81A15A50C001411B3 /* sticky_token.png */,
+				D04700B81A15A50C001411B3 /* sticky_token_old.png */,
 				D04700BA1A15A50C001411B3 /* up_arrow2.png */,
 				D04700BB1A15A50C001411B3 /* up_arrow3.png */,
 				D04700BC1A15A50C001411B3 /* up_arrow4.png */,
@@ -415,44 +463,60 @@
 			buildActionMask = 2147483647;
 			files = (
 				D09222211A68C75F007A7423 /* gamepiece8.png in Resources */,
+				D09A4CBA1A7EAAE200F3A4F3 /* Board_10.json in Resources */,
 				D04700FF1A15A50C001411B3 /* up_arrow_token.png in Resources */,
 				D04700EC1A15A50C001411B3 /* highlight.png in Resources */,
 				D08486ED1A3586F8002B5197 /* GamesListCell.xib in Resources */,
+				D09A4CB61A7EA95000F3A4F3 /* Board_8.json in Resources */,
 				D04700D81A15A50C001411B3 /* down_arrow_token.png in Resources */,
 				D04700C71A15A50C001411B3 /* Board_0.json in Resources */,
+				D09A4CB41A7EA8A500F3A4F3 /* Board_7.json in Resources */,
 				D04700FE1A15A50C001411B3 /* up_arrow5.png in Resources */,
 				D04700DF1A15A50C001411B3 /* gamepiece6.png in Resources */,
 				D09222201A68C75F007A7423 /* gamepiece7.png in Resources */,
-				D04700F91A15A50C001411B3 /* sticky_token.png in Resources */,
+				D04700F91A15A50C001411B3 /* sticky_token_old.png in Resources */,
 				D09222231A69A53D007A7423 /* bright-squares.png in Resources */,
 				D04700DB1A15A50C001411B3 /* gamepiece2.png in Resources */,
 				D04700DE1A15A50C001411B3 /* gamepiece5.png in Resources */,
 				D04700ED1A15A50C001411B3 /* left_arrow_token.png in Resources */,
 				D0AA60231A42A46E001531FC /* Board_4.json in Resources */,
+				D09A4CB21A7EA81B00F3A4F3 /* Board_6.json in Resources */,
+				D09A4CCE1A7EB1AC00F3A4F3 /* Board_20.json in Resources */,
 				D04700EF1A15A50C001411B3 /* menu.mp3 in Resources */,
 				D04700D41A15A50C001411B3 /* blocker_token.png in Resources */,
 				D04700FA1A15A50C001411B3 /* tap_area.png in Resources */,
 				D097BDEB1A3EB07F0081337F /* Board_2.json in Resources */,
 				D092221D1A685978007A7423 /* grid2.png in Resources */,
+				D09A4CC61A7EB0DC00F3A4F3 /* Board_16.json in Resources */,
 				D04700F71A15A50C001411B3 /* right_arrow_token.png in Resources */,
+				D09A4CC21A7EAFF300F3A4F3 /* Board_14.json in Resources */,
+				D09A4CC41A7EB0C600F3A4F3 /* Board_15.json in Resources */,
 				D04700D61A15A50C001411B3 /* board_corner.png in Resources */,
+				D09A4CCA1A7EB17900F3A4F3 /* Board_18.json in Resources */,
 				D04700EE1A15A50C001411B3 /* lose1.mp3 in Resources */,
 				D04700F01A15A50C001411B3 /* menu_button.png in Resources */,
 				D097BDEA1A3EB07F0081337F /* Board_1.json in Resources */,
 				D05348581A14B98200331484 /* LaunchScreen.xib in Resources */,
+				D09A4CCC1A7EB19100F3A4F3 /* Board_19.json in Resources */,
 				D05348551A14B98200331484 /* Images.xcassets in Resources */,
 				D0AA60241A42A46E001531FC /* Board_5.json in Resources */,
+				D09A4CC01A7EAFB600F3A4F3 /* Board_13.json in Resources */,
+				D09A4CC81A7EB10000F3A4F3 /* Board_17.json in Resources */,
 				D04700DA1A15A50C001411B3 /* gamepiece1.png in Resources */,
 				D053484C1A14B98200331484 /* GameScene.sks in Resources */,
 				D04700FB1A15A50C001411B3 /* up_arrow2.png in Resources */,
 				D04700DD1A15A50C001411B3 /* gamepiece4.png in Resources */,
+				D09A4CD01A7EB91A00F3A4F3 /* Board_21.json in Resources */,
 				D04700FD1A15A50C001411B3 /* up_arrow4.png in Resources */,
+				D09A4CB81A7EAA2400F3A4F3 /* Board_9.json in Resources */,
 				D04700F11A15A50C001411B3 /* new_game_button1.png in Resources */,
 				D04700D21A15A50C001411B3 /* arrow1.mp3 in Resources */,
 				D04700D71A15A50C001411B3 /* die.wav in Resources */,
 				D097BDEC1A3EB07F0081337F /* Board_3.json in Resources */,
 				D04701001A15A50C001411B3 /* win1.mp3 in Resources */,
 				D04700DC1A15A50C001411B3 /* gamepiece3.png in Resources */,
+				D09A4CBE1A7EAE3F00F3A4F3 /* Board_12.json in Resources */,
+				D09A4CBC1A7EADEF00F3A4F3 /* Board_11.json in Resources */,
 				D04701031A15A50C001411B3 /* Sprites.atlas in Resources */,
 				D04700FC1A15A50C001411B3 /* up_arrow3.png in Resources */,
 				D04700F81A15A50C001411B3 /* sticky1.mp3 in Resources */,
