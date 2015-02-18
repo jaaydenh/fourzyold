@@ -142,6 +142,7 @@ class GameScene:BaseScene {
         } else {
             activePlayer = .Player1
         }
+        println("* RotateActivePlayer: activePlayer = " + activePlayer.description)
     }
     
     func loadPlayerPhotos() {
@@ -255,6 +256,7 @@ class GameScene:BaseScene {
     }
     
     func getDestinationForPiece(piece:Piece, direction:Direction, startingRow:Int, startingColumn:Int) -> Bool {
+        println("* GetDestinationForPiece")
         var destinationRow: Int
         var destinationColumn: Int
         var destinationDirection: Direction
@@ -590,14 +592,13 @@ class GameScene:BaseScene {
         return canMove
     }
     
-    // MARK: GameKitTurnBasedMatchHelperDelegate Methods
-    
     func enterNewGame(match:GKTurnBasedMatch) {
-        println("Entering new game...")
+        println("* EnterNewGame")
         currentMatch = match
     }
     
-    func playLastMove() {
+    // Triggered when on the game screen and the opponent has just made a move
+    func playLastOpponentMove() {
         if let match = currentMatch {
             
             match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
@@ -639,13 +640,8 @@ class GameScene:BaseScene {
 
                                 self.activePiece = piece
                                 assert(piece.moveDestinations.count > 0)
-                                //self.activePieces.removeAtIndex(0)
                                 
                                 piece.animate()
-                                
-                                //let destination = piece.moveDestinations[0]
-                                // update gameboard model with destination of gamepiece
-                                //self.board.addPieceAtColumn(destination.column, row: destination.row, piece: piece)
                                 
                                 // update board model
                                 for activePiece in self.activePieces {
@@ -653,20 +649,11 @@ class GameScene:BaseScene {
                                     self.board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
                                 }
                                 
-                                //println("play last move - print board")
-                                //self.board.printBoard()
                                 println("active player: " + self.activePlayer.description)
                                 self.rotateActivePlayer()
                                 self.checkForWinnerAndUpdateMatch(false)
                                 self.activePieces.removeAtIndex(self.activePieces.count-1)
-                                //self.processPieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction)
-                                
-//                                if self.activePieces.count > 0 {
-//                                    self.activePieces.removeAll(keepCapacity: false)
-//                                }
                             }
-                            
-                            //self.renderBoard()
                         }
                     }
                     
@@ -686,9 +673,58 @@ class GameScene:BaseScene {
         }
     }
     
+    func playLastMove(destinationColumn: Int, destinationRow: Int, direction: Direction, updateModel: Bool) {
+        println("* GameScene:playLastMove")
+        //self.rotateActivePlayer()
+        var row = destinationRow
+        var column = destinationColumn
+        
+        switch (direction) {
+        case .Up:
+            row = 0
+            break
+        case .Down:
+            row = 7
+            break
+        case .Left:
+            column = 7
+            break
+        case .Right:
+            column = 0
+            break
+        }
+        
+        if let piece = self.placePieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction) {
+            self.activePieces.append(piece)
+        }
+        for piece in self.activePieces {
+            piece.generateActions()
+        }
+        
+        let piece = self.activePieces[self.activePieces.count-1]
+        
+        self.activePiece = piece
+        assert(piece.moveDestinations.count > 0)
+        
+        piece.animate()
+        
+        if updateModel {
+            // update board model
+            for activePiece in self.activePieces {
+                let destination = activePiece.moveDestinations[0]
+                self.board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
+            }
+        }
+
+        println("active player: " + self.activePlayer.description)
+
+        self.checkForWinnerAndUpdateMatch(false)
+        self.activePieces.removeAtIndex(self.activePieces.count-1)
+
+    }
+    
     func layoutMatch()
     {
-
         println()
         self.activePlayer = PieceType.Player1
         board = Board()
@@ -703,11 +739,10 @@ class GameScene:BaseScene {
                     println("Error fetching matches: \(error.localizedDescription)")
                 } else {
                     
-                    //println(match)
-                    
                     if let matchData = matchData {
                         self.gameData = GameKitMatchData(matchData: matchData)
                         
+                        // The first time a match is loaded generate the tokens if this has not already been done
                         if self.gameData.tokenLayout.count == 0 {
                             let boardNumber = Int(arc4random_uniform(16) + 6)
                             self.board.initTokensWithBoard("Board_" + String(boardNumber))
@@ -746,8 +781,8 @@ class GameScene:BaseScene {
                             self.renderBoardTokens()
                         }
                         
-                        if (self.gameData.moves.count > 0) {
-                            for (var i = 0;i < self.gameData.moves.count / 3; i++) {
+                        if (self.gameData.moves.count >= 3) {
+                            for (var i = 0;i < (self.gameData.moves.count - 3) / 3; i++) {
                                 let column = self.gameData.moves[i * 3]
                                 let row = self.gameData.moves[i * 3 + 1]
                                 if let direction = Direction(rawValue: self.gameData.moves[i * 3 + 2]) {
@@ -757,6 +792,15 @@ class GameScene:BaseScene {
                             }
                             
                             self.renderBoard()
+                            
+                            self.board.printBoard()
+                            
+                            let lastMoveColumn = self.gameData.moves[self.gameData.moves.count - 3]
+                            let lastMoveRow = self.gameData.moves[self.gameData.moves.count - 2]
+                            if let lastMoveDirection = Direction(rawValue: self.gameData.moves[self.gameData.moves.count - 1]) {
+                                self.playLastMove(lastMoveColumn, destinationRow: lastMoveRow, direction: lastMoveDirection, updateModel: true)
+                                self.rotateActivePlayer()
+                            }
                         }
                     }
                     
@@ -794,14 +838,20 @@ class GameScene:BaseScene {
     }
     
     func advanceTurn() {
-        println("advanceTurn")
+        println("* GameScene:advanceTurn")
         let currentMatch:GKTurnBasedMatch = self.currentMatch //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch
         let updatedMatchData:NSData = self.gameData.encodeMatchData()
         var nextParticipant:GKTurnBasedParticipant!
         if currentMatch.status != GKTurnBasedMatchStatus.Ended {
             if currentMatch.participants.count >= 2 {
-                
+
                 nextParticipant = getOpponentForMatch(currentMatch)
+
+                let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
+                let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
+                
+                currentMatch.setLocalizableMessageWithKey("%@ has made a move!", arguments: [currentPlayerName.alias])
+                currentMatch.message = "\(currentPlayerName.alias) has made a move!"
                 let sortedParticipants:[GKTurnBasedParticipant] = [nextParticipant, currentMatch.currentParticipant]
                 
                 currentMatch.endTurnWithNextParticipants(sortedParticipants, turnTimeout: GKTurnTimeoutDefault, matchData: updatedMatchData) { (error) -> Void in
@@ -816,6 +866,7 @@ class GameScene:BaseScene {
     }
     
     func renderBoard() {
+        println("* GameScene:renderBoard")
         for piece in board.getAllPieces() {
             if piece != nil {
                 addSpriteForPiece(piece!, isPieceOnBoard: true)
@@ -824,6 +875,7 @@ class GameScene:BaseScene {
     }
     
     func renderBoardTokens() {
+        println("* GameScene:renderBoardTokens")
         for token in board.getAllTokens() {
             if token != nil {
                 if token?.tokenType != TokenType.None {
@@ -898,7 +950,7 @@ class GameScene:BaseScene {
     }
     
     func endMatchWithWinner(pieceType: PieceType, shouldUpdateMatch: Bool) {
-        println("endMatch")
+        println("* GameScene:endMatchWithWinner")
         
         var winnerLabel = self.childNodeWithName(kWinnerLabelName) as SKLabelNode
         var winner = ""
@@ -938,15 +990,21 @@ class GameScene:BaseScene {
             
             opponent = getOpponentForMatch(currentMatch)
             
+            let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
+            let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
+            
             if pieceType == PieceType.None {
                 currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Tied
                 opponent.matchOutcome = GKTurnBasedMatchOutcome.Tied
+                currentMatch.message = "You have Tied a game with \(currentPlayerName.alias)"
             } else if pieceType == activePlayer {
                 currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Won
                 opponent.matchOutcome = GKTurnBasedMatchOutcome.Lost
+                currentMatch.message = "You have Lost a game with \(currentPlayerName.alias)"
             } else {
                 currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Lost
                 opponent.matchOutcome = GKTurnBasedMatchOutcome.Won
+                currentMatch.message = "You have Won a game with \(currentPlayerName.alias)"
             }
             
             let updatedMatchData:NSData = self.gameData.encodeMatchData()

@@ -87,6 +87,7 @@
 		D09A4CCC1A7EB19100F3A4F3 /* Board_19.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CCB1A7EB19100F3A4F3 /* Board_19.json */; };
 		D09A4CCE1A7EB1AC00F3A4F3 /* Board_20.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CCD1A7EB1AC00F3A4F3 /* Board_20.json */; };
 		D09A4CD01A7EB91A00F3A4F3 /* Board_21.json in Resources */ = {isa = PBXBuildFile; fileRef = D09A4CCF1A7EB91A00F3A4F3 /* Board_21.json */; };
+		D0A46F111A93181E005CAE5D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0A46F131A93181E005CAE5D /* Localizable.strings */; };
 		D0AA60231A42A46E001531FC /* Board_4.json in Resources */ = {isa = PBXBuildFile; fileRef = D0AA60211A42A46E001531FC /* Board_4.json */; };
 		D0AA60241A42A46E001531FC /* Board_5.json in Resources */ = {isa = PBXBuildFile; fileRef = D0AA60221A42A46E001531FC /* Board_5.json */; };
 /* End PBXBuildFile section */
@@ -186,6 +187,8 @@
 		D09A4CCB1A7EB19100F3A4F3 /* Board_19.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_19.json; sourceTree = "<group>"; };
 		D09A4CCD1A7EB1AC00F3A4F3 /* Board_20.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_20.json; sourceTree = "<group>"; };
 		D09A4CCF1A7EB91A00F3A4F3 /* Board_21.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_21.json; sourceTree = "<group>"; };
+		D0A46F121A93181E005CAE5D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D0A46F141A931B48005CAE5D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D0AA60211A42A46E001531FC /* Board_4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_4.json; sourceTree = "<group>"; };
 		D0AA60221A42A46E001531FC /* Board_5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_5.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -267,6 +270,7 @@
 				D05348511A14B98200331484 /* Main.storyboard */,
 				D05348541A14B98200331484 /* Images.xcassets */,
 				D05348561A14B98200331484 /* LaunchScreen.xib */,
+				D0A46F131A93181E005CAE5D /* Localizable.strings */,
 				D06026161A16749E00AD36CC /* Boards */,
 				D047008F1A15A50C001411B3 /* resources */,
 				D04700C21A15A50C001411B3 /* Sprites.atlas */,
@@ -493,6 +497,7 @@
 				D09A4CC41A7EB0C600F3A4F3 /* Board_15.json in Resources */,
 				D04700D61A15A50C001411B3 /* board_corner.png in Resources */,
 				D09A4CCA1A7EB17900F3A4F3 /* Board_18.json in Resources */,
+				D0A46F111A93181E005CAE5D /* Localizable.strings in Resources */,
 				D04700EE1A15A50C001411B3 /* lose1.mp3 in Resources */,
 				D04700F01A15A50C001411B3 /* menu_button.png in Resources */,
 				D097BDEA1A3EB07F0081337F /* Board_1.json in Resources */,
@@ -609,6 +614,15 @@
 				D05348571A14B98200331484 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		D0A46F131A93181E005CAE5D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0A46F121A93181E005CAE5D /* en */,
+				D0A46F141A931B48005CAE5D /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
