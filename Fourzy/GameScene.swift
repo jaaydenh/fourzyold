@@ -17,10 +17,11 @@ class GameScene:BaseScene {
     let piecesLayer = SKNode()
     let boardLayer = SKNode()
     
-    let leftActionArea = SKSpriteNode()
-    let rightActionArea = SKSpriteNode()
-    let topActionArea = SKSpriteNode()
-    let bottomActionArea = SKSpriteNode()
+    //var leftActionArea:SKShapeNode = SKShapeNode(rectOfSize: CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows))
+    var leftActionArea = SKSpriteNode()
+    var rightActionArea = SKSpriteNode()
+    var topActionArea = SKSpriteNode()
+    var bottomActionArea = SKSpriteNode()
     
     var isMultiplayer = true
     var activePiece:Piece?
@@ -37,7 +38,7 @@ class GameScene:BaseScene {
         backgroundColor = SKColor.whiteColor()
         
         gameLayer.hidden = false
-        
+
         gameLayer.position = CGPoint(x: 0, y: 0)
         self.addChild(gameLayer)
         
@@ -177,7 +178,7 @@ class GameScene:BaseScene {
         var winnerLabel = SKLabelNode(fontNamed:"Arial Bold")
         winnerLabel.fontSize = 26
         winnerLabel.fontColor = SKColor.blackColor()
-        winnerLabel.position = CGPointMake(0, 0)
+        winnerLabel.position = CGPointMake(0, 115)
         winnerLabel.zPosition = 1.0
         winnerLabel.hidden = false
         winnerLabel.name = kWinnerLabelName
@@ -649,7 +650,7 @@ class GameScene:BaseScene {
                                     self.board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
                                 }
                                 
-                                println("active player: " + self.activePlayer.description)
+                                //println("active player: " + self.activePlayer.description)
                                 self.rotateActivePlayer()
                                 self.checkForWinnerAndUpdateMatch(false)
                                 self.activePieces.removeAtIndex(self.activePieces.count-1)
@@ -668,7 +669,7 @@ class GameScene:BaseScene {
                         //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum]
                     }
                 }
-                
+                self.board.printBoard()
             })
         }
     }
@@ -716,11 +717,12 @@ class GameScene:BaseScene {
             }
         }
 
-        println("active player: " + self.activePlayer.description)
-
+        //println("active player: " + self.activePlayer.description)
+        //self.rotateActivePlayer()
         self.checkForWinnerAndUpdateMatch(false)
         self.activePieces.removeAtIndex(self.activePieces.count-1)
-
+        
+        board.printBoard()
     }
     
     func layoutMatch()
@@ -730,6 +732,7 @@ class GameScene:BaseScene {
         board = Board()
         piecesLayer.removeAllChildren()
         addTapAreas()
+        addTapArrows()
         
         if let match = currentMatch {
         println("* LayoutMatch existing match")
@@ -850,8 +853,8 @@ class GameScene:BaseScene {
                 let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
                 let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
                 
-                currentMatch.setLocalizableMessageWithKey("%@ has made a move!", arguments: [currentPlayerName.alias])
-                currentMatch.message = "\(currentPlayerName.alias) has made a move!"
+                currentMatch.setLocalizableMessageWithKey("%@ has made a move!", arguments: [currentPlayerName.displayName])
+                currentMatch.message = "\(currentPlayerName.displayName) has made a move!"
                 let sortedParticipants:[GKTurnBasedParticipant] = [nextParticipant, currentMatch.currentParticipant]
                 
                 currentMatch.endTurnWithNextParticipants(sortedParticipants, turnTimeout: GKTurnTimeoutDefault, matchData: updatedMatchData) { (error) -> Void in
@@ -915,6 +918,7 @@ class GameScene:BaseScene {
     }
     
     func checkForWinnerAndUpdateMatch(shouldUpdateMatch: Bool) {
+        println("* GameScene:checkForWinnerAndUpdateMatch")
         var winners:[PieceType] = []
         
         for activePiece in activePieces {
@@ -949,71 +953,85 @@ class GameScene:BaseScene {
         }
     }
     
+    
+    func displayEndOfGame(winner:String, isTie:Bool) {
+        var winnerLabel = self.childNodeWithName(kWinnerLabelName) as SKLabelNode
+        if isTie {
+            winnerLabel.text = "Tie!"
+        } else {
+            winnerLabel.text =  "\(winner) Wins!"
+        }
+        winnerLabel.hidden = false
+    }
+    
     func endMatchWithWinner(pieceType: PieceType, shouldUpdateMatch: Bool) {
         println("* GameScene:endMatchWithWinner")
         
-        var winnerLabel = self.childNodeWithName(kWinnerLabelName) as SKLabelNode
         var winner = ""
-    
+        let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
+        let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
+        let opponentParticipant = getOpponentForMatch(currentMatch)
+        let opponentPlayerName = PlayerCache.sharedManager.players[opponentParticipant.playerID]!
+        
         if (isMultiplayer) {
-            if PlayerCache.sharedManager.players.count > 0 {
-                if pieceType == activePlayer {
-                    let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
+            if currentMatch.status == GKTurnBasedMatchStatus.Ended {
+                if currentParticipant.matchOutcome == GKTurnBasedMatchOutcome.Won {
+                    self.displayEndOfGame(currentPlayerName.alias, isTie: false)
+                } else if currentParticipant.matchOutcome == GKTurnBasedMatchOutcome.Lost {
+                    self.displayEndOfGame(opponentPlayerName.displayName, isTie: false)
+                } else if currentParticipant.matchOutcome == GKTurnBasedMatchOutcome.Tied {
+                    self.displayEndOfGame("", isTie: true)
+                }
+            } else if PlayerCache.sharedManager.players.count > 0 {
+                if pieceType == PieceType.None {
+                    self.displayEndOfGame("", isTie: true)
+                } else if pieceType == activePlayer {
                     let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
-                    winnerLabel.text =  "\(currentPlayerName.alias) Wins!"
-                    winnerLabel.hidden = false
+                    self.displayEndOfGame(currentPlayerName.alias, isTie: false)
                 } else {
-                    let opponentParticipant = getOpponentForMatch(currentMatch)
                     let opponentPlayerName = PlayerCache.sharedManager.players[opponentParticipant.playerID]!
-                    winnerLabel.text =  "\(opponentPlayerName.displayName) Wins!"
-                    winnerLabel.hidden = false
+                    self.displayEndOfGame(opponentPlayerName.displayName, isTie: false)
                 }
             }
+            
+            if shouldUpdateMatch {
+                var opponent:GKTurnBasedParticipant!
+                opponent = getOpponentForMatch(currentMatch)
+                
+                if pieceType == PieceType.None {
+                    currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Tied
+                    opponent.matchOutcome = GKTurnBasedMatchOutcome.Tied
+                    currentMatch.message = "\(opponentPlayerName.displayName) have Tied a match versus \(currentPlayerName.alias)"
+                } else if pieceType == activePlayer {
+                    currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Won
+                    opponent.matchOutcome = GKTurnBasedMatchOutcome.Lost
+                    currentMatch.message = "\(opponentPlayerName.displayName) has Lost a match versus \(currentPlayerName.alias)"
+                } else {
+                    currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Lost
+                    opponent.matchOutcome = GKTurnBasedMatchOutcome.Won
+                    currentMatch.message = "\(opponentPlayerName.displayName) has Won a match versus \(currentPlayerName.alias)"
+                }
+                
+                let updatedMatchData:NSData = self.gameData.encodeMatchData()
+                
+                currentMatch.endMatchInTurnWithMatchData(updatedMatchData, completionHandler: { (error) -> Void in
+                    if error != nil {
+                        println(error)
+                    }
+                })
+            }
+            
         } else {
             if pieceType == PieceType.Player1 {
                 winner = "Player 1"
-                winnerLabel.text =  "Player 1 Wins!"
-                winnerLabel.hidden = false
+                self.displayEndOfGame(winner, isTie: false)
             } else if pieceType == PieceType.Player2 {
                 winner = "Player 2"
-                winnerLabel.text = "Player 2 Wins!"
-                winnerLabel.hidden = false
+                self.displayEndOfGame(winner, isTie: false)
             } else if pieceType == PieceType.None {
                 winner = "Tie"
-                winnerLabel.text = "Tie!"
-                winnerLabel.hidden = false
+                self.displayEndOfGame("", isTie: true)
             }
-        }
-        
-        if isMultiplayer && shouldUpdateMatch {
-            var opponent:GKTurnBasedParticipant!
-            
-            opponent = getOpponentForMatch(currentMatch)
-            
-            let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
-            let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
-            
-            if pieceType == PieceType.None {
-                currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Tied
-                opponent.matchOutcome = GKTurnBasedMatchOutcome.Tied
-                currentMatch.message = "You have Tied a game with \(currentPlayerName.alias)"
-            } else if pieceType == activePlayer {
-                currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Won
-                opponent.matchOutcome = GKTurnBasedMatchOutcome.Lost
-                currentMatch.message = "You have Lost a game with \(currentPlayerName.alias)"
-            } else {
-                currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Lost
-                opponent.matchOutcome = GKTurnBasedMatchOutcome.Won
-                currentMatch.message = "You have Won a game with \(currentPlayerName.alias)"
-            }
-            
-            let updatedMatchData:NSData = self.gameData.encodeMatchData()
-            
-            currentMatch.endMatchInTurnWithMatchData(updatedMatchData, completionHandler: { (error) -> Void in
-                if error != nil {
-                    println(error)
-                }
-            })
         }
         
     //NSDictionary *winParams = @{@"Winner": winner}
@@ -1112,9 +1130,83 @@ class GameScene:BaseScene {
         boardLayer.addChild(grid)
     }
     
+    func addTapArrows() {
+        let moveDown = SKAction.moveByX(0.0, y: -9.0, duration: 0.5)
+        let moveUp = SKAction.moveByX(0.0, y: 9.0, duration: 0.5)
+        let moveLeft = SKAction.moveByX(-9.0, y: 0.0, duration: 0.5)
+        let moveRight = SKAction.moveByX(9.0, y: 0.0, duration: 0.5)
+        
+        for var i:Int = 0; i < 8;i++ {
+            var downArrow = SKSpriteNode(imageNamed: "down_arrow")
+            downArrow.size = CGSize(width: 14.0, height: 8.0)
+            downArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+            downArrow.position = CGPoint(x: 30 * i + kTapAreaWidth + 8, y: kTileWidth * kNumRows + kTapAreaWidth + 12)
+            boardLayer.addChild(downArrow)
+            
+            var moveActions: [SKAction] = []
+
+            moveActions.append(moveDown)
+            moveActions.append(moveUp)
+
+            let downSequence = SKAction.sequence(moveActions)
+            let moveDownAction = SKAction.repeatActionForever(downSequence)
+            downSequence.timingMode = SKActionTimingMode.EaseIn
+            downArrow.runAction(moveDownAction)
+            
+            var upArrow = SKSpriteNode(imageNamed: "up_arrow")
+            upArrow.size = CGSize(width: 14.0, height: 8.0)
+            upArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+            upArrow.position = CGPoint(x: 30 * i + kTapAreaWidth + 8, y: 16)
+            boardLayer.addChild(upArrow)
+
+            var upActions: [SKAction] = []
+            upActions.append(moveUp)
+            upActions.append(moveDown)
+
+            let upSequence = SKAction.sequence(upActions)
+            upSequence.timingMode = SKActionTimingMode.EaseIn
+            let moveUpAction = SKAction.repeatActionForever(upSequence)
+            upArrow.runAction(moveUpAction)
+            
+            var leftArrow = SKSpriteNode(imageNamed: "left_arrow")
+            leftArrow.size = CGSize(width: 8.0, height: 14.0)
+            leftArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+            leftArrow.position = CGPoint(x: kNumColumns * kTileWidth + kTapAreaWidth + 14, y: 30 * i + kTapAreaWidth + 10)
+            boardLayer.addChild(leftArrow)
+            
+            var leftActions: [SKAction] = []
+            leftActions.append(moveLeft)
+            leftActions.append(moveRight)
+            
+            let leftSequence = SKAction.sequence(leftActions)
+            leftSequence.timingMode = SKActionTimingMode.EaseIn
+            let moveLeftAction = SKAction.repeatActionForever(leftSequence)
+            leftArrow.runAction(moveLeftAction)
+            
+            var rightArrow = SKSpriteNode(imageNamed: "right_arrow")
+            rightArrow.size = CGSize(width: 8.0, height: 14.0)
+            rightArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
+            rightArrow.position = CGPoint(x: 16, y: 30 * i + kTapAreaWidth + 8)
+            boardLayer.addChild(rightArrow)
+            
+            var rightActions: [SKAction] = []
+            rightActions.append(moveRight)
+            rightActions.append(moveLeft)
+            
+            let rightSequence = SKAction.sequence(rightActions)
+            rightSequence.timingMode = SKActionTimingMode.EaseIn
+            let moveRightAction = SKAction.repeatActionForever(rightSequence)
+            rightArrow.runAction(moveRightAction)
+        }
+    }
+    
     func addTapAreas() {
+        //leftActionArea.strokeColor = SKColor.redColor()
+        //leftActionArea.fillColor = SKColor.yellowColor()
+
         leftActionArea.texture = SKTexture(imageNamed: "tap_area")
-        //leftActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
+        leftActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
+        leftActionArea.hidden = true
         leftActionArea.size = CGSize(width: 45, height: 45)
         leftActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
         leftActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
@@ -1122,9 +1214,10 @@ class GameScene:BaseScene {
         leftActionArea.yScale = 30.0 * 8.0/45.0
         leftActionArea.position = CGPoint(x: -1, y: kTapAreaWidth)
         boardLayer.addChild(leftActionArea)
-        
+
         rightActionArea.texture = SKTexture(imageNamed: "tap_area")
         //rightActionArea.size = CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows)
+        rightActionArea.hidden = true
         rightActionArea.size = CGSize(width: 45, height: 45)
         rightActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
         rightActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
@@ -1135,6 +1228,7 @@ class GameScene:BaseScene {
         
         topActionArea.texture = SKTexture(imageNamed: "tap_area")
         //topActionArea.size = CGSize(width: kTileWidth * kNumRows, height:kTapAreaWidth)
+        topActionArea.hidden = true
         topActionArea.size = CGSize(width: 45, height: 45)
         topActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
         topActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
@@ -1145,6 +1239,7 @@ class GameScene:BaseScene {
         
         bottomActionArea.texture = SKTexture(imageNamed: "tap_area")
         //bottomActionArea.size = CGSize(width: kTileWidth * kNumColumns, height: kTapAreaWidth)
+        bottomActionArea.hidden = true
         bottomActionArea.size = CGSize(width: 45, height: 45)
         bottomActionArea.anchorPoint = CGPoint(x: 0.0, y: 0.0)
         bottomActionArea.centerRect = CGRectMake(15/45, 15/45, 15/45, 15/45)
@@ -1155,32 +1250,32 @@ class GameScene:BaseScene {
     }
     
     func addBoardCorners() {
-        var corner1 = SKSpriteNode(imageNamed:"board_corner")
-        corner1.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
-        //corner1.anchorPoint = CGPointMake(0.0, 0.0)
-        corner1.position = CGPointMake(-140.0, 90.0)
-        corner1.alpha = 0.5
-        gameLayer.addChild(corner1)
-        
-        var corner2 = SKSpriteNode(imageNamed:"board_corner")
-        corner2.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
-        //corner2.anchorPoint = CGPointMake(0.0, 0.0)
-        corner2.position = CGPointMake(140.0, 90.0)
-        corner2.alpha = 0.5
-        gameLayer.addChild(corner2)
-        
-        var corner3 = SKSpriteNode(imageNamed:"board_corner")
-        corner3.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
-        //corner3.anchorPoint = CGPointMake(0.0, 0.0)
-        corner3.position = CGPointMake(140.0, -190)
-        corner3.alpha = 0.5
-        gameLayer.addChild(corner3)
-        
-        var corner4 = SKSpriteNode(imageNamed:"board_corner")
-        corner4.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
-        //corner4.anchorPoint = CGPointMake(0.0, 0.0)
-        corner4.position = CGPointMake(-140.0, -190.0)
-        corner4.alpha = 0.5
-        gameLayer.addChild(corner4)
+//        var corner1 = SKSpriteNode(imageNamed:"board_corner")
+//        corner1.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
+//        //corner1.anchorPoint = CGPointMake(0.0, 0.0)
+//        corner1.position = CGPointMake(-140.0, 90.0)
+//        corner1.alpha = 0.5
+//        gameLayer.addChild(corner1)
+//        
+//        var corner2 = SKSpriteNode(imageNamed:"board_corner")
+//        corner2.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
+//        //corner2.anchorPoint = CGPointMake(0.0, 0.0)
+//        corner2.position = CGPointMake(140.0, 90.0)
+//        corner2.alpha = 0.5
+//        gameLayer.addChild(corner2)
+//        
+//        var corner3 = SKSpriteNode(imageNamed:"board_corner")
+//        corner3.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
+//        //corner3.anchorPoint = CGPointMake(0.0, 0.0)
+//        corner3.position = CGPointMake(140.0, -190)
+//        corner3.alpha = 0.5
+//        gameLayer.addChild(corner3)
+//        
+//        var corner4 = SKSpriteNode(imageNamed:"board_corner")
+//        corner4.size = CGSize(width: kTapAreaWidth, height: kTapAreaWidth)
+//        //corner4.anchorPoint = CGPointMake(0.0, 0.0)
+//        corner4.position = CGPointMake(-140.0, -190.0)
+//        corner4.alpha = 0.5
+//        gameLayer.addChild(corner4)
     }
 }

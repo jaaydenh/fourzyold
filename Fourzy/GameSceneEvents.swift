@@ -57,7 +57,7 @@ extension GameScene {
             self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
 
             self.removeHighlights()
-            println("active player: " + self.activePlayer.description)
+            //println("active player: " + self.activePlayer.description)
             checkForWinnerAndUpdateMatch(true)
             activePieces.removeAtIndex(activePieces.count-1)
             
