@@ -98,8 +98,8 @@ enum PieceType: Int, Printable {
     
     var spriteName: String {
         let spriteNames = [
-            "gamepiece4",
-            "gamepiece7"]
+            "blue_piece",
+            "red_piece"]
         
         return spriteNames[rawValue - 1]
     }

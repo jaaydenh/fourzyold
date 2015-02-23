@@ -69,8 +69,8 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             
             let skView = self.view as SKView
             //skView.frameInterval = 4
-            skView.showsDrawCount = true
-            skView.showsFPS = true
+            //skView.showsDrawCount = true
+            //skView.showsFPS = true
             skView.multipleTouchEnabled = false
             skView.ignoresSiblingOrder = true
 
