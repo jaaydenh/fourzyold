@@ -326,7 +326,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         {
             self.matches = sortMatchesByPlayerTurn(matchList)
             
-            sor
+            
             
             var playerList:[String] = []
             for match in self.matches {
