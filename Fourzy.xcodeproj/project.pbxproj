@@ -70,6 +70,7 @@
 		D05348641A14B98200331484 /* FourzyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05348631A14B98200331484 /* FourzyTests.swift */; };
 		D056BDE31A2C2E2900DCEAF6 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */; };
 		D06FD0D61A99B23C00EA3B12 /* buttonSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = D06FD0D51A99B23C00EA3B12 /* buttonSelected.png */; };
+		D0730F941A9E3F0E007A7896 /* GKTurnBasedMatchExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0730F931A9E3F0E007A7896 /* GKTurnBasedMatchExtension.swift */; };
 		D08486ED1A3586F8002B5197 /* GamesListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D08486EC1A3586F8002B5197 /* GamesListCell.xib */; };
 		D08486EF1A3589C3002B5197 /* GamesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08486EE1A3589C3002B5197 /* GamesListCell.swift */; };
 		D092221D1A685978007A7423 /* grid2.png in Resources */ = {isa = PBXBuildFile; fileRef = D092221C1A685978007A7423 /* grid2.png */; };
@@ -188,6 +189,7 @@
 		D05348631A14B98200331484 /* FourzyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourzyTests.swift; sourceTree = "<group>"; };
 		D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		D06FD0D51A99B23C00EA3B12 /* buttonSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSelected.png; sourceTree = "<group>"; };
+		D0730F931A9E3F0E007A7896 /* GKTurnBasedMatchExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GKTurnBasedMatchExtension.swift; sourceTree = "<group>"; };
 		D08486EC1A3586F8002B5197 /* GamesListCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GamesListCell.xib; sourceTree = "<group>"; };
 		D08486EE1A3589C3002B5197 /* GamesListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GamesListCell.swift; sourceTree = "<group>"; };
 		D092221C1A685978007A7423 /* grid2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid2.png; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				D053484B1A14B98200331484 /* GameScene.sks */,
 				D053484F1A14B98200331484 /* GameViewController.swift */,
 				D04700C41A15A50C001411B3 /* ViewController.swift */,
+				D0730F931A9E3F0E007A7896 /* GKTurnBasedMatchExtension.swift */,
 				D08486EE1A3589C3002B5197 /* GamesListCell.swift */,
 				D08486EC1A3586F8002B5197 /* GamesListCell.xib */,
 				D05348511A14B98200331484 /* Main.storyboard */,
@@ -645,6 +648,7 @@
 				D04701041A15A50C001411B3 /* Token.swift in Sources */,
 				D04701051A15A50C001411B3 /* ViewController.swift in Sources */,
 				D04700CF1A15A50C001411B3 /* GridPosition.swift in Sources */,
+				D0730F941A9E3F0E007A7896 /* GKTurnBasedMatchExtension.swift in Sources */,
 				D04700D01A15A50C001411B3 /* Piece.swift in Sources */,
 				D053484A1A14B98200331484 /* AppDelegate.swift in Sources */,
 				D04700CE1A15A50C001411B3 /* GameSceneEvents.swift in Sources */,

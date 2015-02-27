@@ -89,7 +89,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
 
     func loadMatches() {
-        println("* ViewController:loadMatches")
+        println("# ViewController:loadMatches")
         if ((loadingMatches) != nil) {
             if loadingMatches == true {
                 return
@@ -138,7 +138,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     override func viewDidAppear(animated: Bool) {
 
-        println("* ViewController:viewdidappear")
+        println("# ViewController:viewDidAppear")
         if GKLocalPlayer.localPlayer().authenticated {
             loadMatches()
         }
@@ -314,16 +314,20 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
                 }
             }
         }
-        
+
         return matchList
     }
     
+    
     func didFetchMatches(matches: [AnyObject]!) {
-        println("* ViewController:didFetchMatches")
+        println("# ViewController:didFetchMatches")
         
         if let matchList = matches as? [GKTurnBasedMatch]
         {
             self.matches = sortMatchesByPlayerTurn(matchList)
+            
+            sor
+            
             var playerList:[String] = []
             for match in self.matches {
                 
@@ -350,7 +354,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
     
     func enterNewGame(match:GKTurnBasedMatch) {
-        println("* EnterNewGame")
+        println("# EnterNewGame")
         self.performSegueWithIdentifier("segueToGamePlay", sender: match)
     }
 
@@ -360,7 +364,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        println("* PrepareForSegue")
+        println("# ViewController:prepareForSegue")
         if segue.identifier == "segueToGamePlay" {
             gameViewController = segue.destinationViewController as GameViewController
             //gameViewController.delegate = self
@@ -387,7 +391,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     // A turned-based match has been found, the game should start
     func turnBasedMatchmakerViewController(viewController: GKTurnBasedMatchmakerViewController!, didFindMatch match: GKTurnBasedMatch!) {
-        println("### turnBasedMatchmakerViewController didFindMatch")
+        println("# ViewController:turnBasedMatchmakerViewController:didFindMatch")
         self.dismissViewControllerAnimated(true, completion: nil)
         self.performSegueWithIdentifier("segueToGamePlay", sender: match)
     }
@@ -397,7 +401,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         println("### Quit.....match")
         // TODO
     }
-    
+
     func player(player: GKPlayer!, receivedTurnEventForMatch match: GKTurnBasedMatch!, didBecomeActive: Bool) {
         println("receivedTurnEventForMatch:didBecomeActive:ViewController \(didBecomeActive)")
         loadMatches()

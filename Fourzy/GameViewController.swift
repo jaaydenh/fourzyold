@@ -87,14 +87,14 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         println("receivedTurnEventForMatch:GameViewController")
         if (self.scene.currentMatch != nil) {
             if (self.scene.currentMatch.matchID == match.matchID) {
-                self.scene.playLastOpponentMove()
+                    self.scene.playLastOpponentMove()
             }
         }
     }
     
     func player(player: GKPlayer!, matchEnded match: GKTurnBasedMatch!) {
         if (self.scene.currentMatch.matchID == match.matchID) {
-            self.scene.playLastOpponentMove()
+                self.scene.playLastOpponentMove()
         }
     }
     

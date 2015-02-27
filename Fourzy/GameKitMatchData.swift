@@ -48,5 +48,9 @@ class GameKitMatchData {
 
         return matchData
     }
+    
+    func getMovesCount() -> Int {
+        return moves.count / 3
+    }
 }
 

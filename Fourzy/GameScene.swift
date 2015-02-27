@@ -62,7 +62,7 @@ class GameScene:BaseScene {
     }
     
     override func didMoveToView(view: SKView) {
-        println("didMoveToView")
+        println("# GameScene:didMoveToView")
 //        piecesLayer.removeAllChildren()
 //        addTapAreas()
         //if let match = GameKitTurnBasedMatchHelper.sharedInstance().currentMatch {
@@ -71,7 +71,7 @@ class GameScene:BaseScene {
     }
     
     override func willMoveFromView(view: SKView) {
-        println("willMoveFromView")
+        println("# GameScene:willMoveFromView")
     }
     
     func touchedActivePiece(point: CGPoint) -> Bool {
@@ -119,7 +119,7 @@ class GameScene:BaseScene {
     }
     
     func submitMove() {
-        println("* GameScene:submitMove")
+        println("# GameScene:submitMove")
         
         if (isMultiplayer && currentMatch != nil) {
             if currentMatch.status == GKTurnBasedMatchStatus.Ended {
@@ -235,7 +235,7 @@ class GameScene:BaseScene {
         } else {
             activePlayer = .Player1
         }
-        println("* RotateActivePlayer: activePlayer = " + activePlayer.description)
+        println("# GameScene:RotateActivePlayer: activePlayer = " + activePlayer.description)
     }
     
     func loadPlayerPhotos() {
@@ -350,7 +350,7 @@ class GameScene:BaseScene {
     }
     
     func getDestinationForPiece(piece:Piece, direction:Direction, startingRow:Int, startingColumn:Int) -> Bool {
-        println("* GetDestinationForPiece")
+        println("# GameScene:GetDestinationForPiece")
         var destinationRow: Int
         var destinationColumn: Int
         var destinationDirection: Direction
@@ -687,12 +687,14 @@ class GameScene:BaseScene {
     }
     
     func enterNewGame(match:GKTurnBasedMatch) {
-        println("* EnterNewGame")
+        println("# GameScene:enterNewGame")
         currentMatch = match
     }
     
     // Triggered when on the game screen and the opponent has just made a move
     func playLastOpponentMove() {
+        println("# GameScene:playLastOpponentMove")
+
         if let match = currentMatch {
             
             match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
@@ -703,50 +705,53 @@ class GameScene:BaseScene {
                     if let matchData = matchData {
                         self.gameData = GameKitMatchData(matchData: matchData)
                         let count = self.gameData.moves.count
-                        if (count >= 3) {
-                            var column = self.gameData.moves[count - 3]
-                            var row = self.gameData.moves[count - 2]
-                            if let direction = Direction(rawValue: self.gameData.moves[count - 1]) {
-                                
-                                switch (direction) {
-                                case .Up:
-                                    row = 0
-                                    break
-                                case .Down:
-                                    row = 7
-                                    break
-                                case .Left:
-                                    column = 7
-                                    break
-                                case .Right:
-                                    column = 0
-                                    break
-                                }
-                                
-                                if let piece = self.placePieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction) {
-                                    self.activePieces.append(piece)
-                                }
-                                for piece in self.activePieces {
-                                    piece.generateActions()
-                                }
-                                
-                                let piece = self.activePieces[self.activePieces.count-1]
 
-                                self.activePiece = piece
-                                assert(piece.moveDestinations.count > 0)
-                                
-                                piece.animate()
-                                
-                                // update board model
-                                for activePiece in self.activePieces {
-                                    let destination = activePiece.moveDestinations[0]
-                                    self.board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
+                        if (count >= 3) {
+                            if self.board.piecesCount() < self.gameData.getMovesCount() {
+                                var column = self.gameData.moves[count - 3]
+                                var row = self.gameData.moves[count - 2]
+                                if let direction = Direction(rawValue: self.gameData.moves[count - 1]) {
+                                    
+                                    switch (direction) {
+                                    case .Up:
+                                        row = 0
+                                        break
+                                    case .Down:
+                                        row = 7
+                                        break
+                                    case .Left:
+                                        column = 7
+                                        break
+                                    case .Right:
+                                        column = 0
+                                        break
+                                    }
+                                    
+                                    if let piece = self.placePieceAtColumn(column, row: row, pieceType: self.activePlayer, direction: direction) {
+                                        self.activePieces.append(piece)
+                                    }
+                                    for piece in self.activePieces {
+                                        piece.generateActions()
+                                    }
+                                    
+                                    let piece = self.activePieces[self.activePieces.count-1]
+                                    
+                                    self.activePiece = piece
+                                    assert(piece.moveDestinations.count > 0)
+                                    
+                                    piece.animate()
+                                    
+                                    // update board model
+                                    for activePiece in self.activePieces {
+                                        let destination = activePiece.moveDestinations[0]
+                                        self.board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
+                                    }
+                                    
+                                    //println("active player: " + self.activePlayer.description)
+                                    self.rotateActivePlayer()
+                                    self.checkForWinnerAndUpdateMatch(false)
+                                    self.activePieces.removeAtIndex(self.activePieces.count-1)
                                 }
-                                
-                                //println("active player: " + self.activePlayer.description)
-                                self.rotateActivePlayer()
-                                self.checkForWinnerAndUpdateMatch(false)
-                                self.activePieces.removeAtIndex(self.activePieces.count-1)
                             }
                         }
                     }
@@ -768,7 +773,7 @@ class GameScene:BaseScene {
     }
     
     func playLastMove(destinationColumn: Int, destinationRow: Int, direction: Direction, updateModel: Bool) {
-        println("* GameScene:playLastMove")
+        println("# GameScene:playLastMove")
         //self.rotateActivePlayer()
         var row = destinationRow
         var column = destinationColumn
@@ -829,7 +834,7 @@ class GameScene:BaseScene {
         addTapArrows()
         
         if let match = currentMatch {
-        println("* LayoutMatch existing match")
+            println("# GameScene:LayoutMatch: existing match")
             match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
                 if (error != nil)
                 {
@@ -916,7 +921,7 @@ class GameScene:BaseScene {
                 self.board.printBoard()
             })
         } else {
-            println("* LayoutMatch new match")
+            println("# GameScene:LayoutMatch: new match")
             // Initialize tokens for the board
             let boardNumber = Int(arc4random_uniform(31))
             self.board.initTokensWithBoard("Board_" + String(boardNumber))
@@ -935,7 +940,7 @@ class GameScene:BaseScene {
     }
     
     func advanceTurn() {
-        println("* GameScene:advanceTurn")
+        println("# GameScene:advanceTurn")
         let currentMatch:GKTurnBasedMatch = self.currentMatch //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch
         let updatedMatchData:NSData = self.gameData.encodeMatchData()
         var nextParticipant:GKTurnBasedParticipant!
@@ -963,7 +968,7 @@ class GameScene:BaseScene {
     }
     
     func renderBoard() {
-        println("* GameScene:renderBoard")
+        println("# GameScene:renderBoard")
         for piece in board.getAllPieces() {
             if piece != nil {
                 addSpriteForPiece(piece!, isPieceOnBoard: true)
@@ -972,7 +977,7 @@ class GameScene:BaseScene {
     }
     
     func renderBoardTokens() {
-        println("* GameScene:renderBoardTokens")
+        println("# GameScene:renderBoardTokens")
         for token in board.getAllTokens() {
             if token != nil {
                 if token?.tokenType != TokenType.None {
@@ -1012,7 +1017,7 @@ class GameScene:BaseScene {
     }
     
     func checkForWinnerAndUpdateMatch(shouldUpdateMatch: Bool) {
-        println("* GameScene:checkForWinnerAndUpdateMatch")
+        println("# GameScene:checkForWinnerAndUpdateMatch")
         var winners:[PieceType] = []
         
         for activePiece in activePieces {
@@ -1059,7 +1064,7 @@ class GameScene:BaseScene {
     }
     
     func endMatchWithWinner(pieceType: PieceType, shouldUpdateMatch: Bool) {
-        println("* GameScene:endMatchWithWinner")
+        println("# GameScene:endMatchWithWinner")
         
         var winner = ""
 

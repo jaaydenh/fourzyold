@@ -111,6 +111,20 @@ class Board: SKNode {
         return tokens[column, row]
     }
     
+    func piecesCount() -> Int {
+        var count = 0
+        
+        for (var row = kNumRows - 1;row >= 0;row--) {
+            for (var column = 0;column < kNumColumns;column++) {
+                if let piece = pieceAtColumn(column, row: row) {
+                    count++
+                }
+            }
+        }
+        
+        return count
+    }
+    
     func printBoard() {
         var count = 0
         
