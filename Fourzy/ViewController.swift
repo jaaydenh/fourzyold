@@ -247,6 +247,8 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
             cell.layoutMargins = UIEdgeInsetsZero
         }
         
+        cell.matchStatusLabel?.textColor = UIColor.blackColor()
+        
         let match: GKTurnBasedMatch = self.matches[indexPath.row] as GKTurnBasedMatch
         let opponentParticipant = getOpponentForMatch(match)
         
@@ -257,14 +259,25 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         } else {
             cell.opponentDisplayNameLabel?.text = "Waiting For Opponent"
         }
-        
+            //cell.lastMoveLabel?.text = "1d"
         if match.status == GKTurnBasedMatchStatus.Ended {
-            cell.matchStatusLabel?.text = "Game Over"
+            let localParticipant = participantForLocalPlayerInMatch(match)
+            
+            if localParticipant.matchOutcome == GKTurnBasedMatchOutcome.Won {
+                cell.matchStatusLabel?.text = "You Won"
+                cell.matchStatusLabel?.textColor = UIColor.blueColor()
+            } else if localParticipant.matchOutcome == GKTurnBasedMatchOutcome.Lost {
+                cell.matchStatusLabel?.text = "You Lost"
+                cell.matchStatusLabel?.textColor = UIColor.orangeColor()
+            }
+
         } else {
+            //cell.lastMoveLabel?.text = match.lastMove().description
+            
             let localPlayerID = GKLocalPlayer.localPlayer().playerID
 
-            if let currentParticipant = match.currentParticipant.playerID {
-                if match.currentParticipant.playerID == localPlayerID {
+            if let currentParticipantPlayerId = match.currentParticipant.playerID {
+                if currentParticipantPlayerId == localPlayerID {
                     cell.matchStatusLabel?.text = "Your Turn"
                 } else  {
                     cell.matchStatusLabel?.text = "Waiting For Turn"
@@ -273,6 +286,8 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
                 cell.matchStatusLabel?.text = "Waiting For Turn"
             }
         }
+        
+        cell.lastMoveLabel?.text = ""
         
         return cell
     }
@@ -324,9 +339,20 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         if let matchList = matches as? [GKTurnBasedMatch]
         {
+            self.matches = self.matches.sortedArrayUsingComparator {
+             (obj1, obj2) -> NSComparisonResult in
+                
+                let m1 = obj1 as GKTurnBasedMatch
+                let date1 = m1.lastMove()
+                let m2 = obj2 as GKTurnBasedMatch
+                let date2 = m2.lastMove()
+                //if (date1 != nil && date2 != nil) {
+                    return date1.compare(date2)
+                //}
+            
+            }
+            
             self.matches = sortMatchesByPlayerTurn(matchList)
-            
-            
             
             var playerList:[String] = []
             for match in self.matches {
