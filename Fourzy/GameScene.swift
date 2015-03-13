@@ -17,12 +17,19 @@ class GameScene:BaseScene {
     let piecesLayer = SKNode()
     let tokensLayer = SKNode()
     let boardLayer = SKNode()
+    let tapLayer = SKNode()
     
     //var leftActionArea:SKShapeNode = SKShapeNode(rectOfSize: CGSize(width: kTapAreaWidth, height: kTileHeight * kNumRows))
     var leftActionArea = SKSpriteNode()
     var rightActionArea = SKSpriteNode()
     var topActionArea = SKSpriteNode()
     var bottomActionArea = SKSpriteNode()
+    var player1Indicator = SKSpriteNode()
+    var player2Indicator = SKSpriteNode()
+    var player1Label = SKLabelNode(fontNamed:"Arial Bold")
+    var player2Label = SKLabelNode(fontNamed:"Arial Bold")
+    var currentPlayerName:String = ""
+    var opponentPlayerName:String = ""
     var submitButton:SKButton?
     
     var isMultiplayer = true
@@ -178,6 +185,7 @@ class GameScene:BaseScene {
             if self.isMultiplayer {
                 advanceTurn()
             }
+            self.setActivePlayerIndicator()
             submitButton?.hidden = true
         }
     }
@@ -244,7 +252,7 @@ class GameScene:BaseScene {
             if let playerImage = PlayerCache.sharedManager.playerPhotos[playerID] {
                 let playerTexture = SKTexture(image: playerImage)
                 let player1ImageNode = SKSpriteNode(texture: playerTexture, size: CGSize(width: 50, height: 50))
-                player1ImageNode.position = CGPoint(x: -45, y: 190)
+                player1ImageNode.position = CGPoint(x: -55, y: 190)
                 addChild(player1ImageNode)
             }
         }
@@ -253,7 +261,7 @@ class GameScene:BaseScene {
             if let playerImage = PlayerCache.sharedManager.playerPhotos[playerID] {
                 let playerTexture = SKTexture(image: playerImage)
                 let player1ImageNode = SKSpriteNode(texture: playerTexture, size: CGSize(width: 50, height: 50))
-                player1ImageNode.position = CGPoint(x: 50, y: 190)
+                player1ImageNode.position = CGPoint(x: 60, y: 190)
                 addChild(player1ImageNode)
             }
         }
@@ -280,6 +288,8 @@ class GameScene:BaseScene {
         
         addBackgroundImage()
         addPlayerIcons()
+        addPlayerIndicators()
+        addPlayerLabels()
         addBoardCorners()
         addSubmitButton()
         //addTapAreas()
@@ -768,6 +778,8 @@ class GameScene:BaseScene {
                     }
                 }
                 self.board.printBoard()
+                
+                self.setActivePlayerIndicator()
             })
         }
     }
@@ -823,6 +835,56 @@ class GameScene:BaseScene {
         board.printBoard()
     }
     
+    func setPlayerNames(match:GKTurnBasedMatch) {
+        let currentParticipant = participantForLocalPlayerInMatch(match)
+        let localPlayerID = GKLocalPlayer.localPlayer().playerID
+        var isLocalActive = false;
+        
+        currentPlayerName = PlayerCache.sharedManager.players[localPlayerID]!.alias
+        let opponentParticipant = getOpponentForMatch(match)
+        if let opponentPlayerID = opponentParticipant.playerID {
+            var opponent = PlayerCache.sharedManager.players[opponentPlayerID]!
+            opponentPlayerName = opponent.displayName
+        } else {
+            opponentPlayerName = "Waiting for opponent"
+        }
+        
+        if let currentParticipant = match.currentParticipant {
+            if let currentParticipantPlayerId = currentParticipant.playerID {
+                if currentParticipantPlayerId == localPlayerID {
+                    isLocalActive = true
+                } else  {
+                    isLocalActive = false
+                }
+            } else {
+                opponentPlayerName = "Waiting for opponent"
+            }
+        } else {
+            opponentPlayerName = "Waiting for opponent"
+        }
+        
+        //var player1Label = self.childNodeWithName(kPlayer1LabelName) as SKLabelNode
+        //var player2Label = self.childNodeWithName(kPlayer2LabelName) as SKLabelNode
+        
+        if (activePlayer == .Player1) {
+            if isLocalActive {
+                player1Label.text = currentPlayerName
+                player2Label.text = opponentPlayerName
+            } else {
+                player1Label.text = opponentPlayerName
+                player2Label.text = currentPlayerName
+            }
+        } else if (activePlayer == .Player2) {
+            if isLocalActive {
+                player1Label.text = opponentPlayerName
+                player2Label.text = currentPlayerName
+            } else {
+                player1Label.text = currentPlayerName
+                player2Label.text = opponentPlayerName
+            }
+        }
+    }
+    
     func layoutMatch()
     {
         println()
@@ -830,11 +892,13 @@ class GameScene:BaseScene {
         board = Board()
         piecesLayer.removeAllChildren()
         tokensLayer.removeAllChildren()
+        
         addTapAreas()
         addTapArrows()
         
         if let match = currentMatch {
             println("# GameScene:LayoutMatch: existing match")
+
             match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
                 if (error != nil)
                 {
@@ -846,7 +910,7 @@ class GameScene:BaseScene {
                         
                         // The first time a match is loaded generate the tokens if this has not already been done
                         if self.gameData.tokenLayout.count == 0 {
-                            let boardNumber = Int(arc4random_uniform(31))
+                            let boardNumber = Int(arc4random_uniform(41))
                             self.board.initTokensWithBoard("Board_" + String(boardNumber))
                             //self.board.initTokensWithBoard("Board_23")
                             
@@ -919,11 +983,13 @@ class GameScene:BaseScene {
                 }
 
                 self.board.printBoard()
+                self.setPlayerNames(match)
+                self.setActivePlayerIndicator()
             })
         } else {
             println("# GameScene:LayoutMatch: new match")
             // Initialize tokens for the board
-            let boardNumber = Int(arc4random_uniform(31))
+            let boardNumber = Int(arc4random_uniform(41))
             self.board.initTokensWithBoard("Board_" + String(boardNumber))
             //self.board.initTokensWithBoard("Board_16")
             
@@ -934,8 +1000,21 @@ class GameScene:BaseScene {
                     }
                 }
             }
-
+            
             renderBoardTokens()
+            player1Label.text = "Player 1"
+            player2Label.text = "Player 2"
+            self.setActivePlayerIndicator()
+        }
+    }
+    
+    func setActivePlayerIndicator() {
+        if self.activePlayer == PieceType.Player1 {
+            self.player1Indicator.hidden = false
+            self.player2Indicator.hidden = true
+        } else if self.activePlayer == PieceType.Player2 {
+            self.player1Indicator.hidden = true
+            self.player2Indicator.hidden = false
         }
     }
     
@@ -962,7 +1041,6 @@ class GameScene:BaseScene {
                     }
                 }
                 //println("Send Turn, \(updatedMatchData), \(nextParticipant)")
-                //TODO: update game scene UI to switch active player
             }
         }
     }
@@ -1101,7 +1179,7 @@ class GameScene:BaseScene {
                 if pieceType == PieceType.None {
                     currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Tied
                     opponent.matchOutcome = GKTurnBasedMatchOutcome.Tied
-                    currentMatch.message = "\(opponentPlayerName.displayName) have Tied a match versus \(currentPlayerName.alias)"
+                    currentMatch.message = "\(opponentPlayerName.displayName) has Tied a match versus \(currentPlayerName.alias)"
                 } else if pieceType == activePlayer {
                     currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Won
                     opponent.matchOutcome = GKTurnBasedMatchOutcome.Lost
@@ -1220,14 +1298,45 @@ class GameScene:BaseScene {
     
     func addPlayerIcons() {
         var player1Icon = SKSpriteNode(imageNamed: "playerIcon1")
-        player1Icon.position = CGPoint(x: -45, y: 190)
+        player1Icon.position = CGPoint(x: -55, y: 190)
         player1Icon.size = CGSize(width: 55, height: 55)
         gameLayer.addChild(player1Icon)
         
         var player2Icon = SKSpriteNode(imageNamed: "playerIcon2")
-        player2Icon.position = CGPoint(x: 50, y: 190)
+        player2Icon.position = CGPoint(x: 60, y: 190)
         player2Icon.size = CGSize(width: 55, height: 55)
         gameLayer.addChild(player2Icon)
+    }
+    
+    func addPlayerIndicators() {
+        player1Indicator.texture = SKTexture(imageNamed: "Player1Indicator")
+        player1Indicator.size = CGSize(width: 55, height: 9)
+        player1Indicator.position = CGPoint(x: -55, y: 147)
+        player1Indicator.hidden = false
+        gameLayer.addChild(player1Indicator)
+        
+        player2Indicator.texture = SKTexture(imageNamed: "Player2Indicator")
+        player2Indicator.size = CGSize(width: 55, height: 9)
+        player2Indicator.position = CGPoint(x: 60, y: 147)
+        player2Indicator.hidden = false
+        gameLayer.addChild(player2Indicator)
+    }
+    
+    func addPlayerLabels() {
+        player1Label = SKLabelNode(fontNamed:"Arial Bold")
+        player1Label.fontSize = 16
+        player1Label.fontColor = SKColor.blackColor()
+        player1Label.position = CGPoint(x: -55, y: 235)
+        player1Label.name = kPlayer1LabelName
+        player1Label.text = ""
+        gameLayer.addChild(player1Label)
+        
+        player2Label.fontSize = 16
+        player2Label.fontColor = SKColor.blackColor()
+        player2Label.position = CGPoint(x: 60, y: 235)
+        player2Label.name = kPlayer2LabelName
+        player2Label.text = ""
+        gameLayer.addChild(player2Label)
     }
     
     func addBackgroundImage() {

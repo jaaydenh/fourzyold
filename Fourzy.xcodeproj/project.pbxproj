@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2CDF30BC1A23D32E00BFED99 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CDF30BA1A23D32E00BFED99 /* Crashlytics.framework */; };
 		2CDF30BD1A23D32E00BFED99 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CDF30BB1A23D32E00BFED99 /* Fabric.framework */; };
+		D00940BD1AAFF1E60094BF26 /* Player1Indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = D00940BB1AAFF1E60094BF26 /* Player1Indicator.png */; };
+		D00940BE1AAFF1E60094BF26 /* Player2Indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = D00940BC1AAFF1E60094BF26 /* Player2Indicator.png */; };
 		D00B38221A99E615008AF364 /* blue_piece.png in Resources */ = {isa = PBXBuildFile; fileRef = D00B381F1A99E615008AF364 /* blue_piece.png */; };
 		D00B38231A99E615008AF364 /* red_piece.png in Resources */ = {isa = PBXBuildFile; fileRef = D00B38201A99E615008AF364 /* red_piece.png */; };
 		D00B38241A99E615008AF364 /* grid3.png in Resources */ = {isa = PBXBuildFile; fileRef = D00B38211A99E615008AF364 /* grid3.png */; };
@@ -21,9 +23,19 @@
 		D00B38331A9A6B9C008AF364 /* Board_28.json in Resources */ = {isa = PBXBuildFile; fileRef = D00B382B1A9A6B9C008AF364 /* Board_28.json */; };
 		D00B38341A9A6B9C008AF364 /* Board_30.json in Resources */ = {isa = PBXBuildFile; fileRef = D00B382C1A9A6B9C008AF364 /* Board_30.json */; };
 		D00B38361A9A6BDE008AF364 /* Board_29.json in Resources */ = {isa = PBXBuildFile; fileRef = D00B38351A9A6BDE008AF364 /* Board_29.json */; };
+		D02DF6441AAE9EF7003EF48A /* Board_31.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF6431AAE9EF7003EF48A /* Board_31.json */; };
+		D02DF6461AAEA007003EF48A /* Board_32.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF6451AAEA007003EF48A /* Board_32.json */; };
+		D02DF6481AAEA00F003EF48A /* Board_33.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF6471AAEA00F003EF48A /* Board_33.json */; };
+		D02DF64A1AAEA018003EF48A /* Board_34.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF6491AAEA018003EF48A /* Board_34.json */; };
+		D02DF64C1AAEA01D003EF48A /* Board_35.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF64B1AAEA01D003EF48A /* Board_35.json */; };
+		D02DF64E1AAEA028003EF48A /* Board_36.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF64D1AAEA028003EF48A /* Board_36.json */; };
+		D02DF6501AAEA02E003EF48A /* Board_37.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF64F1AAEA02E003EF48A /* Board_37.json */; };
+		D02DF6521AAEA03C003EF48A /* Board_38.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF6511AAEA03C003EF48A /* Board_38.json */; };
+		D02DF6541AAEA04B003EF48A /* Board_39.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF6531AAEA04B003EF48A /* Board_39.json */; };
+		D02DF6561AAF5111003EF48A /* Board_0.json in Resources */ = {isa = PBXBuildFile; fileRef = D02DF6551AAF5111003EF48A /* Board_0.json */; };
 		D04700C51A15A50C001411B3 /* Array2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700801A15A50C001411B3 /* Array2D.swift */; };
 		D04700C61A15A50C001411B3 /* BaseScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700811A15A50C001411B3 /* BaseScene.swift */; };
-		D04700C71A15A50C001411B3 /* Board_0.json in Resources */ = {isa = PBXBuildFile; fileRef = D04700821A15A50C001411B3 /* Board_0.json */; };
+		D04700C71A15A50C001411B3 /* Board_40.json in Resources */ = {isa = PBXBuildFile; fileRef = D04700821A15A50C001411B3 /* Board_40.json */; };
 		D04700C81A15A50C001411B3 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700831A15A50C001411B3 /* Board.swift */; };
 		D04700C91A15A50C001411B3 /* FConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700841A15A50C001411B3 /* FConstants.swift */; };
 		D04700CA1A15A50C001411B3 /* FExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700851A15A50C001411B3 /* FExtensions.swift */; };
@@ -124,6 +136,8 @@
 /* Begin PBXFileReference section */
 		2CDF30BA1A23D32E00BFED99 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		2CDF30BB1A23D32E00BFED99 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		D00940BB1AAFF1E60094BF26 /* Player1Indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player1Indicator.png; sourceTree = "<group>"; };
+		D00940BC1AAFF1E60094BF26 /* Player2Indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player2Indicator.png; sourceTree = "<group>"; };
 		D00B381F1A99E615008AF364 /* blue_piece.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_piece.png; sourceTree = "<group>"; };
 		D00B38201A99E615008AF364 /* red_piece.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_piece.png; sourceTree = "<group>"; };
 		D00B38211A99E615008AF364 /* grid3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grid3.png; sourceTree = "<group>"; };
@@ -136,9 +150,19 @@
 		D00B382B1A9A6B9C008AF364 /* Board_28.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_28.json; sourceTree = "<group>"; };
 		D00B382C1A9A6B9C008AF364 /* Board_30.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_30.json; sourceTree = "<group>"; };
 		D00B38351A9A6BDE008AF364 /* Board_29.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_29.json; sourceTree = "<group>"; };
+		D02DF6431AAE9EF7003EF48A /* Board_31.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_31.json; sourceTree = "<group>"; };
+		D02DF6451AAEA007003EF48A /* Board_32.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_32.json; sourceTree = "<group>"; };
+		D02DF6471AAEA00F003EF48A /* Board_33.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_33.json; sourceTree = "<group>"; };
+		D02DF6491AAEA018003EF48A /* Board_34.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_34.json; sourceTree = "<group>"; };
+		D02DF64B1AAEA01D003EF48A /* Board_35.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_35.json; sourceTree = "<group>"; };
+		D02DF64D1AAEA028003EF48A /* Board_36.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_36.json; sourceTree = "<group>"; };
+		D02DF64F1AAEA02E003EF48A /* Board_37.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_37.json; sourceTree = "<group>"; };
+		D02DF6511AAEA03C003EF48A /* Board_38.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_38.json; sourceTree = "<group>"; };
+		D02DF6531AAEA04B003EF48A /* Board_39.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_39.json; sourceTree = "<group>"; };
+		D02DF6551AAF5111003EF48A /* Board_0.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_0.json; sourceTree = "<group>"; };
 		D04700801A15A50C001411B3 /* Array2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array2D.swift; sourceTree = "<group>"; };
 		D04700811A15A50C001411B3 /* BaseScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseScene.swift; sourceTree = "<group>"; };
-		D04700821A15A50C001411B3 /* Board_0.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_0.json; sourceTree = "<group>"; };
+		D04700821A15A50C001411B3 /* Board_40.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_40.json; sourceTree = "<group>"; };
 		D04700831A15A50C001411B3 /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		D04700841A15A50C001411B3 /* FConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FConstants.swift; sourceTree = "<group>"; };
 		D04700851A15A50C001411B3 /* FExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FExtensions.swift; sourceTree = "<group>"; };
@@ -362,7 +386,7 @@
 				D097BDE71A3EB07F0081337F /* Board_1.json */,
 				D097BDE81A3EB07F0081337F /* Board_2.json */,
 				D097BDE91A3EB07F0081337F /* Board_3.json */,
-				D04700821A15A50C001411B3 /* Board_0.json */,
+				D04700821A15A50C001411B3 /* Board_40.json */,
 				D09A4CB31A7EA8A500F3A4F3 /* Board_7.json */,
 				D09A4CB51A7EA95000F3A4F3 /* Board_8.json */,
 				D09A4CB71A7EAA2400F3A4F3 /* Board_9.json */,
@@ -378,6 +402,16 @@
 				D09A4CCB1A7EB19100F3A4F3 /* Board_19.json */,
 				D09A4CCD1A7EB1AC00F3A4F3 /* Board_20.json */,
 				D09A4CCF1A7EB91A00F3A4F3 /* Board_21.json */,
+				D02DF6431AAE9EF7003EF48A /* Board_31.json */,
+				D02DF6531AAEA04B003EF48A /* Board_39.json */,
+				D02DF6451AAEA007003EF48A /* Board_32.json */,
+				D02DF6471AAEA00F003EF48A /* Board_33.json */,
+				D02DF6491AAEA018003EF48A /* Board_34.json */,
+				D02DF64B1AAEA01D003EF48A /* Board_35.json */,
+				D02DF64D1AAEA028003EF48A /* Board_36.json */,
+				D02DF64F1AAEA02E003EF48A /* Board_37.json */,
+				D02DF6511AAEA03C003EF48A /* Board_38.json */,
+				D02DF6551AAF5111003EF48A /* Board_0.json */,
 			);
 			name = Boards;
 			sourceTree = "<group>";
@@ -385,6 +419,8 @@
 		D08EA61F1A6B5ACA00390471 /* graphics */ = {
 			isa = PBXGroup;
 			children = (
+				D00940BB1AAFF1E60094BF26 /* Player1Indicator.png */,
+				D00940BC1AAFF1E60094BF26 /* Player2Indicator.png */,
 				D00B381F1A99E615008AF364 /* blue_piece.png */,
 				D00B38201A99E615008AF364 /* red_piece.png */,
 				D00B38211A99E615008AF364 /* grid3.png */,
@@ -481,7 +517,7 @@
 		D053483C1A14B98200331484 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = PartyTroll;
 				TargetAttributes = {
 					D05348431A14B98200331484 = {
@@ -526,11 +562,13 @@
 				D09222211A68C75F007A7423 /* gamepiece8.png in Resources */,
 				D09A4CBA1A7EAAE200F3A4F3 /* Board_10.json in Resources */,
 				D04700FF1A15A50C001411B3 /* up_arrow_token.png in Resources */,
+				D00940BD1AAFF1E60094BF26 /* Player1Indicator.png in Resources */,
 				D04700EC1A15A50C001411B3 /* highlight.png in Resources */,
 				D08486ED1A3586F8002B5197 /* GamesListCell.xib in Resources */,
 				D09A4CB61A7EA95000F3A4F3 /* Board_8.json in Resources */,
 				D04700D81A15A50C001411B3 /* down_arrow_token.png in Resources */,
-				D04700C71A15A50C001411B3 /* Board_0.json in Resources */,
+				D02DF64A1AAEA018003EF48A /* Board_34.json in Resources */,
+				D04700C71A15A50C001411B3 /* Board_40.json in Resources */,
 				D09A4CB41A7EA8A500F3A4F3 /* Board_7.json in Resources */,
 				D04700DF1A15A50C001411B3 /* gamepiece6.png in Resources */,
 				D00B38331A9A6B9C008AF364 /* Board_28.json in Resources */,
@@ -538,6 +576,8 @@
 				D04700F91A15A50C001411B3 /* sticky_token_old.png in Resources */,
 				D00B38231A99E615008AF364 /* red_piece.png in Resources */,
 				D09222231A69A53D007A7423 /* bright-squares.png in Resources */,
+				D02DF64C1AAEA01D003EF48A /* Board_35.json in Resources */,
+				D02DF6541AAEA04B003EF48A /* Board_39.json in Resources */,
 				D04700DB1A15A50C001411B3 /* gamepiece2.png in Resources */,
 				D04700DE1A15A50C001411B3 /* gamepiece5.png in Resources */,
 				D04700ED1A15A50C001411B3 /* left_arrow_token.png in Resources */,
@@ -550,13 +590,17 @@
 				D04700FA1A15A50C001411B3 /* tap_area.png in Resources */,
 				D00B38311A9A6B9C008AF364 /* Board_26.json in Resources */,
 				D06FD0D61A99B23C00EA3B12 /* buttonSelected.png in Resources */,
+				D02DF6501AAEA02E003EF48A /* Board_37.json in Resources */,
 				D097BDEB1A3EB07F0081337F /* Board_2.json in Resources */,
+				D02DF6521AAEA03C003EF48A /* Board_38.json in Resources */,
 				D00B382F1A9A6B9C008AF364 /* Board_24.json in Resources */,
 				D092221D1A685978007A7423 /* grid2.png in Resources */,
 				D09A4CC61A7EB0DC00F3A4F3 /* Board_16.json in Resources */,
+				D00940BE1AAFF1E60094BF26 /* Player2Indicator.png in Resources */,
 				D00B382E1A9A6B9C008AF364 /* Board_23.json in Resources */,
 				D04700F71A15A50C001411B3 /* right_arrow_token.png in Resources */,
 				D09A4CC21A7EAFF300F3A4F3 /* Board_14.json in Resources */,
+				D02DF6441AAE9EF7003EF48A /* Board_31.json in Resources */,
 				D0A46F1B1A95C5A9005CAE5D /* up_arrow.png in Resources */,
 				D00B38301A9A6B9C008AF364 /* Board_25.json in Resources */,
 				D09A4CC41A7EB0C600F3A4F3 /* Board_15.json in Resources */,
@@ -571,9 +615,12 @@
 				D05348551A14B98200331484 /* Images.xcassets in Resources */,
 				D0A46F1C1A95C5A9005CAE5D /* right_arrow.png in Resources */,
 				D00B38241A99E615008AF364 /* grid3.png in Resources */,
+				D02DF6461AAEA007003EF48A /* Board_32.json in Resources */,
 				D0AA60241A42A46E001531FC /* Board_5.json in Resources */,
+				D02DF64E1AAEA028003EF48A /* Board_36.json in Resources */,
 				D0DD45791A999AE700D66866 /* button.png in Resources */,
 				D09A4CC01A7EAFB600F3A4F3 /* Board_13.json in Resources */,
+				D02DF6561AAF5111003EF48A /* Board_0.json in Resources */,
 				D00B38341A9A6B9C008AF364 /* Board_30.json in Resources */,
 				D0DD45781A999AE700D66866 /* playerIcon1.png in Resources */,
 				D09A4CC81A7EB10000F3A4F3 /* Board_17.json in Resources */,
@@ -601,6 +648,7 @@
 				D04700D31A15A50C001411B3 /* back_arrow1.png in Resources */,
 				D05348531A14B98200331484 /* Main.storyboard in Resources */,
 				D00B38361A9A6BDE008AF364 /* Board_29.json in Resources */,
+				D02DF6481AAEA00F003EF48A /* Board_33.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -708,7 +756,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -752,7 +799,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;

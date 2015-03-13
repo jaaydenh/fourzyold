@@ -42,11 +42,6 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         self.matchListTableView?.addSubview(refreshControl)
         
         self.matchListTableView?.registerNib(UINib(nibName: "GamesListCell", bundle: nil), forCellReuseIdentifier: "GamesListCell")
-        
-        
-        //self.matchListTableView?.layer.cornerRadius = 10
-        //self.matchListTableView?.layer.masksToBounds = true;
-
     }
     
     func authenticateLocalPlayer() {
@@ -333,24 +328,23 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         return matchList
     }
     
-    
     func didFetchMatches(matches: [AnyObject]!) {
         println("# ViewController:didFetchMatches")
         
         if let matchList = matches as? [GKTurnBasedMatch]
         {
-            self.matches = self.matches.sortedArrayUsingComparator {
-             (obj1, obj2) -> NSComparisonResult in
-                
-                let m1 = obj1 as GKTurnBasedMatch
-                let date1 = m1.lastMove()
-                let m2 = obj2 as GKTurnBasedMatch
-                let date2 = m2.lastMove()
-                //if (date1 != nil && date2 != nil) {
-                    return date1.compare(date2)
-                //}
-            
-            }
+//            self.matches = self.matches.sortedArrayUsingComparator {
+//             (obj1, obj2) -> NSComparisonResult in
+//                
+//                let m1 = obj1 as GKTurnBasedMatch
+//                let date1 = m1.lastMove()
+//                let m2 = obj2 as GKTurnBasedMatch
+//                let date2 = m2.lastMove()
+//                //if (date1 != nil && date2 != nil) {
+//                    return date1.compare(date2)
+//                //}
+//            
+//            }
             
             self.matches = sortMatchesByPlayerTurn(matchList)
             
