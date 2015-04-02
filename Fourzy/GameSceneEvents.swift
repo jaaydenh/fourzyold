@@ -12,14 +12,6 @@ import GameKit
 extension GameScene {
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-        if (isMultiplayer && currentMatch != nil) {
-            if currentMatch.status == GKTurnBasedMatchStatus.Ended {
-                return
-            }
-            if GKLocalPlayer.localPlayer().playerID != currentMatch.currentParticipant.playerID {
-                return
-            }
-        }
 
         if let sprite = activePiece?.sprite {
             if sprite.hasActions() {
@@ -27,79 +19,49 @@ extension GameScene {
             }
         }
         
-        var touch = touches.anyObject() as UITouch
+        if activePieces.count > 0 {
+            activePieces[activePieces.count-1].sprite?.removeFromParent()
+            activePieces.removeAll(keepCapacity: false)
+        }
+        
+        self.removeHighlights()
+        
+        let touch = touches.anyObject() as UITouch
         let touchLocation = touch.locationInNode(piecesLayer)
         
-//        if (touchedActivePiece(touchLocation)) {
-//            println("touched active piece")
-//            assert(activePieces.count > 0)
-//            for piece in activePieces {
-//                piece.generateActions()
-//            }
-//
-//            let piece = activePieces[activePieces.count-1]
-//            
-//            // update board model
-//            for activePiece in activePieces {
-//                let destination = activePiece.moveDestinations[0]
-//                board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
-//            }
-//
-//            activePiece = piece
-//            assert(piece.moveDestinations.count > 0)
-//            
-//            piece.sprite?.removeAllActions()
-//            piece.sprite?.size = CGSize(width: kPieceSize, height: kPieceSize)
-//            
-//            piece.animate()
-//            
-//            let destination = piece.moveDestinations[piece.moveDestinations.count-1]
-//            self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
-//
-//            self.removeHighlights()
-//            //println("active player: " + self.activePlayer.description)
-//            checkForWinnerAndUpdateMatch(true)
-//            activePieces.removeAtIndex(activePieces.count-1)
-//            
-//            rotateActivePlayer()
-//            
-////            if activePieces.count > 0 {
-////                activePieces.removeAll(keepCapacity: false)
-////            }
-//
-//            // TODO: Tie if no more possible moves
-//            
-//            board.printBoard()
-//            
-//            if self.isMultiplayer {
-//                advanceTurn()
-//            }
-//        } else {
-            if activePieces.count > 0 {
-                activePieces[activePieces.count-1].sprite?.removeFromParent()
-                activePieces.removeAll(keepCapacity: false)
-            }
+        let (success, column, row, direction) = convertPoint(touchLocation)
+        if success {
+            assert(column >= 0 && column < NumColumns)
+            assert(row >= 0 && row < NumRows)
             
-            self.removeHighlights()
-            
-            let (success, column, row, direction) = convertPoint(touchLocation)
-            if success {
-                //println("touchlocation: x: \(touchLocation.x), y: \(touchLocation.y)")
-                //println("column: \(column), row: \(row)")
-                assert(column >= 0 && column < NumColumns)
-                assert(row >= 0 && row < NumRows)
-                
-                if let piece = placePieceAtColumn(column, row: row, pieceType: activePlayer, direction: direction) {
-                    activePieces.append(piece)
-                    piece.pulseAnimation()
-                    //pulseAnimation(piece.sprite!)
-                    self.addGamePieceHighlightFrom(row, column: column, direction: direction)
-                    
-                    submitButton?.hidden = false
-                }
-            } else {
-                submitButton?.hidden = true
+            // Communicate this touch back to the ViewController.
+            if let handler = touchHandler {
+                let position = GridPosition(column: column, row: row, direction: direction)
+                handler(position)
             }
-        //}
+        } else {
+            submitButton?.hidden = true
+        }
+    }
+    
+    // Converts a point relative to the board into a column, row and direction
+    func convertPoint(point: CGPoint) -> (success: Bool, column: Int, row: Int, direction: Direction) {
+        
+        var y = Int(point.y)
+        var x = Int(point.x)
+        var row = (y - kTapAreaWidth) / kTileHeight
+        var column = (x - kTapAreaWidth) / kTileWidth
+        
+        if topActionArea.containsPoint(point) {
+            return (true, column, Int(kNumRows - 1), .Down)
+        } else if bottomActionArea.containsPoint(point) {
+            return (true, column, 0, .Up)
+        } else if rightActionArea.containsPoint(point) {
+            return (true, Int(kNumColumns - 1), row,  .Left)
+        } else if leftActionArea.containsPoint(point) {
+            return (true, 0, row, .Right)
+        } else {
+            return (false, 0, 0, .Up)
+        }
     }
 }

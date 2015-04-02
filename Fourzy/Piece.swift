@@ -18,11 +18,11 @@ class Piece: Printable, Hashable {
     var moveDestinations: [GridPosition] = []
     var sprite: SKSpriteNode?
     
-    init(column: Int, row: Int, pieceType: PieceType, direction: Direction) {
-        self.column = column
-        self.row = row
-        self.pieceType = pieceType
-        self.direction = direction
+    init(move: Move) {
+        self.column = move.column
+        self.row = move.row
+        self.pieceType = move.player
+        self.direction = move.direction
         self.moveDestinations = []
     }
     

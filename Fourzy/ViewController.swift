@@ -13,7 +13,6 @@ import QuartzCore
 let PresentAuthenticationViewController = "present_authentication_view_controller"
 let LocalPlayerIsAuthenticated = "local_player_authenticated"
 
-
 class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSource, GKTurnBasedMatchmakerViewControllerDelegate, GKLocalPlayerListener {
     
     var authenticationViewController: UIViewController!
@@ -165,6 +164,10 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
 //    @IBAction func editGamesList(sender: AnyObject) {
 //                println("start new pass and play game")
 //    }
+    
+    @IBAction func newSinglePlayerGame(sender: AnyObject) {
+        println("start new single player game")
+    }
     
     @IBAction func newPassAndPlayGame(sender: AnyObject) {
         println("start new pass and play game")

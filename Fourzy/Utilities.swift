@@ -8,6 +8,9 @@
 
 import GameKit
 
+// array of pieces currently being animated or with actions pending
+var activePieces:[Piece] = []
+
 func getOpponentForMatch(match: GKTurnBasedMatch) -> GKTurnBasedParticipant {
     let localPlayerID = GKLocalPlayer.localPlayer().playerID
     var opponent: GKTurnBasedParticipant!

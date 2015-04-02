@@ -117,6 +117,7 @@
 		D0A46F1E1A95C5A9005CAE5D /* down_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D0A46F1A1A95C5A9005CAE5D /* down_arrow.png */; };
 		D0AA60231A42A46E001531FC /* Board_4.json in Resources */ = {isa = PBXBuildFile; fileRef = D0AA60211A42A46E001531FC /* Board_4.json */; };
 		D0AA60241A42A46E001531FC /* Board_5.json in Resources */ = {isa = PBXBuildFile; fileRef = D0AA60221A42A46E001531FC /* Board_5.json */; };
+		D0BE32321AB534BA00C25565 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BE32311AB534BA00C25565 /* Move.swift */; };
 		D0DD45771A999AE700D66866 /* playerIcon2.png in Resources */ = {isa = PBXBuildFile; fileRef = D0DD45741A999AE700D66866 /* playerIcon2.png */; };
 		D0DD45781A999AE700D66866 /* playerIcon1.png in Resources */ = {isa = PBXBuildFile; fileRef = D0DD45751A999AE700D66866 /* playerIcon1.png */; };
 		D0DD45791A999AE700D66866 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = D0DD45761A999AE700D66866 /* button.png */; };
@@ -249,6 +250,7 @@
 		D0A46F1A1A95C5A9005CAE5D /* down_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = down_arrow.png; sourceTree = "<group>"; };
 		D0AA60211A42A46E001531FC /* Board_4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_4.json; sourceTree = "<group>"; };
 		D0AA60221A42A46E001531FC /* Board_5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Board_5.json; sourceTree = "<group>"; };
+		D0BE32311AB534BA00C25565 /* Move.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 		D0DD45741A999AE700D66866 /* playerIcon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerIcon2.png; sourceTree = "<group>"; };
 		D0DD45751A999AE700D66866 /* playerIcon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerIcon1.png; sourceTree = "<group>"; };
 		D0DD45761A999AE700D66866 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
@@ -313,12 +315,14 @@
 				D04700831A15A50C001411B3 /* Board.swift */,
 				D04700801A15A50C001411B3 /* Array2D.swift */,
 				D04700841A15A50C001411B3 /* FConstants.swift */,
+				D0BE32311AB534BA00C25565 /* Move.swift */,
 				D04700851A15A50C001411B3 /* FExtensions.swift */,
 				D04700891A15A50C001411B3 /* GameKitMatchData.swift */,
 				D097BDED1A3FBBA20081337F /* PlayerCache.swift */,
 				D04700811A15A50C001411B3 /* BaseScene.swift */,
 				D053484D1A14B98200331484 /* GameScene.swift */,
 				D047008C1A15A50C001411B3 /* GameSceneEvents.swift */,
+				D053484F1A14B98200331484 /* GameViewController.swift */,
 				D047008D1A15A50C001411B3 /* GridPosition.swift */,
 				D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */,
 				D0DD457A1A99AD0800D66866 /* SKButton.swift */,
@@ -326,7 +330,6 @@
 				D04700C11A15A50C001411B3 /* Set.swift */,
 				D04700C31A15A50C001411B3 /* Token.swift */,
 				D053484B1A14B98200331484 /* GameScene.sks */,
-				D053484F1A14B98200331484 /* GameViewController.swift */,
 				D04700C41A15A50C001411B3 /* ViewController.swift */,
 				D0730F931A9E3F0E007A7896 /* GKTurnBasedMatchExtension.swift */,
 				D08486EE1A3589C3002B5197 /* GamesListCell.swift */,
@@ -689,6 +692,7 @@
 				D04700C81A15A50C001411B3 /* Board.swift in Sources */,
 				D05348501A14B98200331484 /* GameViewController.swift in Sources */,
 				D04701021A15A50C001411B3 /* Set.swift in Sources */,
+				D0BE32321AB534BA00C25565 /* Move.swift in Sources */,
 				D0DD457B1A99AD0800D66866 /* SKButton.swift in Sources */,
 				D097BDEE1A3FBBA20081337F /* PlayerCache.swift in Sources */,
 				D056BDE31A2C2E2900DCEAF6 /* Utilities.swift in Sources */,

@@ -25,6 +25,8 @@ class Board: SKNode {
     var lastLayout: NSInteger = 0
     //let backgroundTexture: SKTexture
     
+    //var activePieces:[Piece] = []
+    
     override init () {
 
         // initialize properties
@@ -139,6 +141,366 @@ class Board: SKNode {
             }
             println()
         }
+    }
+    
+    func getDestinationForPiece(piece: Piece, move: Move) -> Bool {
+        println("# Board:GetDestinationForPiece")
+        let direction = move.direction
+        let startingRow = move.row
+        let startingColumn = move.column
+        var destinationRow: Int
+        var destinationColumn: Int
+        var destinationDirection: Direction
+        var canMove: Bool = false
+        
+        if (pieceAtColumn(startingColumn, row: startingRow) != nil) {
+            if let token = tokenAtColumn(startingColumn, row: startingRow) {
+                if (token.tokenType != .Sticky) {
+                    return false
+                }
+            } else {
+                return false
+            }
+        } else {
+            if let token = tokenAtColumn(startingColumn, row: startingRow) {
+                if (token.tokenType == .Blocker) {
+                    return false
+                }
+            }
+        }
+        
+        switch (direction) {
+        case .Down:
+            destinationRow = 0
+            destinationColumn = startingColumn
+            destinationDirection = .Down
+            
+            for var row:Int = startingRow; row >= 0;row-- {
+                if let token = tokenAtColumn(startingColumn, row: row) {
+                    if (token.tokenType == .Sticky) {
+                        if (pieceAtColumn(startingColumn, row: row) != nil) {
+                            // If the piece in the sticky square can move
+                            if (row - 1 >= 0 && (pieceAtColumn(startingColumn, row: row - 1) == nil || tokenAtColumn(startingColumn, row: row - 1)?.tokenType == TokenType.Sticky)) {
+                                if let stuckPiece = pieceAtColumn(startingColumn, row: row) {
+                                    stuckPiece.resetMovement()
+                                    let move = Move(column: startingColumn, row: row - 1, direction: .Down, player: stuckPiece.pieceType)
+                                    let result = getDestinationForPiece(stuckPiece, move: move)
+                                    if result {
+                                        activePieces.append(stuckPiece)
+                                        destinationRow = row
+                                        canMove = true
+                                    } else {
+                                        //canMove = false
+                                    }
+                                    break
+                                }
+                            } else {
+                                // piece in sticky square cannot move
+                                destinationRow = row + 1
+                                //canMove = false
+                                break
+                            }
+                        } else {
+                            destinationRow = row
+                            canMove = true
+                            break
+                        }
+                    } else if pieceAtColumn(startingColumn, row: row) != nil {
+                        destinationRow = row + 1
+                        canMove = true
+                        break
+                    } else if token.tokenType == .UpArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn, row: row + 1, direction: .Up, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .DownArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn, row: row - 1, direction: .Down, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .LeftArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn - 1, row: row, direction: .Left, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .RightArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn + 1, row: row, direction: .Right, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .Blocker {
+                        destinationRow = row + 1
+                        canMove = true
+                        break
+                    }
+                } else {
+                    if pieceAtColumn(startingColumn, row: row) != nil {
+                        destinationRow = row + 1
+                        canMove = true
+                        break
+                    }
+                }
+                
+                destinationRow = row
+                canMove = true
+            }
+            break
+            
+        case .Up:
+            destinationRow = Int(kNumRows) - 1
+            destinationColumn = startingColumn
+            destinationDirection = .Up
+            
+            for var row:Int = startingRow; row <= Int(kNumRows) - 1;row++ {
+                if let token = tokenAtColumn(startingColumn, row: row) {
+                    if token.tokenType == .Sticky {
+                        if pieceAtColumn(startingColumn, row: row) != nil {
+                            // If the piece in the sticky square can move
+                            if (row + 1 < Int(kNumRows) && (pieceAtColumn(startingColumn, row: row + 1) == nil || tokenAtColumn(startingColumn, row: row + 1)?.tokenType == TokenType.Sticky)) {
+                                if let stuckPiece = pieceAtColumn(startingColumn, row: row) {
+                                    stuckPiece.resetMovement()
+                                    let move = Move(column: startingColumn, row: row + 1, direction: .Up, player: stuckPiece.pieceType)
+                                    let result = getDestinationForPiece(stuckPiece, move: move)
+                                    if result {
+                                        activePieces.append(stuckPiece)
+                                        destinationRow = row
+                                        canMove = true
+                                    } else {
+                                        //canMove = false
+                                    }
+                                    break
+                                }
+                            } else {
+                                // piece in sticky square cannot move
+                                destinationRow = row - 1
+                                //canMove = false
+                                break
+                            }
+                        } else {
+                            destinationRow = row
+                            canMove = true
+                            break
+                        }
+                    } else if pieceAtColumn(startingColumn, row: row) != nil {
+                        destinationRow = row - 1
+                        canMove = true
+                        break
+                    } else if token.tokenType == .UpArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn, row: row + 1, direction: .Up, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .DownArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn, row: row - 1, direction: .Down, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .LeftArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn - 1, row: row, direction: .Left, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .RightArrow {
+                        destinationRow = row
+                        let move = Move(column: startingColumn + 1, row: row, direction: .Right, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .Blocker {
+                        destinationRow = row - 1
+                        canMove = true
+                        break
+                    }
+                } else {
+                    if pieceAtColumn(startingColumn, row: row) != nil {
+                        destinationRow = row - 1
+                        canMove = true
+                        break
+                    }
+                }
+                
+                destinationRow = row
+                canMove = true
+            }
+            break
+            
+        case .Left:
+            destinationRow = startingRow
+            destinationColumn = 0
+            destinationDirection = .Left
+            
+            for var column:Int = startingColumn; column >= 0;column-- {
+                if let token = tokenAtColumn(column, row: startingRow) {
+                    if token.tokenType == .Sticky {
+                        if pieceAtColumn(column, row: startingRow) != nil {
+                            // If the piece in the sticky square can move
+                            if (column - 1 >= 0 && (pieceAtColumn(column - 1, row: startingRow) == nil || tokenAtColumn(column - 1, row: startingRow)?.tokenType == TokenType.Sticky)) {
+                                if let stuckPiece = pieceAtColumn(column, row: startingRow) {
+                                    stuckPiece.resetMovement()
+                                    let move = Move(column: column - 1, row: startingRow, direction: .Left, player: stuckPiece.pieceType)
+                                    let result = getDestinationForPiece(stuckPiece, move: move)
+                                    if result {
+                                        activePieces.append(stuckPiece)
+                                        destinationColumn = column
+                                        canMove = true
+                                    } else {
+                                        //canMove = false
+                                    }
+                                    break
+                                }
+                            } else {
+                                // piece in sticky square cannot move
+                                destinationColumn = column + 1
+                                //canMove = false
+                                break
+                            }
+                        } else {
+                            destinationColumn = column
+                            canMove = true
+                            break
+                        }
+                    } else if pieceAtColumn(column, row: startingRow) != nil {
+                        destinationColumn = column + 1
+                        canMove = true
+                        break
+                    } else if token.tokenType == .UpArrow {
+                        destinationColumn = column
+                        let move = Move(column: column, row: startingRow + 1, direction: .Up, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .DownArrow {
+                        destinationColumn = column
+                        let move = Move(column: column, row: startingRow - 1, direction: .Down, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .LeftArrow {
+                        destinationColumn = column
+                        let move = Move(column: column - 1, row: startingRow, direction: .Left, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .RightArrow {
+                        destinationColumn = column
+                        let move = Move(column: column + 1, row: startingRow, direction: .Right, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .Blocker {
+                        destinationColumn = column + 1
+                        canMove = true
+                        break
+                    }
+                } else {
+                    if pieceAtColumn(column, row: startingRow) != nil {
+                        destinationColumn = column + 1
+                        canMove = true
+                        break
+                    }
+                }
+                
+                destinationColumn = column
+                canMove = true
+            }
+            break
+            
+        case .Right:
+            destinationRow = startingRow
+            destinationColumn = Int(kNumColumns) - 1
+            destinationDirection = .Right
+            
+            for var column:Int = startingColumn; column <= Int(kNumColumns) - 1;column++ {
+                if let token = tokenAtColumn(column, row: startingRow) {
+                    if token.tokenType == .Sticky {
+                        if pieceAtColumn(column, row: startingRow) != nil {
+                            // If the piece in the sticky square can move
+                            if (column + 1 < Int(kNumColumns) && (pieceAtColumn(column + 1, row: startingRow) == nil || tokenAtColumn(column + 1, row: startingRow)?.tokenType == TokenType.Sticky)) {
+                                if let stuckPiece = pieceAtColumn(column, row: startingRow) {
+                                    stuckPiece.resetMovement()
+                                    let move = Move(column: column + 1, row: startingRow, direction: .Right, player: stuckPiece.pieceType)
+                                    let result = getDestinationForPiece(stuckPiece, move: move)
+                                    if result {
+                                        activePieces.append(stuckPiece)
+                                        destinationColumn = column
+                                        canMove = true
+                                    } else {
+                                        //canMove = false
+                                    }
+                                    break
+                                }
+                            } else {
+                                // piece in sticky square cannot move
+                                destinationColumn = column - 1
+                                //canMove = false
+                                break
+                            }
+                        } else {
+                            destinationColumn = column
+                            canMove = true
+                            break
+                        }
+                    } else if pieceAtColumn(column, row: startingRow) != nil {
+                        destinationColumn = column - 1
+                        canMove = true
+                        break
+                    } else if token.tokenType == .UpArrow {
+                        destinationColumn = column
+                        let move = Move(column: column, row: startingRow + 1, direction: .Up, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .DownArrow {
+                        destinationColumn = column
+                        let move = Move(column: column, row: startingRow - 1, direction: .Down, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .LeftArrow {
+                        destinationColumn = column
+                        let move = Move(column: column - 1, row: startingRow, direction: .Left, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .RightArrow {
+                        destinationColumn = column
+                        let move = Move(column: column + 1, row: startingRow, direction: .Right, player: piece.pieceType)
+                        getDestinationForPiece(piece, move: move)
+                        canMove = true
+                        break
+                    } else if token.tokenType == .Blocker {
+                        destinationColumn = column - 1
+                        canMove = true
+                        break
+                    }
+                } else {
+                    if pieceAtColumn(column, row: startingRow) != nil {
+                        destinationColumn = column - 1
+                        canMove = true
+                        break
+                    }
+                }
+                
+                destinationColumn = column
+                canMove = true
+            }
+            break
+            
+        default:
+            break
+        }
+        
+        let position = GridPosition(column: destinationColumn, row: destinationRow, direction: destinationDirection)
+        piece.moveDestinations.append(position)
+        return canMove
     }
     
     func checkForWinnerAtRow(row: Int, column: Int) -> PieceType {
