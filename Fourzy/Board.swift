@@ -129,7 +129,7 @@ class Board: SKNode {
     
     func printBoard() {
         var count = 0
-        
+        println()
         for (var row = kNumRows - 1;row >= 0;row--) {
             for (var column = 0;column < kNumColumns;column++) {
                 if let piece = pieceAtColumn(column, row: row) {

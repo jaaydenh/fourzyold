@@ -106,7 +106,6 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="newPassAndPlayGame:" destination="LVB-YS-i5n" eventType="touchUpInside" id="crq-n7-jeq"/>
                                                 <action selector="newSinglePlayerGame:" destination="LVB-YS-i5n" eventType="touchUpInside" id="b6F-cz-D0b"/>
                                             </connections>
                                         </button>

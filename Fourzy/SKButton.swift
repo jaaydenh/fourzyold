@@ -42,13 +42,13 @@ class SKButton: SKSpriteNode {
         self.defaultTexture = defaultTexture
         self.selectedTexture = selectedTexture
         self.disabledTexture = disabledTexture
-        self.label = SKLabelNode(fontNamed: "Helvetica");
+        self.label = SKLabelNode(fontNamed: "Helvetica")
         super.init(texture: defaultTexture, color: UIColor.whiteColor(), size: defaultTexture.size())
         userInteractionEnabled = true
         
         
-        self.label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center;
-        self.label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center;
+        self.label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center
+        self.label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
         addChild(self.label)
         
         // Adding this node as an empty layer. Without it the touch functions are not being called
@@ -79,13 +79,13 @@ class SKButton: SKSpriteNode {
     }
     
     func setButtonLabel(#title: NSString, font: String, fontSize: CGFloat) {
-        var title = title;
-        var font = font;
-        var fontSize = fontSize;
+        var title = title
+        var font = font
+        var fontSize = fontSize
         
-        self.label.text = title;
-        self.label.fontSize = fontSize;
-        self.label.fontName = font;
+        self.label.text = title
+        self.label.fontSize = fontSize
+        self.label.fontName = font
         
     }
     

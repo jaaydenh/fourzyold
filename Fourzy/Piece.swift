@@ -56,8 +56,8 @@ class Piece: Printable, Hashable {
     
     func pulseAnimation() {
         sprite?.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        var pulseActions: [SKAction] = [];
-        var moveActions: [SKAction] = [];
+        var pulseActions: [SKAction] = []
+        var moveActions: [SKAction] = []
         let growAction = SKAction.resizeToWidth(CGFloat(kPieceSize+7), height: CGFloat(kPieceSize+7), duration: 0.5)
         let growMove = SKAction.moveByX(-0.5, y: -0.5, duration: 0.5)
         let shrinkAction = SKAction.resizeToWidth(CGFloat(kPieceSize), height: CGFloat(kPieceSize), duration: 0.5)
@@ -76,11 +76,11 @@ class Piece: Printable, Hashable {
         //sprite?.runAction(move)
     }
     
-    func animate() {
+    func animate(completion: () -> ()) {
         let sequence = SKAction.sequence(actions)
         if let sprite = sprite {
             sprite.removeAllActions()
-            sprite.runAction(sequence)
+            sprite.runAction(sequence, completion: completion)
         }
     }
     

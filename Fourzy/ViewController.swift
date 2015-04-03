@@ -167,6 +167,8 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     @IBAction func newSinglePlayerGame(sender: AnyObject) {
         println("start new single player game")
+        var gameMode = "single"
+        self.performSegueWithIdentifier("segueToGamePlay", sender: gameMode)
     }
     
     @IBAction func newPassAndPlayGame(sender: AnyObject) {
@@ -187,27 +189,27 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
                 cell.backgroundColor = UIColor.clearColor()
                 var layer:CAShapeLayer = CAShapeLayer()
                 var pathRef:CGMutablePathRef = CGPathCreateMutable()
-                var bounds:CGRect = CGRectInset(cell.bounds, 0, 0);
+                var bounds:CGRect = CGRectInset(cell.bounds, 0, 0)
                 var addLine = false
                 if (indexPath.row == 0 && indexPath.row == (tableView.numberOfRowsInSection(indexPath.section) - 1)) {
                     CGPathAddRoundedRect(pathRef, nil, bounds, cornerRadius, cornerHeight)
                 } else if (indexPath.row == 0) {
-                    CGPathMoveToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMaxY(bounds));
-                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMinY(bounds), CGRectGetMidX(bounds), CGRectGetMinY(bounds), cornerRadius);
-                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMinY(bounds), CGRectGetMaxX(bounds), CGRectGetMidY(bounds), cornerRadius);
-                    CGPathAddLineToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMaxY(bounds));
+                    CGPathMoveToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMaxY(bounds))
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMinY(bounds), CGRectGetMidX(bounds), CGRectGetMinY(bounds), cornerRadius)
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMinY(bounds), CGRectGetMaxX(bounds), CGRectGetMidY(bounds), cornerRadius)
+                    CGPathAddLineToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMaxY(bounds))
                     addLine = true
                 } else if (indexPath.row ==  (tableView.numberOfRowsInSection(indexPath.section) - 1)) {
-                    CGPathMoveToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMinY(bounds));
-                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMaxY(bounds), CGRectGetMidX(bounds), CGRectGetMaxY(bounds), cornerRadius);
-                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMaxY(bounds), CGRectGetMaxX(bounds), CGRectGetMidY(bounds), cornerRadius);
-                    CGPathAddLineToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMinY(bounds));
+                    CGPathMoveToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMinY(bounds))
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMaxY(bounds), CGRectGetMidX(bounds), CGRectGetMaxY(bounds), cornerRadius)
+                    CGPathAddArcToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMaxY(bounds), CGRectGetMaxX(bounds), CGRectGetMidY(bounds), cornerRadius)
+                    CGPathAddLineToPoint(pathRef, nil, CGRectGetMaxX(bounds), CGRectGetMinY(bounds))
                 } else {
-                    CGPathAddRect(pathRef, nil, bounds);
+                    CGPathAddRect(pathRef, nil, bounds)
                     addLine = true
                 }
-                layer.path = pathRef;
-                //CFRelease(pathRef);
+                layer.path = pathRef
+                //CFRelease(pathRef)
                 layer.fillColor = UIColor(white: 1.0, alpha: 1.0).CGColor
                 
                 if (addLine == true) {
@@ -220,7 +222,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
                 var testView:UIView = UIView(frame: bounds)
                 testView.layer.insertSublayer(layer, atIndex: 0)
                 testView.backgroundColor = UIColor.clearColor()
-                cell.backgroundView = testView;
+                cell.backgroundView = testView
             }
         }
     }
@@ -391,11 +393,17 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         if segue.identifier == "segueToGamePlay" {
             gameViewController = segue.destinationViewController as GameViewController
             //gameViewController.delegate = self
+            gameViewController.isSinglePlayer = false
             if sender != nil {
-                gameViewController.match = sender as GKTurnBasedMatch
-                gameViewController.isMultiplayer = true
+                if sender is GKTurnBasedMatch {
+                    gameViewController.match = sender as GKTurnBasedMatch
+                    gameViewController.isOnline = true
+                } else {
+                    gameViewController.isSinglePlayer = true
+                    gameViewController.isOnline = false
+                }
             } else {
-                gameViewController.isMultiplayer = false
+                gameViewController.isOnline = false
             }
         }
     }

@@ -29,16 +29,16 @@ extension GKTurnBasedMatch {
                 if self.currentParticipant != nil {
                     if localParticipant == self.currentParticipant {
                         if otherParticipant.lastTurnDate != nil {
-                            lastMove = otherParticipant.lastTurnDate;
+                            lastMove = otherParticipant.lastTurnDate
                         }
                     } else {
                         if localParticipant.lastTurnDate != nil {
-                            lastMove = localParticipant.lastTurnDate;
+                            lastMove = localParticipant.lastTurnDate
                         }
                     }
                 } else {
                     if localParticipant.lastTurnDate != nil {
-                        lastMove = localParticipant.lastTurnDate;
+                        lastMove = localParticipant.lastTurnDate
                     }
                 }
             }

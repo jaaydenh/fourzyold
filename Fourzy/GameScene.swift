@@ -255,7 +255,7 @@ class GameScene:BaseScene {
     func setPlayerNames(match:GKTurnBasedMatch, activePlayer: PieceType) {
         let currentParticipant = participantForLocalPlayerInMatch(match)
         let localPlayerID = GKLocalPlayer.localPlayer().playerID
-        var isLocalActive = false;
+        var isLocalActive = false
         
         currentPlayerName = PlayerCache.sharedManager.players[localPlayerID]!.alias
         let opponentParticipant = getOpponentForMatch(match)
@@ -456,7 +456,7 @@ class GameScene:BaseScene {
     func addBackgroundImage() {
         var background = SKSpriteNode(imageNamed: "bright-squares")
         background.size = CGSize(width: 320, height: 568)
-        //background.position = CGPointMake(self.size.width/2, self.size.height/2);
+        //background.position = CGPointMake(self.size.width/2, self.size.height/2)
         //addChild(background)
         
         //let grid = SKSpriteNode()

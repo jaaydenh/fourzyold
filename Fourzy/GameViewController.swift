@@ -33,10 +33,11 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     
     var scene: GameScene!
     var board: Board!
-    var match:GKTurnBasedMatch!
-    var activePlayer:PieceType = PieceType.Player1
-    var isMultiplayer = true
-    var currentMatch:GKTurnBasedMatch!
+    var match: GKTurnBasedMatch!
+    var activePlayer: PieceType = PieceType.Player1
+    var isOnline = true
+    var isSinglePlayer = false
+    var currentMatch: GKTurnBasedMatch!
     var gameData: GameKitMatchData = GameKitMatchData()
     
     override func viewWillAppear(animated: Bool) {
@@ -69,14 +70,13 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             self.scene = GameScene(size: viewSize)
             self.scene.scaleMode = .AspectFill
             self.currentMatch = self.match
-            //self.scene.isMultiplayer = self.isMultiplayer
             self.scene.touchHandler = self.handleTouch
             self.scene.submitMoveHandler = self.handleSubmitMove
             
             self.loadingProgressIndicator.stopAnimating()
             self.loadingProgressIndicator.hidden = true
             
-            if self.isMultiplayer {
+            if self.isOnline {
                 self.loadPlayerPhotos()
             }
 
@@ -95,7 +95,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     func handleSubmitMove() {
         println("# GameViewController:handleSubmitMove")
         
-        if (isMultiplayer && currentMatch != nil) {
+        if (isOnline && currentMatch != nil) {
             if currentMatch.status == GKTurnBasedMatchStatus.Ended {
                 return
             }
@@ -103,6 +103,21 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                 return
             }
         }
+        
+        submitMove()
+        {
+            //activePieces.removeAtIndex(activePieces.count-1)
+            self.board.printBoard()
+            if self.isSinglePlayer == true {
+                if self.activePlayer == .Player2 {
+                    self.aiMove()
+                }
+            }
+        }
+        println("# test")
+    }
+    
+    func submitMove(completion: () -> ()) {
         
         if (activePieces.count > 0) {
             for piece in activePieces {
@@ -122,33 +137,33 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             
             piece.sprite?.removeAllActions()
             piece.sprite?.size = CGSize(width: kPieceSize, height: kPieceSize)
-            
-            piece.animate()
-            
-            let destination = piece.moveDestinations[piece.moveDestinations.count-1]
-            self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
-            
-            self.scene.removeHighlights()
 
-            checkForWinnerAndUpdateMatch(true)
+            scene.removeHighlights()
             
-            activePieces.removeAtIndex(activePieces.count-1)
-            
-            rotateActivePlayer()
-            
-            //            if activePieces.count > 0 {
-            //                activePieces.removeAll(keepCapacity: false)
-            //            }
-            
-            // TODO: Tie if no more possible moves
-            
-            board.printBoard()
-            
-            if self.isMultiplayer {
-                advanceTurn()
+            piece.animate() {
+                let destination = piece.moveDestinations[piece.moveDestinations.count-1]
+                self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
+                
+                self.rotateActivePlayer()
+                
+                //            if activePieces.count > 0 {
+                //                activePieces.removeAll(keepCapacity: false)
+                //            }
+                
+                // TODO: Tie if no more possible moves
+                
+                self.board.printBoard()
+                
+                if self.isOnline {
+                    self.advanceTurn()
+                }
+                self.scene.setActivePlayerIndicator(self.activePlayer)
+                self.scene.submitButton?.hidden = true
+                completion()
             }
-            scene.setActivePlayerIndicator(activePlayer)
-            scene.submitButton?.hidden = true
+            self.checkForWinnerAndUpdateMatch(true)
+            println("# test")
+            activePieces.removeAtIndex(activePieces.count-1)
         }
     }
     
@@ -156,7 +171,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     // detects that the player touches the screen.
     func handleTouch(gridPosition: GridPosition) {
         
-        if (isMultiplayer && currentMatch != nil) {
+        if (isOnline && currentMatch != nil) {
             if currentMatch.status == GKTurnBasedMatchStatus.Ended {
                 return
             }
@@ -191,6 +206,32 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         }
         
         return nil
+    }
+    
+    func aiMove() {
+        var currentPiece:Piece!
+        do {
+            var column = Int(arc4random_uniform(8))
+            var row = Int(arc4random_uniform(8))
+            if let direction = Direction(rawValue: Int(arc4random_uniform(4)) + 1) {
+                if direction == .Up {
+                    row = 0
+                } else if direction == .Down {
+                    row = kNumRows - 1
+                } else if direction == .Left {
+                    column = kNumColumns - 1
+                } else if direction == .Right {
+                    column = 0
+                }
+        
+                let move = Move(column: column, row: row, direction: direction, player: activePlayer)
+                if let piece = performMove(move) {
+                    currentPiece = piece
+                    activePieces.append(piece)
+                    self.handleSubmitMove()
+                }
+            }
+        } while currentPiece == nil
     }
     
     func processPieceAtColumn(move: Move) {
@@ -411,7 +452,9 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                                     
                                     assert(piece.moveDestinations.count > 0)
                                     
-                                    piece.animate()
+                                    piece.animate() {
+                                        
+                                    }
                                     
                                     // update board model
                                     for activePiece in activePieces {
@@ -482,7 +525,9 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             scene.activePiece = piece
             assert(piece.moveDestinations.count > 0)
             
-            piece.animate()
+            piece.animate() {
+                
+            }
         }
         
         if updateModel {
@@ -567,7 +612,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         
         var winner = ""
         
-        if (isMultiplayer) {
+        if (isOnline) {
             let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
             let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
             let opponentParticipant = getOpponentForMatch(currentMatch)
