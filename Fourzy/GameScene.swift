@@ -68,6 +68,10 @@ class GameScene:BaseScene {
         
         createContent()
     }
+
+     required init?(coder aDecoder: NSCoder) {
+         fatalError("init(coder:) has not been implemented")
+     }
     
     func setupScene() {
         piecesLayer.removeAllChildren()
@@ -183,7 +187,8 @@ class GameScene:BaseScene {
         } else if (direction == .Down) {
             return CGPoint(x: column * kTileWidth + kGridXOffset + kPieceSize/2, y: (row+1) * kTileHeight + kTapAreaWidth + 5 + kPieceSize/2)
         } else if (direction == .Left) {
-            return CGPoint(x: (column+1) * kTileWidth + kTapAreaWidth + 5 + kPieceSize/2, y: row * kTileHeight + kTapAreaWidth + kPieceSize/2)
+            let pieceSize = kPieceSize/2
+            return CGPoint(x: (column+1) * kTileWidth + kTapAreaWidth + 5 + pieceSize, y: row * kTileHeight + kTapAreaWidth + kPieceSize/2)
         } else if (direction == .Right) {
             return CGPoint(x: 5 + kPieceSize/2, y: row * kTileHeight + kTapAreaWidth + kPieceSize/2)
         }
@@ -322,7 +327,7 @@ class GameScene:BaseScene {
     }
     
     func displayEndOfGame(winner:String, isTie:Bool) {
-        var winnerLabel = self.childNodeWithName(kWinnerLabelName) as SKLabelNode
+        var winnerLabel = self.childNodeWithName(kWinnerLabelName) as! SKLabelNode
         if isTie {
             winnerLabel.text = "Tie!"
         } else {

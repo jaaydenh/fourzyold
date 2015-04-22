@@ -55,7 +55,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         localPlayer.authenticateHandler = {(viewController:UIViewController!, error:NSError!) -> Void in
             
             if (error != nil) {
-                self.setLastError(error!)
+                self.setPreviousError(error!)
             }
             
             if((viewController) != nil) {
@@ -98,7 +98,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
                 println("Error fetching matches: \(error.localizedDescription)")
             }
             if matches != nil {
-                self.matches = matches as [GKTurnBasedMatch]
+                self.matches = matches as! [GKTurnBasedMatch]
                 
                 self.didFetchMatches(matches)
             }
@@ -110,7 +110,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     
     
-    func setLastError(error:NSError) {
+    func setPreviousError(error:NSError) {
         if let lastError = error.copy() as? NSError {
             
             println("GameKitHelper ERROR: \(lastError.userInfo?.description)")
@@ -230,7 +230,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
 //        let cell = UITableViewCell(style: UITableViewCellStyle.Value2, reuseIdentifier: "GamesListCell") as GamesListCell
-        let cell = tableView.dequeueReusableCellWithIdentifier("GamesListCell", forIndexPath: indexPath) as GamesListCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("GamesListCell", forIndexPath: indexPath) as! GamesListCell
         
         // Remove seperator inset
         if cell.respondsToSelector(Selector("setSeparatorInset:")) {
@@ -249,7 +249,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         cell.matchStatusLabel?.textColor = UIColor.blackColor()
         
-        let match: GKTurnBasedMatch = self.matches[indexPath.row] as GKTurnBasedMatch
+        let match: GKTurnBasedMatch = self.matches[indexPath.row] as! GKTurnBasedMatch
         let opponentParticipant = getOpponentForMatch(match)
         
         if opponentParticipant.playerID != nil {
@@ -298,19 +298,19 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
-            var matchList = matches as [GKTurnBasedMatch]
+            var matchList = matches as! [GKTurnBasedMatch]
             matchList.removeAtIndex(indexPath.row)
             //self.matchListTableView?.reloadData()
             var indexPaths:NSMutableArray = []
             indexPaths.addObject(indexPath.row)
-            matchListTableView?.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Fade)
+            matchListTableView?.deleteRowsAtIndexPaths(indexPaths as [AnyObject], withRowAnimation: UITableViewRowAnimation.Fade)
         }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         println("select match" + self.matches[indexPath.row].matchID)
 
-        let match = self.matches[indexPath.row] as GKTurnBasedMatch
+        let match = self.matches[indexPath.row] as! GKTurnBasedMatch
         self.performSegueWithIdentifier("segueToGamePlay", sender: match)
     }
     
@@ -356,7 +356,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
             var playerList:[String] = []
             for match in self.matches {
                 
-                var matchParticipants = match.participants as [GKTurnBasedParticipant]
+                var matchParticipants = match.participants as! [GKTurnBasedParticipant]
                 let playerIDs = matchParticipants.map { ($0 as GKTurnBasedParticipant).playerID }
                 
                 //TODO: check if players dictionary already contains a player before loading that players data
@@ -391,12 +391,12 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         println("# ViewController:prepareForSegue")
         if segue.identifier == "segueToGamePlay" {
-            gameViewController = segue.destinationViewController as GameViewController
+            gameViewController = segue.destinationViewController as! GameViewController
             //gameViewController.delegate = self
             gameViewController.isSinglePlayer = false
             if sender != nil {
                 if sender is GKTurnBasedMatch {
-                    gameViewController.match = sender as GKTurnBasedMatch
+                    gameViewController.match = sender as! GKTurnBasedMatch
                     gameViewController.isOnline = true
                 } else {
                     gameViewController.isSinglePlayer = true
@@ -466,7 +466,7 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
             
             GKPlayer.loadPlayersForIdentifiers(playerList, withCompletionHandler: { (players, error) -> Void in
                 if (error != nil) {
-                    self.setLastError(error!)
+                    self.setPreviousError(error!)
                 }
                 if let playersFound = players as? [GKPlayer] {
                     for player in playersFound {

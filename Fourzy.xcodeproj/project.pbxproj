@@ -67,7 +67,7 @@
 		D04700FA1A15A50C001411B3 /* tap_area.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700B91A15A50C001411B3 /* tap_area.png */; };
 		D04700FF1A15A50C001411B3 /* up_arrow_token.png in Resources */ = {isa = PBXBuildFile; fileRef = D04700BE1A15A50C001411B3 /* up_arrow_token.png */; };
 		D04701001A15A50C001411B3 /* win1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D04700BF1A15A50C001411B3 /* win1.mp3 */; };
-		D04701021A15A50C001411B3 /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700C11A15A50C001411B3 /* Set.swift */; };
+		D04701021A15A50C001411B3 /* GameSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700C11A15A50C001411B3 /* GameSet.swift */; };
 		D04701031A15A50C001411B3 /* Sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = D04700C21A15A50C001411B3 /* Sprites.atlas */; };
 		D04701041A15A50C001411B3 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700C31A15A50C001411B3 /* Token.swift */; };
 		D04701051A15A50C001411B3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04700C41A15A50C001411B3 /* ViewController.swift */; };
@@ -195,7 +195,7 @@
 		D04700B91A15A50C001411B3 /* tap_area.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tap_area.png; sourceTree = "<group>"; };
 		D04700BE1A15A50C001411B3 /* up_arrow_token.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up_arrow_token.png; sourceTree = "<group>"; };
 		D04700BF1A15A50C001411B3 /* win1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = win1.mp3; sourceTree = "<group>"; };
-		D04700C11A15A50C001411B3 /* Set.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
+		D04700C11A15A50C001411B3 /* GameSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameSet.swift; sourceTree = "<group>"; };
 		D04700C21A15A50C001411B3 /* Sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = Sprites.atlas; sourceTree = "<group>"; };
 		D04700C31A15A50C001411B3 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		D04700C41A15A50C001411B3 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -327,7 +327,7 @@
 				D056BDE21A2C2E2900DCEAF6 /* Utilities.swift */,
 				D0DD457A1A99AD0800D66866 /* SKButton.swift */,
 				D047008E1A15A50C001411B3 /* Piece.swift */,
-				D04700C11A15A50C001411B3 /* Set.swift */,
+				D04700C11A15A50C001411B3 /* GameSet.swift */,
 				D04700C31A15A50C001411B3 /* Token.swift */,
 				D053484B1A14B98200331484 /* GameScene.sks */,
 				D04700C41A15A50C001411B3 /* ViewController.swift */,
@@ -520,7 +520,7 @@
 		D053483C1A14B98200331484 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = PartyTroll;
 				TargetAttributes = {
 					D05348431A14B98200331484 = {
@@ -691,7 +691,7 @@
 				D04700CA1A15A50C001411B3 /* FExtensions.swift in Sources */,
 				D04700C81A15A50C001411B3 /* Board.swift in Sources */,
 				D05348501A14B98200331484 /* GameViewController.swift in Sources */,
-				D04701021A15A50C001411B3 /* Set.swift in Sources */,
+				D04701021A15A50C001411B3 /* GameSet.swift in Sources */,
 				D0BE32321AB534BA00C25565 /* Move.swift in Sources */,
 				D0DD457B1A99AD0800D66866 /* SKButton.swift in Sources */,
 				D097BDEE1A3FBBA20081337F /* PlayerCache.swift in Sources */,
@@ -791,7 +791,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -828,8 +828,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -848,7 +849,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Fourzy/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -869,7 +870,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Fourzy/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

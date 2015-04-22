@@ -83,7 +83,7 @@ class SKButton: SKSpriteNode {
         var font = font
         var fontSize = fontSize
         
-        self.label.text = title
+        self.label.text = title as String
         self.label.fontSize = fontSize
         self.label.fontName = font
         
@@ -97,9 +97,9 @@ class SKButton: SKSpriteNode {
     weak var targetTouchUp: AnyObject?
     weak var targetTouchDown: AnyObject?
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent)  {
-        let touch: AnyObject! = touches.anyObject()
-        let touchLocation = touch.locationInNode(parent)
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        let touch = touches.first as? UITouch
+        let touchLocation = touch!.locationInNode(parent)
         
         if (!isEnabled) {
             return
@@ -108,29 +108,24 @@ class SKButton: SKSpriteNode {
         if (targetTouchDown != nil && targetTouchDown!.respondsToSelector(actionTouchDown!)) {
             UIApplication.sharedApplication().sendAction(actionTouchDown!, to: targetTouchDown, from: self, forEvent: nil)
         }
-        
-        
     }
     
-    override func touchesMoved(touches: NSSet, withEvent event: UIEvent)  {
-        
+    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
         if (!isEnabled) {
             return
         }
         
-        let touch: AnyObject! = touches.anyObject()
-        let touchLocation = touch.locationInNode(parent)
+        let touch = touches.first as? UITouch
+        let touchLocation = touch!.locationInNode(parent)
         
         if (CGRectContainsPoint(frame, touchLocation)) {
             isSelected = true
         } else {
             isSelected = false
         }
-        
     }
     
-    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
-        
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         if (!isEnabled) {
             return
         }
@@ -138,8 +133,8 @@ class SKButton: SKSpriteNode {
         isSelected = false
         
         if (targetTouchUpInside != nil && targetTouchUpInside!.respondsToSelector(actionTouchUpInside!)) {
-            let touch: AnyObject! = touches.anyObject()
-            let touchLocation = touch.locationInNode(parent)
+            let touch = touches.first as? UITouch
+            let touchLocation = touch!.locationInNode(parent)
             
             if (CGRectContainsPoint(frame, touchLocation) ) {
                 UIApplication.sharedApplication().sendAction(actionTouchUpInside!, to: targetTouchUpInside, from: self, forEvent: nil)

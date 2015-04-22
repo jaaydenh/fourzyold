@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Party Troll. All rights reserved.
 //
 
-import Spritekit
+import SpriteKit
 
 let NumRows = 8
 let NumColumns = 8
@@ -48,7 +48,7 @@ class Board: SKNode {
             if let tokensArray: AnyObject = dictionary["tokens"] {
                 
                 // Loop through the rows...
-                for (row, rowArray) in enumerate(tokensArray as [[Int]]) {
+                for (row, rowArray) in enumerate(tokensArray as! [[Int]]) {
                     
                     // Note: In Sprite Kit (0,0) is at the bottom of the screen,
                     // so we need to read this file upside down.

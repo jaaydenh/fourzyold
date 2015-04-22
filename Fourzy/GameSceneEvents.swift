@@ -11,7 +11,7 @@ import GameKit
 
 extension GameScene {
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
 
         if let sprite = activePiece?.sprite {
             if sprite.hasActions() {
@@ -26,7 +26,7 @@ extension GameScene {
         
         self.removeHighlights()
         
-        let touch = touches.anyObject() as UITouch
+        let touch = touches.first as! UITouch
         let touchLocation = touch.locationInNode(piecesLayer)
         
         let (success, column, row, direction) = convertPoint(touchLocation)
