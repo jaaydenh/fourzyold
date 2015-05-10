@@ -47,11 +47,10 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         localPlayer.registerListener(self)
         
         // Start the progress indicator animation.
-        self.loadingProgressIndicator.startAnimating()
+        loadingProgressIndicator.startAnimating()
         
         GameScene.loadSceneAssetsWithCompletionHandler {
-            var viewSize = self.view.bounds.size
-            
+
             let skView = self.view as! SKView
             //skView.frameInterval = 4
             //skView.showsDrawCount = true
@@ -66,12 +65,17 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             //                viewSize.height *= 2
             //                viewSize.width *= 2
             //            }
-            
+        
+            var viewSize = self.view.bounds.size
             self.scene = GameScene(size: viewSize)
             self.scene.scaleMode = .AspectFill
             self.currentMatch = self.match
-            self.scene.touchHandler = self.handleTouch
-            self.scene.submitMoveHandler = self.handleSubmitMove
+
+            self.scene.touchHandler = { [unowned self](GridPosition) in self.handleTouch(GridPosition)}
+//            self.scene.touchHandler = {
+//                [unowned self] in self.handleTouch
+//            }()
+            self.scene.submitMoveHandler = { [unowned self] in self.handleSubmitMove()}
             
             self.loadingProgressIndicator.stopAnimating()
             self.loadingProgressIndicator.hidden = true
@@ -85,11 +89,18 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             activePieces.removeAll(keepCapacity: false)
             self.layoutMatch()
             
-            UIView.animateWithDuration(2.0) {
+            //UIView.animateWithDuration(2.0) {
                 //self.archerButton.alpha = 1.0
                 //self.warriorButton.alpha = 1.0
-            }
+            //}
         }
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+//        super.viewDidDisappear(true)
+//        activePieces.removeAll(keepCapacity: false)
+//        var test:SKView = self.view as! SKView
+//            test.presentScene(nil)
     }
     
     func handleSubmitMove() {
@@ -140,10 +151,13 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
 
             scene.removeHighlights()
             
+            let destination = piece.moveDestinations[piece.moveDestinations.count-1]
+            self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
+            
+            self.checkForWinnerAndUpdateMatch(true)
+            activePieces.removeAtIndex(activePieces.count-1)
+            
             piece.animate() {
-                let destination = piece.moveDestinations[piece.moveDestinations.count-1]
-                self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
-                
                 self.rotateActivePlayer()
                 
                 //            if activePieces.count > 0 {
@@ -161,9 +175,6 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                 self.scene.submitButton?.hidden = true
                 completion()
             }
-            self.checkForWinnerAndUpdateMatch(true)
-            println("# test")
-            activePieces.removeAtIndex(activePieces.count-1)
         }
     }
     
@@ -695,16 +706,23 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     
     func player(player: GKPlayer!, receivedTurnEventForMatch match: GKTurnBasedMatch!, didBecomeActive: Bool) {
         println("receivedTurnEventForMatch:GameViewController")
-        if (self.currentMatch != nil) {
-            if (self.currentMatch.matchID == match.matchID) {
+        let currentMatch = self.currentMatch as GKTurnBasedMatch
+        let turnMatch = match as GKTurnBasedMatch
+        var currentMatchID = currentMatch.matchID.capitalizedString
+        var turnMatchID = turnMatch.matchID.capitalizedString
+        
+        if ((currentMatch.matchID) != nil) {
+            if (currentMatch.matchID == turnMatch.matchID) {
                 playLastOpponentMove()
             }
         }
     }
     
     func player(player: GKPlayer!, matchEnded match: GKTurnBasedMatch!) {
-        if (self.currentMatch.matchID == match.matchID) {
-            playLastOpponentMove()
+        if (self.currentMatch != nil) {
+            if (self.currentMatch.matchID == match.matchID) {
+                playLastOpponentMove()
+            }
         }
     }
     

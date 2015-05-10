@@ -35,7 +35,7 @@ class GameScene:BaseScene {
     var opponentPlayerName:String = ""
     var submitButton:SKButton?
     var activePiece:Piece?
-    
+
     //var backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
 
     // Pre-load sound resources
@@ -44,9 +44,10 @@ class GameScene:BaseScene {
     
      override init(size: CGSize) {
         super.init(size: size)
+        
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         backgroundColor = SKColor.whiteColor()
-
+        
         gameLayer.hidden = false
 
         gameLayer.position = CGPoint(x: 0, y: 0)
@@ -81,10 +82,10 @@ class GameScene:BaseScene {
         addTapArrows()
     }
     
-    func addActivePiece(piece:Piece) {
-        activePieces.append(piece)
-        println(activePieces.count)
-    }
+//    func addActivePiece(piece:Piece) {
+//        activePieces.append(piece)
+//        println(activePieces.count)
+//    }
     
     override func didMoveToView(view: SKView) {
         println("# GameScene:didMoveToView")
@@ -146,7 +147,9 @@ class GameScene:BaseScene {
         }
         
         // Communicate this touch back to the ViewController.
+        //self.submitMoveHandler = { [unowned self] in print(self)}
         if let handler = submitMoveHandler {
+            
             handler()
         }
     }
@@ -234,10 +237,10 @@ class GameScene:BaseScene {
     
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
-        if var activePiece = self.activePiece {
-            if let sprite = activePiece.sprite {
+        if let curActivePiece = self.activePiece {
+            if let sprite = curActivePiece.sprite {
                 if sprite.hasActions() {
-                    let destinationRect = CGRect(x: activePiece.moveDestination.x - (CGFloat(kPieceSize) / 2), y: activePiece.moveDestination.y - (CGFloat(kPieceSize) / 2), width: CGFloat(kPieceSize), height: CGFloat(kPieceSize))
+                    let destinationRect = CGRect(x: curActivePiece.moveDestination.x - (CGFloat(kPieceSize) / 2), y: curActivePiece.moveDestination.y - (CGFloat(kPieceSize) / 2), width: CGFloat(kPieceSize), height: CGFloat(kPieceSize))
                     if (CGRectIntersectsRect(destinationRect, sprite.frame)) {
                         if activePieces.count > 0 {
                             var piece = activePieces[activePieces.count-1]
@@ -265,8 +268,11 @@ class GameScene:BaseScene {
         currentPlayerName = PlayerCache.sharedManager.players[localPlayerID]!.alias
         let opponentParticipant = getOpponentForMatch(match)
         if let opponentPlayerID = opponentParticipant.playerID {
-            var opponent = PlayerCache.sharedManager.players[opponentPlayerID]!
-            opponentPlayerName = opponent.displayName
+            if let opponent = PlayerCache.sharedManager.players[opponentPlayerID] {
+                opponentPlayerName = opponent.displayName
+            } else {
+                opponentPlayerName = "Waiting for opponent"
+            }
         } else {
             opponentPlayerName = "Waiting for opponent"
         }
@@ -316,7 +322,7 @@ class GameScene:BaseScene {
             self.player2Indicator.hidden = false
         }
     }
-    
+
     func renderBoard(pieces: Array<Piece?>) {
         println("# GameScene:renderBoard")
         for piece in pieces {
