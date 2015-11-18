@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Party Troll. All rights reserved.
 //
 
-struct GameSet<T: Hashable>: SequenceType, Printable {
+struct GameSet<T: Hashable>: SequenceType, CustomStringConvertible {
     private var dictionary = Dictionary<T, Bool>()
     
     mutating func addElement(newElement: T) {

@@ -1,6 +1,6 @@
 
 
-struct Move: Printable {
+struct Move: CustomStringConvertible {
     let column: Int
     let row: Int
     let direction: Direction

@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class Token: Printable, Hashable {
+class Token: CustomStringConvertible, Hashable {
     var column: Int
     var row: Int
     let tokenType: TokenType
@@ -29,7 +29,7 @@ class Token: Printable, Hashable {
     }
 }
 
-enum TokenType: Int, Printable {
+enum TokenType: Int, CustomStringConvertible {
     
     case None = 0, Sticky, UpArrow, DownArrow, LeftArrow, RightArrow, Blocker
     

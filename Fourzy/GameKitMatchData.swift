@@ -42,7 +42,7 @@ class GameKitMatchData {
             moveNumber++
         }
         combinedDataArray.append(moveNumber)
-        combinedDataArray.extend(moves + currentMove + tokenLayout)
+        combinedDataArray.appendContentsOf(moves + currentMove + tokenLayout)
         
         let matchData:NSData = NSKeyedArchiver.archivedDataWithRootObject(combinedDataArray)
 

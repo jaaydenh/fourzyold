@@ -53,9 +53,9 @@ class SKButton: SKSpriteNode {
         
         // Adding this node as an empty layer. Without it the touch functions are not being called
         // The reason for this is unknown when this was implemented...?
-        let bugFixLayerNode = SKSpriteNode(texture: nil, color: nil, size: defaultTexture.size())
-        bugFixLayerNode.position = self.position
-        addChild(bugFixLayerNode)
+        //let bugFixLayerNode = SKSpriteNode(texture: nil, color: nil, size: defaultTexture.size())
+        //bugFixLayerNode.position = self.position
+        //addChild(bugFixLayerNode)
         
     }
     
@@ -78,10 +78,10 @@ class SKButton: SKSpriteNode {
         
     }
     
-    func setButtonLabel(#title: NSString, font: String, fontSize: CGFloat) {
-        var title = title
-        var font = font
-        var fontSize = fontSize
+    func setButtonLabel(title title: NSString, font: String, fontSize: CGFloat) {
+        let title = title
+        let font = font
+        let fontSize = fontSize
         
         self.label.text = title as String
         self.label.fontSize = fontSize
@@ -97,9 +97,10 @@ class SKButton: SKSpriteNode {
     weak var targetTouchUp: AnyObject?
     weak var targetTouchDown: AnyObject?
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-        let touch = touches.first as? UITouch
-        let touchLocation = touch!.locationInNode(parent)
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+
+        //let touch = touches.first
+        //let touchLocation = touch!.locationInNode(parent!)
         
         if (!isEnabled) {
             return
@@ -110,13 +111,13 @@ class SKButton: SKSpriteNode {
         }
     }
     
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if (!isEnabled) {
             return
         }
         
-        let touch = touches.first as? UITouch
-        let touchLocation = touch!.locationInNode(parent)
+        let touch = touches.first
+        let touchLocation = touch!.locationInNode(parent!)
         
         if (CGRectContainsPoint(frame, touchLocation)) {
             isSelected = true
@@ -124,8 +125,9 @@ class SKButton: SKSpriteNode {
             isSelected = false
         }
     }
-    
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+
         if (!isEnabled) {
             return
         }
@@ -133,8 +135,8 @@ class SKButton: SKSpriteNode {
         isSelected = false
         
         if (targetTouchUpInside != nil && targetTouchUpInside!.respondsToSelector(actionTouchUpInside!)) {
-            let touch = touches.first as? UITouch
-            let touchLocation = touch!.locationInNode(parent)
+            let touch = touches.first
+            let touchLocation = touch!.locationInNode(parent!)
             
             if (CGRectContainsPoint(frame, touchLocation) ) {
                 UIApplication.sharedApplication().sendAction(actionTouchUpInside!, to: targetTouchUpInside, from: self, forEvent: nil)

@@ -16,11 +16,11 @@ extension GKTurnBasedMatch {
         var otherParticipant:GKTurnBasedParticipant?
         var lastMove:NSDate = NSDate()
     
-        for participant in self.participants {
-            if participant.playerID == GKLocalPlayer.localPlayer().playerID {
-                localParticipant = participant as? GKTurnBasedParticipant
+        for participant in self.participants! {
+            if participant.player?.playerID == GKLocalPlayer.localPlayer().playerID {
+                localParticipant = participant as GKTurnBasedParticipant
             } else {
-                otherParticipant = participant as? GKTurnBasedParticipant
+                otherParticipant = participant as GKTurnBasedParticipant
             }
         }
     
@@ -29,16 +29,16 @@ extension GKTurnBasedMatch {
                 if self.currentParticipant != nil {
                     if localParticipant == self.currentParticipant {
                         if otherParticipant.lastTurnDate != nil {
-                            lastMove = otherParticipant.lastTurnDate
+                            lastMove = otherParticipant.lastTurnDate!
                         }
                     } else {
                         if localParticipant.lastTurnDate != nil {
-                            lastMove = localParticipant.lastTurnDate
+                            lastMove = localParticipant.lastTurnDate!
                         }
                     }
                 } else {
                     if localParticipant.lastTurnDate != nil {
-                        lastMove = localParticipant.lastTurnDate
+                        lastMove = localParticipant.lastTurnDate!
                     }
                 }
             }

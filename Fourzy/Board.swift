@@ -45,17 +45,17 @@ class Board: SKNode {
             // one element for each row of the level. Each of those row elements in
             // turn is also an array describing the columns in that row. If a column
             // is 1, it means there is a tile at that location, 0 means there is not.
-            if let tokensArray: AnyObject = dictionary["tokens"] {
+            if let tokensArray = dictionary["tokens"] {
                 
                 // Loop through the rows...
-                for (row, rowArray) in enumerate(tokensArray as! [[Int]]) {
+                for (row, rowArray) in (tokensArray as! [[Int]]).enumerate() {
                     
                     // Note: In Sprite Kit (0,0) is at the bottom of the screen,
                     // so we need to read this file upside down.
                     let tileRow = NumRows - row - 1
                     
                     // Loop through the columns in the current row...
-                    for (column, value) in enumerate(rowArray) {
+                    for (column, value) in rowArray.enumerate() {
                         
                         if let tokenType = TokenType(rawValue: value) {
                             let token = Token(column: column, row: tileRow, tokenType: tokenType)
@@ -118,7 +118,7 @@ class Board: SKNode {
         
         for (var row = kNumRows - 1;row >= 0;row--) {
             for (var column = 0;column < kNumColumns;column++) {
-                if let piece = pieceAtColumn(column, row: row) {
+                if let _ = pieceAtColumn(column, row: row) {
                     count++
                 }
             }
@@ -128,8 +128,7 @@ class Board: SKNode {
     }
     
     func printBoard() {
-        var count = 0
-        println()
+        print("")
         for (var row = kNumRows - 1;row >= 0;row--) {
             for (var column = 0;column < kNumColumns;column++) {
                 if let piece = pieceAtColumn(column, row: row) {
@@ -139,12 +138,12 @@ class Board: SKNode {
                 }
                 print(" ")
             }
-            println()
+            print("")
         }
     }
     
     func getDestinationForPiece(piece: Piece, move: Move) -> Bool {
-        println("# Board:GetDestinationForPiece")
+        print("# Board:GetDestinationForPiece")
         let direction = move.direction
         let startingRow = move.row
         let startingColumn = move.column

@@ -11,8 +11,7 @@ import GameKit
 
 extension GameScene {
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
-
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let sprite = activePiece?.sprite {
             if sprite.hasActions() {
                 return
@@ -26,8 +25,8 @@ extension GameScene {
         
         self.removeHighlights()
         
-        let touch = touches.first as! UITouch
-        let touchLocation = touch.locationInNode(piecesLayer)
+        let touch = touches.first
+        let touchLocation = touch!.locationInNode(piecesLayer)
         
         let (success, column, row, direction) = convertPoint(touchLocation)
         if success {
@@ -47,10 +46,10 @@ extension GameScene {
     // Converts a point relative to the board into a column, row and direction
     func convertPoint(point: CGPoint) -> (success: Bool, column: Int, row: Int, direction: Direction) {
         
-        var y = Int(point.y)
-        var x = Int(point.x)
-        var row = (y - kTapAreaWidth) / kTileHeight
-        var column = (x - kTapAreaWidth) / kTileWidth
+        let y = Int(point.y)
+        let x = Int(point.x)
+        let row = (y - kTapAreaWidth) / kTileHeight
+        let column = (x - kTapAreaWidth) / kTileWidth
         
         if topActionArea.containsPoint(point) {
             return (true, column, Int(kNumRows - 1), .Down)

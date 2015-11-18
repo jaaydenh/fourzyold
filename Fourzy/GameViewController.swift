@@ -14,16 +14,23 @@ extension SKNode {
     class func unarchiveFromFile(file : NSString) -> SKNode? {
         if let path = NSBundle.mainBundle().pathForResource(file as String, ofType: "sks") {
             
-            var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)
-            var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData!)
-            
-            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameScene
-            archiver.finishDecoding()
-            return scene
+            do {
+                let sceneData = try NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe)
+                
+                let archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
+                
+                archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
+                let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameScene
+                archiver.finishDecoding()
+                return scene
+            } catch _ {
+                print("error")
+            }
+
         } else {
             return nil
         }
+        return nil
     }
 }
 
@@ -43,7 +50,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        var localPlayer = GKLocalPlayer.localPlayer()
+        let localPlayer = GKLocalPlayer.localPlayer()
         localPlayer.registerListener(self)
         
         // Start the progress indicator animation.
@@ -66,7 +73,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             //                viewSize.width *= 2
             //            }
         
-            var viewSize = self.view.bounds.size
+            let viewSize = self.view.bounds.size
             self.scene = GameScene(size: viewSize)
             self.scene.scaleMode = .AspectFill
             self.currentMatch = self.match
@@ -104,13 +111,13 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     }
     
     func handleSubmitMove() {
-        println("# GameViewController:handleSubmitMove")
+        print("# GameViewController:handleSubmitMove")
         
         if (isOnline && currentMatch != nil) {
             if currentMatch.status == GKTurnBasedMatchStatus.Ended {
                 return
             }
-            if GKLocalPlayer.localPlayer().playerID != currentMatch.currentParticipant.playerID {
+            if GKLocalPlayer.localPlayer().playerID != currentMatch.currentParticipant!.player?.playerID {
                 return
             }
         }
@@ -125,7 +132,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                 }
             }
         }
-        println("# test")
+        print("# test")
     }
     
     func submitMove(completion: () -> ()) {
@@ -152,7 +159,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             scene.removeHighlights()
             
             let destination = piece.moveDestinations[piece.moveDestinations.count-1]
-            self.gameData.currentMove.extend([destination.column, destination.row, piece.direction.rawValue])
+            self.gameData.currentMove.appendContentsOf([destination.column, destination.row, piece.direction.rawValue])
             
             self.checkForWinnerAndUpdateMatch(true)
             activePieces.removeAtIndex(activePieces.count-1)
@@ -186,7 +193,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             if currentMatch.status == GKTurnBasedMatchStatus.Ended {
                 return
             }
-            if GKLocalPlayer.localPlayer().playerID != currentMatch.currentParticipant.playerID {
+            if GKLocalPlayer.localPlayer().playerID != currentMatch.currentParticipant!.player?.playerID {
                 return
             }
         }
@@ -221,7 +228,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     
     func aiMove() {
         var currentPiece:Piece!
-        do {
+        repeat {
             var column = Int(arc4random_uniform(8))
             var row = Int(arc4random_uniform(8))
             if let direction = Direction(rawValue: Int(arc4random_uniform(4)) + 1) {
@@ -250,7 +257,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         let piece = Piece(move: move)
         activePieces.append(piece)
         
-        let canMove = board.getDestinationForPiece(piece, move: move)
+        //let canMove = board.getDestinationForPiece(piece, move: move)
         
         for piece in activePieces {
             let destination = piece.moveDestinations[0]
@@ -263,47 +270,47 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     }
     
     func advanceTurn() {
-        println("# GameViewController:advanceTurn")
+        print("# GameViewController:advanceTurn")
         let currentMatch:GKTurnBasedMatch = self.currentMatch //GameKitTurnBasedMatchHelper.sharedInstance().currentMatch
         let updatedMatchData:NSData = self.gameData.encodeMatchData()
         var nextParticipant:GKTurnBasedParticipant!
         if currentMatch.status != GKTurnBasedMatchStatus.Ended {
-            if currentMatch.participants.count >= 2 {
+            if currentMatch.participants!.count >= 2 {
                 
                 nextParticipant = getOpponentForMatch(currentMatch)
                 
                 let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
-                let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
+                let currentPlayerName = PlayerCache.sharedManager.players[(currentParticipant.player?.playerID)!]!
                 
-                currentMatch.setLocalizableMessageWithKey("%@ has made a move!", arguments: [currentPlayerName.alias])
+                currentMatch.setLocalizableMessageWithKey("%@ has made a move!", arguments: [currentPlayerName.alias!])
                 currentMatch.message = "\(currentPlayerName.alias) has made a move!"
-                let sortedParticipants:[GKTurnBasedParticipant] = [nextParticipant, currentMatch.currentParticipant]
+                let sortedParticipants:[GKTurnBasedParticipant] = [nextParticipant, currentMatch.currentParticipant!]
                 
                 currentMatch.endTurnWithNextParticipants(sortedParticipants, turnTimeout: GKTurnTimeoutDefault, matchData: updatedMatchData) { (error) -> Void in
                     if (error != nil) {
-                        println(error)
+                        print(error)
                     }
                 }
-                //println("Send Turn, \(updatedMatchData), \(nextParticipant)")
+                //print("Send Turn, \(updatedMatchData), \(nextParticipant)")
             }
         }
     }
     
     func layoutMatch()
     {
-        println()
+        print("")
         self.activePlayer = PieceType.Player1
         board = Board()
 
         scene.setupScene()
         
         if let match = currentMatch {
-            println("# GameScene:LayoutMatch: existing match")
+            print("# GameScene:LayoutMatch: existing match")
             
-            match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
+            match.loadMatchDataWithCompletionHandler({ (matchData:NSData?, error:NSError?) -> Void in
                 if (error != nil)
                 {
-                    println("Error fetching matches: \(error.localizedDescription)")
+                    print("Error fetching matches: \(error!.localizedDescription)")
                 } else {
                     
                     if let matchData = matchData {
@@ -326,7 +333,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                             match.saveCurrentTurnWithMatchData(self.gameData.encodeMatchData(), completionHandler: { (error) -> Void in
                                 if (error != nil)
                                 {
-                                    println("Error saving current turn with match data: \(error.localizedDescription)")
+                                    print("Error saving current turn with match data: \(error!.localizedDescription)")
                                 }
                             })
                             
@@ -380,7 +387,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                     else
                     {
                         // let playerNum = match.participants. [match.currentParticipant + 1]
-                        //println("Player %@'s Turn", playerNum)
+                        //print("Player %@'s Turn", playerNum)
                         //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum]
                     }
                 }
@@ -390,7 +397,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                 self.scene.setActivePlayerIndicator(self.activePlayer)
             })
         } else {
-            println("# GameScene:LayoutMatch: new match")
+            print("# GameScene:LayoutMatch: new match")
             // Initialize tokens for the board
             let boardNumber = Int(arc4random_uniform(41))
             self.board.initTokensWithBoard("Board_" + String(boardNumber))
@@ -413,14 +420,14 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     
     // Triggered when on the game screen and the opponent has just made a move
     func playLastOpponentMove() {
-        println("# GameScene:playLastOpponentMove")
+        print("# GameScene:playLastOpponentMove")
         
         if let match = currentMatch {
             
-            match.loadMatchDataWithCompletionHandler({ (matchData:NSData!, error:NSError!) -> Void in
+            match.loadMatchDataWithCompletionHandler({ (matchData:NSData?, error:NSError?) -> Void in
                 if (error != nil)
                 {
-                    println("Error fetching matches: \(error.localizedDescription)")
+                    print("Error fetching matches: \(error!.localizedDescription)")
                 } else {
                     if let matchData = matchData {
                         self.gameData = GameKitMatchData(matchData: matchData)
@@ -473,7 +480,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                                         self.board.addPieceAtColumn(destination.column, row: destination.row, piece: activePiece)
                                     }
                                     
-                                    //println("active player: " + self.activePlayer.description)
+                                    //print("active player: " + self.activePlayer.description)
                                     self.rotateActivePlayer()
                                     self.checkForWinnerAndUpdateMatch(false)
                                     activePieces.removeAtIndex(activePieces.count-1)
@@ -489,7 +496,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                     else
                     {
                         // let playerNum = match.participants. [match.currentParticipant + 1]
-                        //println("Player %@'s Turn", playerNum)
+                        //print("Player %@'s Turn", playerNum)
                         //statusString = [NSString stringWithFormat:@"Player %ld's Turn", (long)playerNum]
                     }
                 }
@@ -501,7 +508,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     }
     
     func playLastMove(destinationColumn: Int, destinationRow: Int, direction: Direction, updateModel: Bool) {
-        println("# GameScene:playLastMove")
+        print("# GameScene:playLastMove")
         //self.rotateActivePlayer()
         var row = destinationRow
         var column = destinationColumn
@@ -549,7 +556,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
             }
         }
         
-        //println("active player: " + self.activePlayer.description)
+        //print("active player: " + self.activePlayer.description)
         //self.rotateActivePlayer()
         self.checkForWinnerAndUpdateMatch(false)
         
@@ -564,18 +571,18 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         } else {
             activePlayer = .Player1
         }
-        println("# GameScene:RotateActivePlayer: activePlayer = " + activePlayer.description)
+        print("# GameScene:RotateActivePlayer: activePlayer = " + activePlayer.description)
     }
     
     func loadPlayerPhotos() {
         let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
-        if let playerID = currentParticipant.playerID {
+        if let playerID = currentParticipant.player?.playerID {
             if let playerImage = PlayerCache.sharedManager.playerPhotos[playerID] {
                 scene.loadCurrentPlayerPhoto(playerImage)
             }
         }
         let opponentParticipant = getOpponentForMatch(currentMatch)
-        if let playerID = opponentParticipant.playerID {
+        if let playerID = opponentParticipant.player?.playerID {
             if let playerImage = PlayerCache.sharedManager.playerPhotos[playerID] {
                 scene.loadOpponentPlayerPhoto(playerImage)
             }
@@ -583,12 +590,12 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     }
     
     func checkForWinnerAndUpdateMatch(shouldUpdateMatch: Bool) {
-        println("# GameViewController:checkForWinnerAndUpdateMatch")
+        print("# GameViewController:checkForWinnerAndUpdateMatch")
         var winners:[PieceType] = []
         
         for activePiece in activePieces {
             let destination = activePiece.moveDestinations[0]
-            var winner = board.checkForWinnerAtRow(destination.row, column: destination.column)
+            let winner = board.checkForWinnerAtRow(destination.row, column: destination.column)
             if (winner != PieceType.None) {
                 winners.append(winner)
             }
@@ -619,21 +626,21 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     }
     
     func endMatchWithWinner(pieceType: PieceType, shouldUpdateMatch: Bool) {
-        println("# GameScene:endMatchWithWinner")
+        print("# GameScene:endMatchWithWinner")
         
         var winner = ""
         
         if (isOnline) {
             let currentParticipant = participantForLocalPlayerInMatch(currentMatch)
-            let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
+            let currentPlayerName = PlayerCache.sharedManager.players[(currentParticipant.player?.playerID)!]!
             let opponentParticipant = getOpponentForMatch(currentMatch)
-            let opponentPlayerName = PlayerCache.sharedManager.players[opponentParticipant.playerID]!
+            let opponentPlayerName = PlayerCache.sharedManager.players[(opponentParticipant.player?.playerID)!]!
             
             if currentMatch.status == GKTurnBasedMatchStatus.Ended {
                 if currentParticipant.matchOutcome == GKTurnBasedMatchOutcome.Won {
-                    scene.displayEndOfGame(currentPlayerName.alias, isTie: false)
+                    scene.displayEndOfGame(currentPlayerName.alias!, isTie: false)
                 } else if currentParticipant.matchOutcome == GKTurnBasedMatchOutcome.Lost {
-                    scene.displayEndOfGame(opponentPlayerName.displayName, isTie: false)
+                    scene.displayEndOfGame(opponentPlayerName.displayName!, isTie: false)
                 } else if currentParticipant.matchOutcome == GKTurnBasedMatchOutcome.Tied {
                     scene.displayEndOfGame("", isTie: true)
                 }
@@ -641,11 +648,11 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                 if pieceType == PieceType.None {
                     scene.displayEndOfGame("", isTie: true)
                 } else if pieceType == activePlayer {
-                    let currentPlayerName = PlayerCache.sharedManager.players[currentParticipant.playerID]!
-                    scene.displayEndOfGame(currentPlayerName.alias, isTie: false)
+                    let currentPlayerName = PlayerCache.sharedManager.players[(currentParticipant.player?.playerID)!]!
+                    scene.displayEndOfGame(currentPlayerName.alias!, isTie: false)
                 } else {
-                    let opponentPlayerName = PlayerCache.sharedManager.players[opponentParticipant.playerID]!
-                    scene.displayEndOfGame(opponentPlayerName.displayName, isTie: false)
+                    let opponentPlayerName = PlayerCache.sharedManager.players[(opponentParticipant.player?.playerID)!]!
+                    scene.displayEndOfGame(opponentPlayerName.displayName!, isTie: false)
                 }
             }
             
@@ -654,15 +661,15 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                 opponent = getOpponentForMatch(currentMatch)
                 
                 if pieceType == PieceType.None {
-                    currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Tied
+                    currentMatch.currentParticipant!.matchOutcome = GKTurnBasedMatchOutcome.Tied
                     opponent.matchOutcome = GKTurnBasedMatchOutcome.Tied
                     currentMatch.message = "\(opponentPlayerName.displayName) has Tied a match versus \(currentPlayerName.alias)"
                 } else if pieceType == activePlayer {
-                    currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Won
+                    currentMatch.currentParticipant!.matchOutcome = GKTurnBasedMatchOutcome.Won
                     opponent.matchOutcome = GKTurnBasedMatchOutcome.Lost
                     currentMatch.message = "\(opponentPlayerName.displayName) has Lost a match versus \(currentPlayerName.alias)"
                 } else {
-                    currentMatch.currentParticipant.matchOutcome = GKTurnBasedMatchOutcome.Lost
+                    currentMatch.currentParticipant!.matchOutcome = GKTurnBasedMatchOutcome.Lost
                     opponent.matchOutcome = GKTurnBasedMatchOutcome.Won
                     currentMatch.message = "\(opponentPlayerName.displayName) has Won a match versus \(currentPlayerName.alias)"
                 }
@@ -671,7 +678,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
                 
                 currentMatch.endMatchInTurnWithMatchData(updatedMatchData, completionHandler: { (error) -> Void in
                     if error != nil {
-                        println(error)
+                        print(error)
                     }
                 })
             }
@@ -694,7 +701,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
     }
     
     func renderBoardTokens() {
-        println("# GameScene:renderBoardTokens")
+        print("# GameScene:renderBoardTokens")
         for token in board.getAllTokens() {
             if token != nil {
                 if token?.tokenType != TokenType.None {
@@ -704,12 +711,12 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         }
     }
     
-    func player(player: GKPlayer!, receivedTurnEventForMatch match: GKTurnBasedMatch!, didBecomeActive: Bool) {
-        println("receivedTurnEventForMatch:GameViewController")
+    func player(player: GKPlayer, receivedTurnEventForMatch match: GKTurnBasedMatch, didBecomeActive: Bool) {
+        print("receivedTurnEventForMatch:GameViewController")
         let currentMatch = self.currentMatch as GKTurnBasedMatch
         let turnMatch = match as GKTurnBasedMatch
-        var currentMatchID = currentMatch.matchID.capitalizedString
-        var turnMatchID = turnMatch.matchID.capitalizedString
+        //var currentMatchID = currentMatch.matchID!.capitalizedString
+        //var turnMatchID = turnMatch.matchID!.capitalizedString
         
         if ((currentMatch.matchID) != nil) {
             if (currentMatch.matchID == turnMatch.matchID) {
@@ -718,7 +725,7 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         }
     }
     
-    func player(player: GKPlayer!, matchEnded match: GKTurnBasedMatch!) {
+    func player(player: GKPlayer, matchEnded match: GKTurnBasedMatch) {
         if (self.currentMatch != nil) {
             if (self.currentMatch.matchID == match.matchID) {
                 playLastOpponentMove()
@@ -730,13 +737,13 @@ class GameViewController: UIViewController, GKLocalPlayerListener {
         return false
     }
     
-    override func supportedInterfaceOrientations() -> Int {
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
-        } else {
-            return Int(UIInterfaceOrientationMask.All.rawValue)
-        }
-    }
+//    override func supportedInterfaceOrientations() -> Int {
+//        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+//            return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
+//        } else {
+//            return Int(UIInterfaceOrientationMask.All.rawValue)
+//        }
+//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

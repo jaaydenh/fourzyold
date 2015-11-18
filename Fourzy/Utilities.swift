@@ -15,16 +15,16 @@ func getOpponentForMatch(match: GKTurnBasedMatch) -> GKTurnBasedParticipant {
     let localPlayerID = GKLocalPlayer.localPlayer().playerID
     var opponent: GKTurnBasedParticipant!
     
-    for p in match.participants
+    for p in match.participants!
     {
-        if let playerID = p.playerID {
+        if let playerID = p.player?.playerID {
             if playerID != localPlayerID
             {
-                opponent = p as! GKTurnBasedParticipant
+                opponent = p as GKTurnBasedParticipant
                 break
             }
         } else {
-            opponent = p as! GKTurnBasedParticipant
+            opponent = p as GKTurnBasedParticipant
         }
 
     }
@@ -36,11 +36,11 @@ func participantForLocalPlayerInMatch(match: GKTurnBasedMatch) -> GKTurnBasedPar
     let localPlayerID = GKLocalPlayer.localPlayer().playerID
     var localPlayerParticipant: GKTurnBasedParticipant!
     
-    for p in match.participants
+    for p in match.participants!
     {
-        if p.playerID == localPlayerID
+        if p.player?.playerID == localPlayerID
         {
-            localPlayerParticipant = p as! GKTurnBasedParticipant
+            localPlayerParticipant = p as GKTurnBasedParticipant
             break
         }
     }

@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class Piece: Printable, Hashable {
+class Piece: CustomStringConvertible, Hashable {
     var column: Int
     var row: Int
     let pieceType: PieceType
@@ -43,9 +43,9 @@ class Piece: Printable, Hashable {
         if var lastPosition = sprite?.position {
             for position in moveDestinations.reverse() {
                 let moveLocation = CGPoint(x: position.column * Int(kTileWidth) + Int(kTapAreaWidth) + kPieceSize/2, y: position.row * Int(kTileHeight) + Int(kTapAreaWidth) + kPieceSize/2)
-                var xDiff:Double = Double(moveLocation.x - lastPosition.x)
-                var yDiff:Double = Double(moveLocation.y - lastPosition.y)
-                var distance = sqrt(xDiff * xDiff + yDiff * yDiff)
+                let xDiff:Double = Double(moveLocation.x - lastPosition.x)
+                let yDiff:Double = Double(moveLocation.y - lastPosition.y)
+                let distance = sqrt(xDiff * xDiff + yDiff * yDiff)
                 let move = SKAction.moveTo(moveLocation, duration: distance/260.0)
                 actions.append(move)
                 lastPosition = moveLocation
@@ -69,7 +69,7 @@ class Piece: Printable, Hashable {
         moveActions.append(shrinkMove)
 
         let sequence1 = SKAction.sequence(pulseActions)
-        let sequence2 = SKAction.sequence(moveActions)
+        //let sequence2 = SKAction.sequence(moveActions)
         let pulse = SKAction.repeatActionForever(sequence1)
         //let move = SKAction.repeatActionForever(sequence2)
         sprite?.runAction(pulse)
@@ -93,7 +93,7 @@ class Piece: Printable, Hashable {
     }
 }
 
-enum PieceType: Int, Printable {
+enum PieceType: Int, CustomStringConvertible {
     case None = 0, Player1, Player2
     
     var spriteName: String {

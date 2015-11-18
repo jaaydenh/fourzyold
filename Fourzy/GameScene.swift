@@ -84,11 +84,11 @@ class GameScene:BaseScene {
     
 //    func addActivePiece(piece:Piece) {
 //        activePieces.append(piece)
-//        println(activePieces.count)
+//        print(activePieces.count)
 //    }
     
     override func didMoveToView(view: SKView) {
-        println("# GameScene:didMoveToView")
+        print("# GameScene:didMoveToView")
 //        piecesLayer.removeAllChildren()
 //        addTapAreas()
         //if let match = GameKitTurnBasedMatchHelper.sharedInstance().currentMatch {
@@ -97,7 +97,7 @@ class GameScene:BaseScene {
     }
     
     override func willMoveFromView(view: SKView) {
-        println("# GameScene:willMoveFromView")
+        print("# GameScene:willMoveFromView")
     }
     
 //    func touchedActivePiece(point: CGPoint) -> Bool {
@@ -123,8 +123,8 @@ class GameScene:BaseScene {
     
     func addSubmitButton() {
 
-        var buttonTexture = SKTexture(imageNamed: "button")
-        var buttonSelectedTexture = SKTexture(imageNamed: "buttonSelected")
+        let buttonTexture = SKTexture(imageNamed: "button")
+        let buttonSelectedTexture = SKTexture(imageNamed: "buttonSelected")
         
         if let button = SKButton(normalTexture: buttonTexture, selectedTexture: buttonSelectedTexture, disabledTexture: buttonTexture) as SKButton? {
             button.setButtonLabel(title: "Submit", font: "Helvetica Neue Medium", fontSize: 18)
@@ -138,7 +138,7 @@ class GameScene:BaseScene {
     }
     
     func submitMove() {
-        println("# GameScene:submitMove")
+        print("# GameScene:submitMove")
         
         if let sprite = activePiece?.sprite {
             if sprite.hasActions() {
@@ -217,7 +217,7 @@ class GameScene:BaseScene {
     
     func createContent() {
         
-        var winnerLabel = SKLabelNode(fontNamed:"Arial Bold")
+        let winnerLabel = SKLabelNode(fontNamed:"Arial Bold")
         winnerLabel.fontSize = 26
         winnerLabel.fontColor = SKColor.blackColor()
         winnerLabel.position = CGPointMake(0, 115)
@@ -243,7 +243,7 @@ class GameScene:BaseScene {
                     let destinationRect = CGRect(x: curActivePiece.moveDestination.x - (CGFloat(kPieceSize) / 2), y: curActivePiece.moveDestination.y - (CGFloat(kPieceSize) / 2), width: CGFloat(kPieceSize), height: CGFloat(kPieceSize))
                     if (CGRectIntersectsRect(destinationRect, sprite.frame)) {
                         if activePieces.count > 0 {
-                            var piece = activePieces[activePieces.count-1]
+                            let piece = activePieces[activePieces.count-1]
                             activePieces.removeAtIndex(activePieces.count-1)
                             let sequence = SKAction.sequence(piece.actions)
                             piece.sprite?.runAction(sequence)
@@ -256,20 +256,20 @@ class GameScene:BaseScene {
     }
     
     func enterNewGame(match:GKTurnBasedMatch) {
-        println("# GameScene:enterNewGame")
+        print("# GameScene:enterNewGame")
         //currentMatch = match
     }
     
     func setPlayerNames(match:GKTurnBasedMatch, activePlayer: PieceType) {
-        let currentParticipant = participantForLocalPlayerInMatch(match)
+        //let currentParticipant = participantForLocalPlayerInMatch(match)
         let localPlayerID = GKLocalPlayer.localPlayer().playerID
         var isLocalActive = false
         
-        currentPlayerName = PlayerCache.sharedManager.players[localPlayerID]!.alias
+        currentPlayerName = PlayerCache.sharedManager.players[localPlayerID!]!.alias!
         let opponentParticipant = getOpponentForMatch(match)
-        if let opponentPlayerID = opponentParticipant.playerID {
+        if let opponentPlayerID = opponentParticipant.player?.playerID {
             if let opponent = PlayerCache.sharedManager.players[opponentPlayerID] {
-                opponentPlayerName = opponent.displayName
+                opponentPlayerName = opponent.displayName!
             } else {
                 opponentPlayerName = "Waiting for opponent"
             }
@@ -278,7 +278,7 @@ class GameScene:BaseScene {
         }
         
         if let currentParticipant = match.currentParticipant {
-            if let currentParticipantPlayerId = currentParticipant.playerID {
+            if let currentParticipantPlayerId = currentParticipant.player?.playerID {
                 if currentParticipantPlayerId == localPlayerID {
                     isLocalActive = true
                 } else  {
@@ -324,7 +324,7 @@ class GameScene:BaseScene {
     }
 
     func renderBoard(pieces: Array<Piece?>) {
-        println("# GameScene:renderBoard")
+        print("# GameScene:renderBoard")
         for piece in pieces {
             if piece != nil {
                 addSpriteForPiece(piece!, isPieceOnBoard: true)
@@ -333,7 +333,7 @@ class GameScene:BaseScene {
     }
     
     func displayEndOfGame(winner:String, isTie:Bool) {
-        var winnerLabel = self.childNodeWithName(kWinnerLabelName) as! SKLabelNode
+        let winnerLabel = self.childNodeWithName(kWinnerLabelName) as! SKLabelNode
         if isTie {
             winnerLabel.text = "Tie!"
         } else {
@@ -422,12 +422,12 @@ class GameScene:BaseScene {
     }
     
     func addPlayerIcons() {
-        var player1Icon = SKSpriteNode(imageNamed: "playerIcon1")
+        let player1Icon = SKSpriteNode(imageNamed: "playerIcon1")
         player1Icon.position = CGPoint(x: -55, y: 190)
         player1Icon.size = CGSize(width: 55, height: 55)
         gameLayer.addChild(player1Icon)
         
-        var player2Icon = SKSpriteNode(imageNamed: "playerIcon2")
+        let player2Icon = SKSpriteNode(imageNamed: "playerIcon2")
         player2Icon.position = CGPoint(x: 60, y: 190)
         player2Icon.size = CGSize(width: 55, height: 55)
         gameLayer.addChild(player2Icon)
@@ -465,14 +465,14 @@ class GameScene:BaseScene {
     }
     
     func addBackgroundImage() {
-        var background = SKSpriteNode(imageNamed: "bright-squares")
+        let background = SKSpriteNode(imageNamed: "bright-squares")
         background.size = CGSize(width: 320, height: 568)
         //background.position = CGPointMake(self.size.width/2, self.size.height/2)
         //addChild(background)
         
         //let grid = SKSpriteNode()
         //grid.texture = SKTexture(imageNamed: "grid2")
-        var grid = SKSpriteNode(imageNamed:"grid3")
+        let grid = SKSpriteNode(imageNamed:"grid3")
         grid.anchorPoint = CGPoint(x: 0.0, y: 0.0)
         grid.position = CGPoint(x: kTapAreaWidth, y: kTapAreaWidth)
         boardLayer.addChild(grid)
@@ -485,7 +485,7 @@ class GameScene:BaseScene {
         let moveRight = SKAction.moveByX(9.0, y: 0.0, duration: 0.5)
         
         for var i:Int = 0; i < 8;i++ {
-            var downArrow = SKSpriteNode(imageNamed: "down_arrow")
+            let downArrow = SKSpriteNode(imageNamed: "down_arrow")
             downArrow.size = CGSize(width: 14.0, height: 8.0)
             downArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
             downArrow.position = CGPoint(x: 30 * i + kTapAreaWidth + 8, y: kTileWidth * kNumRows + kTapAreaWidth + 12)
@@ -501,7 +501,7 @@ class GameScene:BaseScene {
             downSequence.timingMode = SKActionTimingMode.EaseIn
             downArrow.runAction(moveDownAction)
             
-            var upArrow = SKSpriteNode(imageNamed: "up_arrow")
+            let upArrow = SKSpriteNode(imageNamed: "up_arrow")
             upArrow.size = CGSize(width: 14.0, height: 8.0)
             upArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
             upArrow.position = CGPoint(x: 30 * i + kTapAreaWidth + 8, y: 16)
@@ -516,7 +516,7 @@ class GameScene:BaseScene {
             let moveUpAction = SKAction.repeatActionForever(upSequence)
             upArrow.runAction(moveUpAction)
             
-            var leftArrow = SKSpriteNode(imageNamed: "left_arrow")
+            let leftArrow = SKSpriteNode(imageNamed: "left_arrow")
             leftArrow.size = CGSize(width: 8.0, height: 14.0)
             leftArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
             leftArrow.position = CGPoint(x: kNumColumns * kTileWidth + kTapAreaWidth + 14, y: 30 * i + kTapAreaWidth + 10)
@@ -531,7 +531,7 @@ class GameScene:BaseScene {
             let moveLeftAction = SKAction.repeatActionForever(leftSequence)
             leftArrow.runAction(moveLeftAction)
             
-            var rightArrow = SKSpriteNode(imageNamed: "right_arrow")
+            let rightArrow = SKSpriteNode(imageNamed: "right_arrow")
             rightArrow.size = CGSize(width: 8.0, height: 14.0)
             rightArrow.anchorPoint = CGPoint(x: 0.0, y: 0.0)
             rightArrow.position = CGPoint(x: 16, y: 30 * i + kTapAreaWidth + 8)

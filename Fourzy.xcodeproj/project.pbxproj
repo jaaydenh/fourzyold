@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2CDF30BC1A23D32E00BFED99 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CDF30BA1A23D32E00BFED99 /* Crashlytics.framework */; };
-		2CDF30BD1A23D32E00BFED99 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CDF30BB1A23D32E00BFED99 /* Fabric.framework */; };
 		D00940BD1AAFF1E60094BF26 /* Player1Indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = D00940BB1AAFF1E60094BF26 /* Player1Indicator.png */; };
 		D00940BE1AAFF1E60094BF26 /* Player2Indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = D00940BC1AAFF1E60094BF26 /* Player2Indicator.png */; };
 		D00B38221A99E615008AF364 /* blue_piece.png in Resources */ = {isa = PBXBuildFile; fileRef = D00B381F1A99E615008AF364 /* blue_piece.png */; };
@@ -135,8 +133,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2CDF30BA1A23D32E00BFED99 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		2CDF30BB1A23D32E00BFED99 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		D00940BB1AAFF1E60094BF26 /* Player1Indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player1Indicator.png; sourceTree = "<group>"; };
 		D00940BC1AAFF1E60094BF26 /* Player2Indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Player2Indicator.png; sourceTree = "<group>"; };
 		D00B381F1A99E615008AF364 /* blue_piece.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_piece.png; sourceTree = "<group>"; };
@@ -262,9 +258,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CDF30BC1A23D32E00BFED99 /* Crashlytics.framework in Frameworks */,
 				D04701071A15A55D001411B3 /* GameKit.framework in Frameworks */,
-				2CDF30BD1A23D32E00BFED99 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,8 +284,6 @@
 		D053483B1A14B98200331484 = {
 			isa = PBXGroup;
 			children = (
-				2CDF30BA1A23D32E00BFED99 /* Crashlytics.framework */,
-				2CDF30BB1A23D32E00BFED99 /* Fabric.framework */,
 				D04701061A15A55D001411B3 /* GameKit.framework */,
 				D05348461A14B98200331484 /* Fourzy */,
 				D05348601A14B98200331484 /* FourzyTests */,
@@ -520,7 +512,8 @@
 		D053483C1A14B98200331484 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = PartyTroll;
 				TargetAttributes = {
 					D05348431A14B98200331484 = {
@@ -676,7 +669,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run c40de2c6ebe04160b2342a3b4dc353265c0d0011 10e5fa8826214ebe83f9b4dc77bc3aac82c7ebd505b9ce95aed5fc5fc282b664";
+			shellScript = "";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -777,6 +770,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -849,8 +843,9 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Fourzy/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.PartyTroll.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -870,8 +865,9 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Fourzy/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.PartyTroll.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -892,6 +888,7 @@
 				);
 				INFOPLIST_FILE = FourzyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.PartyTroll.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Fourzy.app/Fourzy";
 			};
@@ -907,6 +904,7 @@
 				);
 				INFOPLIST_FILE = FourzyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.PartyTroll.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Fourzy.app/Fourzy";
 			};
